@@ -1,9 +1,12 @@
 package org.database;
 
+import org.database.oracle.OracleConnection;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 
 public abstract class DatabaseConnection {
+    protected static DatabaseConnection instance = null;
     protected Connection conn;
     protected String url;
     protected String username;
@@ -13,6 +16,13 @@ public abstract class DatabaseConnection {
     protected String schema;
     protected String port;
     protected String connString;
+
+    public static DatabaseConnection getInstance() throws Exception {
+        if(instance == null)
+            throw new RuntimeException("No instance of DatabaseConnection has been created");
+
+        return instance;
+    }
 
     public Connection getConn() {
         return conn;

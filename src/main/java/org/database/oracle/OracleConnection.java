@@ -12,7 +12,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class OracleConnection extends DatabaseConnection {
-    private static OracleConnection instance = null;
     private static final String DB_INIT_FILE = "Migrations/init.sql";
     public OracleConnection(String url, String username, String password, String driver, String database, String schema, String port) {
         // Singleton
@@ -30,10 +29,6 @@ public class OracleConnection extends DatabaseConnection {
         this.port = port;
 
         makeConnectionString();
-    }
-
-    public static OracleConnection getInstance() {
-        return instance;
     }
 
     @Override

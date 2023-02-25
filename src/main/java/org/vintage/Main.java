@@ -24,17 +24,36 @@ public class Main {
                     splashscreen = new Splash(IMAGE, AUTHOR, PROJECT_NAME);
                     splashscreen.splash.setVisible(true);
                     try {
-                        Thread.sleep(SPLASH_TIME);
+                        Thread tdb = new Thread(new Runnable(){
+                            @Override
+                            public void run() {
+                                try {
+                                    // Connect to Oracle Database and check if it's initialized
+                                    OracleConnection orcl = new OracleConnection(ORACLE_DB_ADDR, "c##tux", "fmilove", "oracle.jdbc.driver.OracleDriver", "ORCLCDB", "C##TUX", "1521");
+                                    orcl.connect();
+
+                                    if(!orcl.isInitialized())
+                                        orcl.init();
+                                } catch (Exception ex) {
+                                    System.out.println("Error connecting to database: " + ex.getMessage());
+                                }
+                            }
+                        });
+
+                        // Start tdb and measure runtime
+                        long startTime = System.currentTimeMillis();
+                        tdb.start();
+                        tdb.join();
+                        long endTime = System.currentTimeMillis();
+
+                        // Sleep splash for SPLASH_TIME - runtime
+                        long runtime = endTime - startTime;
+                        if(runtime < SPLASH_TIME)
+                            Thread.sleep(SPLASH_TIME - runtime);
+
                     } catch (InterruptedException ex) {
                         System.out.println("Error sleeping splash: " + ex.getMessage());
                     }
-
-                    // Connect to Oracle Database and check if it's initialized
-                    OracleConnection orcl = new OracleConnection(ORACLE_DB_ADDR, "c##tux", "fmilove", "oracle.jdbc.driver.OracleDriver", "ORCLCDB", "C##TUX", "1521");
-                    orcl.connect();
-
-                    if(!orcl.isInitialized())
-                        orcl.init();
 
                     splashscreen.splash.setVisible(false);
                     splashscreen.splash.dispose();
@@ -49,7 +68,12 @@ public class Main {
             }
         });
 
-        tmain.start();
+        try {
+            tmain.start();
+            tmain.join();
+        } catch (InterruptedException ex) {
+            System.out.println("Error starting main thread: " + ex.getMessage());
+        }
 
     }
 }
