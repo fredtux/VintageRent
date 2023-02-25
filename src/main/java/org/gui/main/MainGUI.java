@@ -1,22 +1,23 @@
 package org.gui.main;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class MainGUI {
+public class MainGUI { // Singleton
+    private static MainGUI instance = null;
 
     private JPanel panel1;
     private JPanel pnlMain;
-    private JButton btnMsg;
 
     public MainGUI() {
-        btnMsg.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Hello World!");
-            }
-        });
+        // Singleton
+        if(instance != null)
+            throw new RuntimeException("MainGUI is a singleton class. Use getInstance() instead.");
+        else
+            instance = this;
+    }
+
+    public static MainGUI getInstance() {
+        return instance;
     }
 
     public static void main(String[] args) {
