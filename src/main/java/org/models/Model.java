@@ -4,7 +4,7 @@ public abstract class Model {
     protected static Model instance = null;
     String name;
 
-    public Model getInstance() throws Exception{
+    public static Model getInstance() throws Exception{
         if(instance == null)
             throw new RuntimeException("No instance of Model has been created");
 

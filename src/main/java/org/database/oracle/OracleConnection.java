@@ -106,6 +106,18 @@ public class OracleConnection extends DatabaseConnection {
         }
     }
 
+    @Override
+    public void update(String query) throws Exception {
+        Statement stmt = null;
+        try{
+            stmt = this.conn.createStatement();
+            stmt.executeUpdate(query);
+        } catch (SQLException ex) {
+            System.out.println("Error executing query: " + ex.getMessage());
+            throw new SQLException("Error executing query: " + ex.getMessage());
+        }
+    }
+
     private Reader readFile(String resourcePath) throws Exception{
         ClassLoader classLoader = getClass().getClassLoader();
         return new BufferedReader(new FileReader(classLoader.getResource(resourcePath).getFile()));

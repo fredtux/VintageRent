@@ -1,10 +1,14 @@
 package org.gui.main;
 
+import org.models.Model;
+import org.models.ModelList;
 import org.models.RentModel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.sql.Date;
+import javax.swing.event.*;
 
 public class MainGUI { // Singleton
     private static MainGUI instance = null;
@@ -35,6 +39,75 @@ public class MainGUI { // Singleton
             DefaultTableModel rm = rentModel.getTableModel();
             this.tblMain.setModel(rm);
             rm.fireTableDataChanged();
+
+           class TableModelEvents implements TableModelListener {
+               public boolean isCellEditable(int row, int column) {
+                   return column != 0;
+               }
+
+                public void setValueAt(String value, int row, int column) throws Exception {
+                    RentModel rm = RentModel.getInstance();
+                    ModelList<RentModel.InnerRentModel> modelList = new ModelList<RentModel.InnerRentModel>();
+                    RentModel.InnerRentModel irm = new RentModel.InnerRentModel();
+                    DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
+
+                    irm.DURATA_IN_ZILE = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+                    irm.ESTE_RETURNAT = Boolean.parseBoolean(dtm.getValueAt(row, 1).toString());
+                    irm.PENALIZARE = Double.parseDouble(dtm.getValueAt(row, 2).toString());
+                    irm.DATA_INCHIRIERE = Date.valueOf(dtm.getValueAt(row, 3).toString());
+                    irm.IDCAMERA = Integer.parseInt(dtm.getValueAt(row, 4).toString());
+                    irm.IDCLIENT = Integer.parseInt(dtm.getValueAt(row, 5).toString());
+                    irm.IDOBIECTIV = Integer.parseInt(dtm.getValueAt(row, 6).toString());
+                    irm.IDANGAJAT = Integer.parseInt(dtm.getValueAt(row, 7).toString());
+
+                    switch(column){
+                        case 0:
+                            irm.DURATA_IN_ZILE = Integer.parseInt(value);
+                            break;
+                        case 1:
+                            irm.ESTE_RETURNAT = Boolean.parseBoolean(value);
+                            break;
+                        case 2:
+                            irm.PENALIZARE = Double.parseDouble(value);
+                            break;
+                        case 3:
+                            irm.DATA_INCHIRIERE = Date.valueOf(value);
+                            break;
+                        case 4:
+                            irm.IDCAMERA = Integer.parseInt(value);
+                            break;
+                        case 5:
+                            irm.IDCLIENT = Integer.parseInt(value);
+                            break;
+                        case 6:
+                            irm.IDOBIECTIV = Integer.parseInt(value);
+                            break;
+                        case 7:
+                            irm.IDANGAJAT = Integer.parseInt(value);
+                            break;
+                        default:
+                            throw new Exception("Invalid column index");
+                    }
+
+                    modelList.add(irm);
+                    rm.updateData(modelList);
+                }
+
+               @Override
+               public void tableChanged(TableModelEvent e) {
+                     if (e.getType() == TableModelEvent.UPDATE) {
+                          int row = e.getFirstRow();
+                          int column = e.getColumn();
+                          try {
+                            setValueAt((String) tblMain.getValueAt(row, column), row, column);
+                          } catch (Exception ex) {
+                            System.out.println("Error in trying to update rent table: " + ex.getMessage());
+                          }
+                     }
+               }
+           }
+
+            this.tblMain.getModel().addTableModelListener(new TableModelEvents());
         } catch (Exception e) {
             System.out.println("Error in trying to initialize rent table: " + e.getMessage());
         }
@@ -46,11 +119,28 @@ public class MainGUI { // Singleton
         JMenuBar menuBar = new JMenuBar();
         JMenu menu = new JMenu("File");
         menuBar.add(menu);
-        JMenuItem menuItem = new JMenuItem("Exit");
-        menuItem.addActionListener(e -> System.exit(0));
-        menu.add(menuItem);
+        JMenuItem menuItemExit = new JMenuItem("Exit");
+        menuItemExit.addActionListener(e -> System.exit(0));
+        menu.add(menuItemExit);
 
         JMenu menu2 = new JMenu("About");
+        class AboutMenuListener implements MenuListener {
+            @Override
+            public void menuSelected(MenuEvent e) {
+                JOptionPane.showMessageDialog(null, "Vintage Rent v1.0.0\nDeveloped by Dinu Florin-Silviu");
+            }
+
+            @Override
+            public void menuDeselected(MenuEvent e) {
+
+            }
+
+            @Override
+            public void menuCanceled(MenuEvent e) {
+
+            }
+        }
+        menu2.addMenuListener(new AboutMenuListener());
         menuBar.add(menu2);
 
         frame.setJMenuBar(menuBar);

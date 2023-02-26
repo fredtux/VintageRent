@@ -100,4 +100,6 @@ public abstract class DatabaseConnection {
 
     public abstract void init() throws Exception;
 
+    public abstract void update(String query) throws Exception;
+
 }
