@@ -5,11 +5,9 @@ import org.database.DatabaseConnection;
 import org.database.csv.CsvConnection;
 
 import java.io.*;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.List;
+import java.util.Date;
 
 public class OracleConnection extends DatabaseConnection {
     private static OracleConnection instance = null;
@@ -32,6 +30,12 @@ public class OracleConnection extends DatabaseConnection {
         this.port = port;
 
         makeConnectionString();
+
+        try{
+            logger.log("New instance of OracleConnection created");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 
     public static DatabaseConnection getInstance(DatabaseType t) throws RuntimeException {
@@ -63,6 +67,12 @@ public class OracleConnection extends DatabaseConnection {
             System.out.println("Error connecting to Oracle Database: " + ex.getMessage());
             throw new SQLException("Error connecting to Oracle Database: " + ex.getMessage());
         }
+
+        try{
+            logger.log("Connected to Oracle Database");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 
     @Override
@@ -73,6 +83,12 @@ public class OracleConnection extends DatabaseConnection {
             System.out.println("Error disconnecting from Oracle Database: " + ex.getMessage());
             throw new SQLException("Error disconnecting from Oracle Database: " + ex.getMessage());
         }
+
+        try{
+            logger.log("Disconnected to Oracle Database");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 
     @Override
@@ -81,16 +97,25 @@ public class OracleConnection extends DatabaseConnection {
         try{
             stmt = this.conn.createStatement();
             ResultSet res = stmt.executeQuery(query);
+            try{
+                logger.log("OracleConnection query executed");
+            } catch (Exception ex) {
+                System.out.println("Error logging to CSV: " + ex.getMessage());
+            }
             return res;
         } catch (SQLException ex) {
             System.out.println("Error executing query: " + ex.getMessage());
             throw new SQLException("Error executing query: " + ex.getMessage());
         }
-
     }
 
     @Override
     public boolean isInitialized() throws Exception {
+        try{
+            logger.log("OracleConnection checking initialization");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
         try {
             ResultSet rs = executeQuery("SELECT COUNT(*) AS CNT FROM user_tables");
             while(rs.next()){
@@ -113,6 +138,12 @@ public class OracleConnection extends DatabaseConnection {
             sr.setLogWriter(null);
             sr.runScript(initScript);
             initScript.close();
+
+            try{
+                logger.log("OracleConnection database initialized");
+            } catch (Exception ex) {
+                System.out.println("Error logging to CSV: " + ex.getMessage());
+            }
         } catch (IOException ex) {
             System.out.println("Error reading init script: " + ex.getMessage());
             throw new IOException("Error reading init script: " + ex.getMessage());
@@ -131,6 +162,12 @@ public class OracleConnection extends DatabaseConnection {
         } catch (SQLException ex) {
             System.out.println("Error executing query: " + ex.getMessage());
             throw new SQLException("Error executing query: " + ex.getMessage());
+        }
+
+        try{
+            logger.log("OracleConnection executed update");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
         }
     }
 

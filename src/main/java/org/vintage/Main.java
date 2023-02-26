@@ -6,9 +6,11 @@ import org.database.csv.CsvConnection;
 import org.database.oracle.OracleConnection;
 import org.gui.main.MainGUI;
 import org.gui.splash.Splash;
+import org.logger.CsvLogger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class Main {
 
@@ -22,6 +24,13 @@ public class Main {
     public static void main(String[] args) {
         FlatDarkLaf.setup();
         System.setProperty("flatlaf.menuBarEmbedded", "false");
+
+        CsvLogger logger = CsvLogger.getInstance();
+        try{
+            logger.log("Starting application");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
 
         Thread tmain = new Thread(new Runnable() {
             @Override

@@ -9,12 +9,12 @@ import java.io.*;
 import java.sql.ResultSet;
 import java.util.List;
 import com.mockrunner.mock.jdbc.MockResultSet;
-import org.database.oracle.OracleConnection;
 
 public class CsvConnection extends DatabaseConnection {
     private static CsvConnection instance = null;
 
     private String path = null;
+    private String folder = "/CSV/";
     private CSVReader reader = null;
     private CSVWriter writer = null;
     private CSVParser parser = null;
@@ -22,7 +22,7 @@ public class CsvConnection extends DatabaseConnection {
     public CsvConnection() {
         // Singleton
         if(instance != null)
-            throw new RuntimeException("OracleConnection is a singleton class. Use getInstance() instead.");
+            throw new RuntimeException("CsvConnection is a singleton class. Use getInstance() instead.");
         else{
             instance = this;
             instances.add(this);
@@ -45,7 +45,7 @@ public class CsvConnection extends DatabaseConnection {
     public CsvConnection(String path) {
         // Singleton
         if(instance != null)
-            throw new RuntimeException("OracleConnection is a singleton class. Use getInstance() instead.");
+            throw new RuntimeException("CsvConnection is a singleton class. Use getInstance() instead.");
         else
             instance = this;
 
@@ -82,6 +82,12 @@ public class CsvConnection extends DatabaseConnection {
 
     @Override
     public boolean isInitialized() throws Exception {
+        try{
+            logger.log("CsvConnection check initialization");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
+
         ClassLoader classLoader = getClass().getClassLoader();
         Reader r = new BufferedReader(new FileReader(classLoader.getResource(path).getFile()));
         this.reader = new CSVReader(r);
@@ -111,6 +117,12 @@ public class CsvConnection extends DatabaseConnection {
         this.writer = new CSVWriter(new FileWriter(classLoader.getResource(path).getFile()));
         this.writer.writeNext(columns);
         this.writer.close();
+
+        try{
+            logger.log("CsvConnection file initialized");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 
     @Override
@@ -188,13 +200,20 @@ public class CsvConnection extends DatabaseConnection {
         try {
             this.setPath(tableName);
             ClassLoader classLoader = getClass().getClassLoader();
-            File f = new File(classLoader.getResource("CSV/" + this.path).getFile());
+            File f = new File(classLoader.getResource(this.folder + this.path).getFile());
             this.writer = new CSVWriter(new FileWriter(f));
-            this.writer.writeNext(columns);
+            if(columns != null)
+                this.writer.writeNext(columns);
             this.writer.writeAll(values);
             this.writer.close();
         } catch (NullPointerException e) {
             this.createAndInsertDynamically(tableName, columns, values);
+        }
+
+        try{
+            logger.log("CsvConnection create and insert");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
         }
     }
 
@@ -221,13 +240,35 @@ public class CsvConnection extends DatabaseConnection {
         System.out.println(parent.getPath());
         File f = new File(parent, tableName);
         f.createNewFile();
+
+        try{
+            logger.log("CsvConnection file created");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 
     @Override
     public void insert(String tableName, String[] columns, List<String[]> values) throws Exception {
         this.setPath(tableName);
         ClassLoader classLoader = getClass().getClassLoader();
-        File f = new File(classLoader.getResource("CSV/" + this.path).getFile());
+        File f = new File(classLoader.getResource(this.folder + this.path).getFile());
+        this.writer = new CSVWriter(new FileWriter(f, true));
+        this.writer.writeNext(columns);
+        this.writer.writeAll(values);
+        this.writer.close();
+
+        try{
+            logger.log("CsvConnection data inserted");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
+    }
+
+    public void insertNoLog(String tableName, String[] columns, List<String[]> values) throws Exception {
+        this.setPath(tableName);
+        ClassLoader classLoader = getClass().getClassLoader();
+        File f = new File(classLoader.getResource(this.folder + this.path).getFile());
         this.writer = new CSVWriter(new FileWriter(f, true));
         this.writer.writeNext(columns);
         this.writer.writeAll(values);
@@ -248,9 +289,24 @@ public class CsvConnection extends DatabaseConnection {
     public void truncate(String tableName) throws Exception {
         this.setPath(tableName);
         ClassLoader classLoader = getClass().getClassLoader();
-        File f = new File(classLoader.getResource("CSV/" + this.path).getFile());
+        File f = new File(classLoader.getResource(this.folder + this.path).getFile());
         this.writer = new CSVWriter(new FileWriter(f));
         this.writer.writeNext(null); // write nothing
         this.writer.close();
+
+        try{
+            logger.log("CsvConnection file truncated");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
+    }
+
+    public String getFolder() {
+        return folder;
+    }
+
+    public CsvConnection setFolder(String folder) {
+        this.folder = folder;
+        return this;
     }
 }

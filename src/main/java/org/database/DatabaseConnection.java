@@ -2,6 +2,7 @@ package org.database;
 
 import org.database.csv.CsvConnection;
 import org.database.oracle.OracleConnection;
+import org.logger.CsvLogger;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -24,6 +25,8 @@ public abstract class DatabaseConnection {
     protected String schema;
     protected String port;
     protected String connString;
+
+    protected CsvLogger logger = CsvLogger.getInstance();
 
     public static DatabaseConnection getInstance(DatabaseType t) throws RuntimeException {
         if(instances == null)
