@@ -67,7 +67,8 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
             instance = this;
 
         this.name = "Camera";
-        this.databaseType = DatabaseConnection.DatabaseType.ORACLE;
+        this.databaseType = DatabaseConnection.DatabaseType.CSV;
+        this.tableName = "Camere.csv";
     }
 
     public CameraModel(DatabaseConnection.DatabaseType t) {
@@ -108,13 +109,62 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
     @Override
     public ModelList<InnerCameraModel> getData() throws Exception{
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
-        ResultSet rs = db.executeQuery("SELECT IDCAMERA, MARCA, MODELCAMERA, F.DENUMIRE AS DENUMIREFORMAT, F.LATIMEFILM, T.DENUMIRE AS DENUMIRETIP, M.DENUMIRE AS DENUMIREMONTURA, ANFABRICATIE, PRET, PRETINCHIRIERE\n" +
-                "FROM CAMERE\n" +
-                "    INNER JOIN FORMAT F on CAMERE.IDFORMAT = F.IDFORMAT\n" +
-                "    INNER JOIN TIPCAMERA T on CAMERE.IDTIP = T.IDTIP\n" +
-                "    INNER JOIN MONTURA M on CAMERE.IDMONTURA = M.IDMONTURA");
+        Map<String, String> tables = null;
+        if(databaseType == DatabaseConnection.DatabaseType.CSV) {
+            tables = new HashMap<>();
+            tables.put("CAMERE", "Camere.csv");
+            tables.put("FORMAT", "Format.csv");
+            tables.put("TIPCAMERA", "TipCamera.csv");
+            tables.put("MONTURA", "Montura.csv");
+        } else {
+            tables = new HashMap<>();
+            tables.put("CAMERE", "CAMERE");
+            tables.put("FORMAT", "FORMAT");
+            tables.put("TIPCAMERA", "TIPCAMERA");
+            tables.put("MONTURA", "MONTURA");
+        }
 
-        this.transferToModelList(rs);
+
+        ResultSet cameras = db.getAllTableData(tables.get("CAMERE"));
+        ResultSet formats = db.getAllTableData(tables.get("FORMAT"));
+        ResultSet types = db.getAllTableData(tables.get("TIPCAMERA"));
+        ResultSet mounts = db.getAllTableData(tables.get("MONTURA"));
+
+        // Make a HashMap of formats with IDFORMAT as key
+        Map<Integer, String> formatMap = new HashMap<>();
+        while(formats.next()) {
+            formatMap.put(formats.getInt("IDFORMAT"), formats.getString("DENUMIRE"));
+        }
+
+        // Make a HashMap of types with IDTIP as key
+        Map<Integer, String> typeMap = new HashMap<>();
+        while(types.next()) {
+            typeMap.put(types.getInt("IDTIP"), types.getString("DENUMIRE"));
+        }
+
+        // Make a HashMap of mounts with IDMONTURA as key
+        Map<Integer, String> mountMap = new HashMap<>();
+        while(mounts.next()) {
+            mountMap.put(mounts.getInt("IDMONTURA"), mounts.getString("DENUMIRE"));
+        }
+
+        // Add fields to cameras
+        this.modelList = new ModelList<>(true);
+        while(cameras.next()) {
+            InnerCameraModel model = new InnerCameraModel();
+            model.Marca = cameras.getString("Marca");
+            model.ModelCamera = cameras.getString("ModelCamera");
+            model.AnFabricatie = cameras.getInt("AnFabricatie");
+            model.Pret = cameras.getDouble("Pret");
+            model.PretInchiriere = cameras.getDouble("PretInchiriere");
+            model.IDCamera = cameras.getInt("IDCamera");
+            model.DenumireTip = typeMap.get(cameras.getInt("IDTIP"));
+            model.DenumireFormat = formatMap.get(cameras.getInt("IDFORMAT"));
+            model.LatimeFilm = formatMap.get(cameras.getInt("IDFORMAT"));
+            model.DenumireMontura = mountMap.get(cameras.getInt("IDMONTURA"));
+
+            this.modelList.add(model);
+        }
 
         return this.modelList;
     }
