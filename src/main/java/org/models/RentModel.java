@@ -29,7 +29,7 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList> {
 
     public static RentModel getInstance() {
         if (instance == null)
-            throw new RuntimeException("No instance of RentModel has been created");
+            instance = new RentModel();
 
         return instance;
     }
@@ -106,7 +106,7 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList> {
     @Override
     public ModelList<InnerRentModel> getData(String whereClause, String orderBy, String limit)  throws Exception{
         DatabaseConnection db = OracleConnection.getInstance();
-        ResultSet rs = db.executeQuery("SELECT * FROM " + this.tableName + " WHERE " + whereClause + " ORDER BY " + orderBy + " LIMIT " + limit);
+        ResultSet rs = db.executeQuery("SELECT * FROM " + this.tableName + " WHERE " + whereClause + " ORDER BY " + orderBy + " FETCH NEXT " + limit + " ROWS ONLY");
 
         this.transferToModelList(rs);
 
@@ -116,7 +116,7 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList> {
     @Override
     public ModelList<InnerRentModel> getData(String whereClause, String orderBy, String limit, String offset)  throws Exception{
         DatabaseConnection db = OracleConnection.getInstance();
-        ResultSet rs = db.executeQuery("SELECT * FROM " + this.tableName + " WHERE " + whereClause + " ORDER BY " + orderBy + " LIMIT " + limit + " OFFSET " + offset);
+        ResultSet rs = db.executeQuery("SELECT * FROM " + this.tableName + " WHERE " + whereClause + " ORDER BY " + orderBy + " OFFSET " + offset + " ROWS FETCH NEXT " + limit + " ROWS ONLY");
 
         this.transferToModelList(rs);
 

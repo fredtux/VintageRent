@@ -2,6 +2,7 @@ package org.models;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.lang.Comparable;
 
 public class ModelList <T>{
     private List<T> list;
@@ -12,6 +13,48 @@ public class ModelList <T>{
 
     public ModelList() {
         this.list = new ArrayList<T>();
+    }
+
+    public class SortedArrayList<T> extends ArrayList<T> {
+        public SortedArrayList() {
+            super();
+        }
+
+        public SortedArrayList(int initialCapacity) {
+            super(initialCapacity);
+        }
+
+        public SortedArrayList(List<T> list) {
+            super(list);
+        }
+
+        @Override
+        public boolean add(T item) {
+            super.add(item);
+            sort(null);
+            return true;
+        }
+
+        @Override
+        public void add(int index, T item) {
+            super.add(index, item);
+            sort(null);
+        }
+
+        @Override
+        public T set(int index, T item) {
+            T oldItem = super.set(index, item);
+            sort(null);
+            return oldItem;
+        }
+
+    }
+    public ModelList(boolean isSorted) {
+        if(isSorted){
+            this.list = new SortedArrayList<T>();
+        } else {
+            this.list = new ArrayList<T>();
+        }
     }
 
     public List<T> getList() {
