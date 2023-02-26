@@ -134,4 +134,5 @@ public abstract class DatabaseConnection {
 
     public abstract void truncate(String tableName) throws Exception;
 
+    public abstract void init(String[] columns) throws Exception;
 }

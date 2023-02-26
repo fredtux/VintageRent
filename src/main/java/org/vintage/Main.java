@@ -7,6 +7,7 @@ import org.database.oracle.OracleConnection;
 import org.gui.main.MainGUI;
 import org.gui.splash.Splash;
 import org.logger.CsvLogger;
+import org.models.ModelInit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,8 @@ public class Main {
 
                                     if(!orcl.isInitialized())
                                         orcl.init();
+
+                                    ModelInit.init();
                                 } catch (Exception ex) {
                                     System.out.println("Error connecting to database: " + ex.getMessage());
                                 }

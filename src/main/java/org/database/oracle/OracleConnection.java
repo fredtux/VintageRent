@@ -43,7 +43,7 @@ public class OracleConnection extends DatabaseConnection {
             throw new RuntimeException("No instance of DatabaseConnection has been created");
 
         for(DatabaseConnection db : instances) {
-            if(db instanceof OracleConnection && t == DatabaseType.ORACLE)
+            if(db instanceof OracleConnection)
                 return db;
         }
 
@@ -203,6 +203,11 @@ public class OracleConnection extends DatabaseConnection {
 
     @Override
     public void truncate(String tableName) throws Exception {
+
+    }
+
+    @Override
+    public void init(String[] columns) throws Exception {
 
     }
 

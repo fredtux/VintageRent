@@ -62,6 +62,7 @@ public class CsvConnection extends DatabaseConnection {
     }
     @Override
     public void makeConnectionString() {
+        this.path = this.url;
     }
 
     @Override
@@ -88,19 +89,23 @@ public class CsvConnection extends DatabaseConnection {
             System.out.println("Error logging to CSV: " + ex.getMessage());
         }
 
-        ClassLoader classLoader = getClass().getClassLoader();
-        Reader r = new BufferedReader(new FileReader(classLoader.getResource(path).getFile()));
-        this.reader = new CSVReader(r);
-        String line[] = null;
-        if((line = this.reader.readNext()) != null){
+        try {
+            ClassLoader classLoader = getClass().getClassLoader();
+            Reader r = new BufferedReader(new FileReader(classLoader.getResource(path).getFile()));
+            this.reader = new CSVReader(r);
+            String line[] = null;
+            if ((line = this.reader.readNext()) != null) {
+                this.reader.close();
+                r.close();
+                return true;
+            }
+
             this.reader.close();
             r.close();
-            return true;
+            return false;
+        } catch (Exception ex) {
+            return false;
         }
-
-        this.reader.close();
-        r.close();
-        return false;
     }
 
     @Override
@@ -252,7 +257,7 @@ public class CsvConnection extends DatabaseConnection {
     public void insert(String tableName, String[] columns, List<String[]> values) throws Exception {
         this.setPath(tableName);
         ClassLoader classLoader = getClass().getClassLoader();
-        File f = new File(classLoader.getResource(this.folder + this.path).getFile());
+        File f = new File(classLoader.getResource(this.path).getFile());
         this.writer = new CSVWriter(new FileWriter(f, true));
         this.writer.writeNext(columns);
         this.writer.writeAll(values);

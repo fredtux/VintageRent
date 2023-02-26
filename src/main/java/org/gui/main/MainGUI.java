@@ -264,6 +264,8 @@ public class MainGUI { // Singleton
 
 //        this.jscrPane.setViewportView(this.tblMain);
 
+        this.jscrPane = new JScrollPane();
+
         GridBagConstraints c2 = new GridBagConstraints();
         c2.gridx = 0;
         c2.gridy = 1;
@@ -273,7 +275,8 @@ public class MainGUI { // Singleton
         c2.weighty = 0.1;
         c2.anchor = GridBagConstraints.NORTH;
         c2.fill = GridBagConstraints.BOTH;
-        this.panel1.add(this.jscrPane,c2);
+        this.panel1 = new JPanel(new GridBagLayout());
+        this.panel1.add(this.jscrPane, c2);
 
         frame.getContentPane().add(this.panel1);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
