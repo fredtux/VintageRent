@@ -2,21 +2,26 @@ package org.database.oracle;
 
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.database.DatabaseConnection;
+import org.database.csv.CsvConnection;
 
 import java.io.*;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 public class OracleConnection extends DatabaseConnection {
+    private static OracleConnection instance = null;
     private static final String DB_INIT_FILE = "Migrations/init.sql";
     public OracleConnection(String url, String username, String password, String driver, String database, String schema, String port) {
         // Singleton
         if(instance != null)
             throw new RuntimeException("OracleConnection is a singleton class. Use getInstance() instead.");
-        else
+        else {
             instance = this;
+            instances.add(this);
+        }
 
         this.url = url;
         this.username = username;
@@ -27,6 +32,18 @@ public class OracleConnection extends DatabaseConnection {
         this.port = port;
 
         makeConnectionString();
+    }
+
+    public static DatabaseConnection getInstance(DatabaseType t) throws RuntimeException {
+        if(instance == null || t != DatabaseType.ORACLE)
+            throw new RuntimeException("No instance of DatabaseConnection has been created");
+
+        for(DatabaseConnection db : instances) {
+            if(db instanceof OracleConnection && t == DatabaseType.ORACLE)
+                return db;
+        }
+
+        throw new RuntimeException("No instance of DatabaseConnection of the specified DatabaseType has been created");
     }
 
     @Override
@@ -95,6 +112,7 @@ public class OracleConnection extends DatabaseConnection {
             ScriptRunner sr = new ScriptRunner(this.conn);
             sr.setLogWriter(null);
             sr.runScript(initScript);
+            initScript.close();
         } catch (IOException ex) {
             System.out.println("Error reading init script: " + ex.getMessage());
             throw new IOException("Error reading init script: " + ex.getMessage());
@@ -114,6 +132,41 @@ public class OracleConnection extends DatabaseConnection {
             System.out.println("Error executing query: " + ex.getMessage());
             throw new SQLException("Error executing query: " + ex.getMessage());
         }
+    }
+
+    @Override
+    public ResultSet getAllTableData(String tableName) throws Exception {
+        return this.executeQuery("SELECT * FROM " + tableName);
+    }
+
+    @Override
+    public void createAndInsert(String tableName, String[] columns, List<String[]> values) throws Exception {
+
+    }
+
+    @Override
+    public void createTable(String tableName, String[] columns, String[] types) throws Exception {
+
+    }
+
+    @Override
+    public void insert(String tableName, String[] columns, List<String[]> values) throws Exception {
+
+    }
+
+    @Override
+    public void delete(String tableName, String[] columns, List<String[]> values) throws Exception {
+
+    }
+
+    @Override
+    public void drop(String tableName) throws Exception {
+
+    }
+
+    @Override
+    public void truncate(String tableName) throws Exception {
+
     }
 
     private Reader readFile(String resourcePath) throws Exception{

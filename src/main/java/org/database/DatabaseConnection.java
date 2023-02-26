@@ -1,12 +1,20 @@
 package org.database;
 
+import org.database.csv.CsvConnection;
 import org.database.oracle.OracleConnection;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class DatabaseConnection {
-    protected static DatabaseConnection instance = null;
+    protected static ArrayList<DatabaseConnection> instances = new ArrayList<>();
+
+    public enum DatabaseType {
+        ORACLE,
+        CSV
+    }
     protected Connection conn;
     protected String url;
     protected String username;
@@ -17,11 +25,18 @@ public abstract class DatabaseConnection {
     protected String port;
     protected String connString;
 
-    public static DatabaseConnection getInstance() throws RuntimeException {
-        if(instance == null)
+    public static DatabaseConnection getInstance(DatabaseType t) throws RuntimeException {
+        if(instances == null)
             throw new RuntimeException("No instance of DatabaseConnection has been created");
 
-        return instance;
+        for(DatabaseConnection db : instances) {
+            if(db instanceof OracleConnection && t == DatabaseType.ORACLE)
+                return db;
+            else if(db instanceof CsvConnection && t == DatabaseType.CSV)
+                return db;
+        }
+
+        throw new RuntimeException("No instance of DatabaseConnection of the specified DatabaseType has been created");
     }
 
     public Connection getConn() {
@@ -101,5 +116,19 @@ public abstract class DatabaseConnection {
     public abstract void init() throws Exception;
 
     public abstract void update(String query) throws Exception;
+
+    public abstract ResultSet getAllTableData(String tableName) throws Exception;
+
+    public abstract void createAndInsert(String tableName, String[] columns, List<String[]> values) throws Exception;
+
+    public abstract void createTable(String tableName, String[] columns, String[] types) throws Exception;
+
+    public abstract void insert(String tableName, String[] columns, List<String[]> values) throws Exception;
+
+    public abstract void delete(String tableName, String[] columns, List<String[]> values) throws Exception;
+
+    public abstract void drop(String tableName) throws Exception;
+
+    public abstract void truncate(String tableName) throws Exception;
 
 }

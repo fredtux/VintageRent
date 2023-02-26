@@ -53,6 +53,18 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
             instance = this;
 
         this.name = "Rent";
+        this.databaseType = DatabaseConnection.DatabaseType.ORACLE;
+    }
+
+    public RentModel(DatabaseConnection.DatabaseType t) {
+        // Singleton
+        if(instance != null)
+            throw new RuntimeException("RentModel is a singleton class. Use getInstance() instead.");
+        else
+            instance = this;
+
+        this.name = "Rent";
+        this.databaseType = t;
     }
 
     private void transferToModelList(ResultSet rs) throws Exception{
@@ -74,8 +86,8 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
 
     @Override
     public ModelList<InnerRentModel> getData() throws Exception{
-        DatabaseConnection db = DatabaseConnection.getInstance();
-        ResultSet rs = db.executeQuery("SELECT * FROM " + this.tableName);
+        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
+        ResultSet rs = db.getAllTableData(this.tableName);
 
         this.transferToModelList(rs);
 
@@ -84,7 +96,7 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
 
     @Override
     public ModelList<InnerRentModel> getData(String whereClause)  throws Exception{
-        DatabaseConnection db = DatabaseConnection.getInstance();
+        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         ResultSet rs = db.executeQuery("SELECT * FROM " + this.tableName + " WHERE " + whereClause);
 
         this.transferToModelList(rs);
@@ -94,7 +106,7 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
 
     @Override
     public ModelList<InnerRentModel> getData(String whereClause, String orderBy)  throws Exception{
-        DatabaseConnection db = DatabaseConnection.getInstance();
+        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         ResultSet rs = db.executeQuery("SELECT * FROM " + this.tableName + " WHERE " + whereClause + " ORDER BY " + orderBy);
 
         this.transferToModelList(rs);
@@ -104,7 +116,7 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
 
     @Override
     public ModelList<InnerRentModel> getData(String whereClause, String orderBy, String limit)  throws Exception{
-        DatabaseConnection db = DatabaseConnection.getInstance();
+        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         ResultSet rs = db.executeQuery("SELECT * FROM " + this.tableName + " WHERE " + whereClause + " ORDER BY " + orderBy + " FETCH NEXT " + limit + " ROWS ONLY");
 
         this.transferToModelList(rs);
@@ -114,7 +126,7 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
 
     @Override
     public ModelList<InnerRentModel> getData(String whereClause, String orderBy, String limit, String offset)  throws Exception{
-        DatabaseConnection db = DatabaseConnection.getInstance();
+        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         ResultSet rs = db.executeQuery("SELECT * FROM " + this.tableName + " WHERE " + whereClause + " ORDER BY " + orderBy + " OFFSET " + offset + " ROWS FETCH NEXT " + limit + " ROWS ONLY");
 
         this.transferToModelList(rs);
@@ -124,7 +136,7 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
 
     @Override
     public void updateData(ModelList<InnerRentModel> oneRow) throws Exception {
-        DatabaseConnection db = DatabaseConnection.getInstance();
+        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         db.update("UPDATE " + this.tableName + " SET DURATAINZILE = " + oneRow.get(0).DURATA_IN_ZILE + ", ESTERETURNAT = " + (oneRow.get(0).ESTE_RETURNAT ? "'1'" : "'0'") + ", PENALIZARE = " + oneRow.get(0).PENALIZARE + ", DATAINCHIRIERE = DATE'" + oneRow.get(0).DATA_INCHIRIERE + "', IDCAMERA = " + oneRow.get(0).IDCAMERA + ", IDCLIENT = " + oneRow.get(0).IDCLIENT + ", IDOBIECTIV = " + oneRow.get(0).IDOBIECTIV + ", IDANGAJAT = " + oneRow.get(0).IDANGAJAT + " WHERE IDANGAJAT = " + oneRow.get(0).IDANGAJAT + " AND IDCAMERA = " + oneRow.get(0).IDCAMERA + " AND IDCLIENT = " + oneRow.get(0).IDCLIENT + " AND IDOBIECTIV = " + oneRow.get(0).IDOBIECTIV);
     }
 }

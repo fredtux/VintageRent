@@ -1,7 +1,10 @@
 package org.models;
 
+import org.database.DatabaseConnection;
+
 public abstract class Model {
     protected static Model instance = null;
+    protected DatabaseConnection.DatabaseType databaseType = null;
     String name;
 
     public static Model getInstance() throws Exception{

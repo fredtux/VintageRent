@@ -61,6 +61,18 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
             instance = this;
 
         this.name = "Camera";
+        this.databaseType = DatabaseConnection.DatabaseType.ORACLE;
+    }
+
+    public CameraModel(DatabaseConnection.DatabaseType t) {
+        // Singleton
+        if(instance != null)
+            throw new RuntimeException("CameraModel is a singleton class. Use getInstance() instead.");
+        else
+            instance = this;
+
+        this.name = "Camera";
+        this.databaseType = t;
     }
 
     private void transferToModelList(ResultSet rs) throws Exception{
@@ -85,7 +97,7 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
 
     @Override
     public ModelList<InnerCameraModel> getData() throws Exception{
-        DatabaseConnection db = DatabaseConnection.getInstance();
+        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         ResultSet rs = db.executeQuery("SELECT IDCAMERA, MARCA, MODELCAMERA, F.DENUMIRE AS DENUMIREFORMAT, F.LATIMEFILM, T.DENUMIRE AS DENUMIRETIP, M.DENUMIRE AS DENUMIREMONTURA, ANFABRICATIE, PRET, PRETINCHIRIERE\n" +
                 "FROM CAMERE\n" +
                 "    INNER JOIN FORMAT F on CAMERE.IDFORMAT = F.IDFORMAT\n" +
@@ -99,7 +111,7 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
 
     @Override
     public ModelList<InnerCameraModel> getData(String whereClause)  throws Exception{
-        DatabaseConnection db = DatabaseConnection.getInstance();
+        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         ResultSet rs = db.executeQuery("SELECT IDCAMERA, MARCA, MODELCAMERA, F.DENUMIRE AS DENUMIREFORMAT, F.LATIMEFILM, T.DENUMIRE AS DENUMIRETIP, M.DENUMIRE AS DENUMIREMONTURA, ANFABRICATIE, PRET, PRETINCHIRIERE\n" +
                 "FROM CAMERE\n" +
                 "    INNER JOIN FORMAT F on CAMERE.IDFORMAT = F.IDFORMAT\n" +
@@ -113,7 +125,7 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
 
     @Override
     public ModelList<InnerCameraModel> getData(String whereClause, String orderBy)  throws Exception{
-        DatabaseConnection db = DatabaseConnection.getInstance();
+        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         ResultSet rs = db.executeQuery("SELECT IDCAMERA, MARCA, MODELCAMERA, F.DENUMIRE AS DENUMIREFORMAT, F.LATIMEFILM, T.DENUMIRE AS DENUMIRETIP, M.DENUMIRE AS DENUMIREMONTURA, ANFABRICATIE, PRET, PRETINCHIRIERE\n" +
                 "FROM CAMERE\n" +
                 "    INNER JOIN FORMAT F on CAMERE.IDFORMAT = F.IDFORMAT\n" +
@@ -127,7 +139,7 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
 
     @Override
     public ModelList<InnerCameraModel> getData(String whereClause, String orderBy, String limit)  throws Exception{
-        DatabaseConnection db = DatabaseConnection.getInstance();
+        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         ResultSet rs = db.executeQuery("SELECT IDCAMERA, MARCA, MODELCAMERA, F.DENUMIRE AS DENUMIREFORMAT, F.LATIMEFILM, T.DENUMIRE AS DENUMIRETIP, M.DENUMIRE AS DENUMIREMONTURA, ANFABRICATIE, PRET, PRETINCHIRIERE\n" +
                 "FROM CAMERE\n" +
                 "    INNER JOIN FORMAT F on CAMERE.IDFORMAT = F.IDFORMAT\n" +
@@ -141,7 +153,7 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
 
     @Override
     public ModelList<InnerCameraModel> getData(String whereClause, String orderBy, String limit, String offset)  throws Exception{
-        DatabaseConnection db = DatabaseConnection.getInstance();
+        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         ResultSet rs = db.executeQuery("SELECT IDCAMERA, MARCA, MODELCAMERA, F.DENUMIRE AS DENUMIREFORMAT, F.LATIMEFILM, T.DENUMIRE AS DENUMIRETIP, M.DENUMIRE AS DENUMIREMONTURA, ANFABRICATIE, PRET, PRETINCHIRIERE\n" +
                 "FROM CAMERE\n" +
                 "    INNER JOIN FORMAT F on CAMERE.IDFORMAT = F.IDFORMAT\n" +
@@ -155,7 +167,7 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
 
     @Override
     public void updateData(ModelList<InnerCameraModel> oneRow) throws Exception {
-        DatabaseConnection db = DatabaseConnection.getInstance();
+        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         db.update("UPDATE " + this.tableName + " SET MARCA = '" + oneRow.get(0).Marca + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRET = " + oneRow.get(0).Pret + ", PRETINCHIRIERE = " + oneRow.get(0).PretInchiriere + ", ANFABRICATIE = " + oneRow.get(0).AnFabricatie + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
     }
 }
