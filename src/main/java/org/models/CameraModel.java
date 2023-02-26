@@ -67,8 +67,7 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
             instance = this;
 
         this.name = "Camera";
-        this.databaseType = DatabaseConnection.DatabaseType.CSV;
-        this.tableName = "Camere.csv";
+        this.databaseType = DatabaseConnection.DatabaseType.ORACLE;
     }
 
     public CameraModel(DatabaseConnection.DatabaseType t) {
@@ -238,6 +237,15 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
         where.put("IDCAMERA", String.valueOf(oneRow.get(0).IDCamera));
         db.update(this.tableName, set, where);
 //        db.update("UPDATE " + this.tableName + " SET MARCA = '" + oneRow.get(0).Marca + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRET = " + oneRow.get(0).Pret + ", PRETINCHIRIERE = " + oneRow.get(0).PretInchiriere + ", ANFABRICATIE = " + oneRow.get(0).AnFabricatie + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
+    }
+
+    @Override
+    public void deleteRow(ModelList<InnerCameraModel> row) throws Exception {
+        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
+
+        Map<String, String> where = new HashMap<>();
+        where.put("IDCAMERA", row.get(0).IDCamera + "");
+        db.delete(this.tableName, where);
     }
 
     @Override

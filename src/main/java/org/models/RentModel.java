@@ -176,6 +176,18 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
     }
 
     @Override
+    public void deleteRow(ModelList<InnerRentModel> row) throws Exception {
+        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
+
+        Map<String, String> where = new HashMap<>();
+        where.put("IDANGAJAT", row.get(0).IDANGAJAT + "");
+        where.put("IDCAMERA", row.get(0).IDCAMERA + "");
+        where.put("IDCLIENT", row.get(0).IDCLIENT + "");
+        where.put("IDOBIECTIV", row.get(0).IDOBIECTIV + "");
+        db.delete(this.tableName, where);
+    }
+
+    @Override
     public void throwIntoCsv() throws Exception {
         if(this.databaseType == DatabaseConnection.DatabaseType.CSV){
             throw new Exception("Cannot throw into CSV from CSV.");

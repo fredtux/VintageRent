@@ -197,6 +197,7 @@ public class CsvConnection extends DatabaseConnection {
             for (int i = 0; i < headers.size(); i++) {
                 if(headers.get(i).equals(entry.getKey()) && row.get(i).equals(entry.getValue())){
                     ++counter;
+                    break;
                 }
             }
         }
@@ -352,6 +353,56 @@ public class CsvConnection extends DatabaseConnection {
     @Override
     public void delete(String tableName, String[] columns, List<String[]> values) throws Exception {
 
+    }
+
+    @Override
+    public void delete(String tableName, Map<String, String> where) throws Exception {
+        this.setPath(tableName);
+        ClassLoader classLoader = getClass().getClassLoader();
+        Reader r = new BufferedReader(new FileReader(classLoader.getResource("CSV/" + this.path).getFile()));
+        this.reader = new CSVReader(r);
+
+        List<String[]> lresult = this.reader.readAll();
+
+        this.reader.close();
+
+        List<String> headers = null;
+        List<String[]> sdata = null;
+        List<List<Object>> data = null;
+
+        // Get first line and set headers
+        if(lresult.size() > 0){
+            headers = Arrays.asList(lresult.get(0));
+        }
+
+        // Use the rest of the lines as data
+        if(lresult.size() > 1){
+            sdata = lresult.subList(1, lresult.size());
+        }
+
+        // Transform sdata to data
+        if(sdata != null){
+            data = new java.util.ArrayList<List<Object>>();
+            for (String[] strings : sdata) {
+                data.add(Arrays.asList(strings));
+            }
+        }
+
+        // Delete data
+        for (List<Object> list : data) {
+            if(this.hasPrimaryKey(headers, where, list)){
+                data.remove(list);
+                break;
+            }
+        }
+
+        // Write data to file
+        this.writer = new CSVWriter(new FileWriter(classLoader.getResource("CSV/" + this.path).getFile()));
+        this.writer.writeNext(headers.toArray(new String[headers.size()]));
+        for (List<Object> list : data) {
+            this.writer.writeNext(list.toArray(new String[list.size()]));
+        }
+        this.writer.close();
     }
 
     @Override

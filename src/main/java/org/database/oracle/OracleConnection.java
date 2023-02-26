@@ -105,7 +105,7 @@ public class OracleConnection extends DatabaseConnection {
             }
             return res;
         } catch (SQLException ex) {
-            System.out.println("Error executing query: " + ex.getMessage());
+            System.out.println("Error executing query: " + ex.getMessage() + ":" + ex.getErrorCode());
             throw new SQLException("Error executing query: " + ex.getMessage());
         }
     }
@@ -206,6 +206,30 @@ public class OracleConnection extends DatabaseConnection {
     @Override
     public void delete(String tableName, String[] columns, List<String[]> values) throws Exception {
 
+    }
+
+    @Override
+    public void delete(String tableName, Map<String, String> where) throws Exception {
+        Statement stmt = null;
+        try{
+            String query = "DELETE FROM " + tableName + " WHERE ";
+            for(Map.Entry<String, String> entry : where.entrySet()){
+                query += entry.getKey() + " = " + entry.getValue() + " AND ";
+            }
+            query = query.substring(0, query.length() - 5);
+
+            stmt = this.conn.createStatement();
+            stmt.executeUpdate(query);
+        } catch (SQLException ex) {
+            System.out.println("Error executing query: " + ex.getMessage());
+            throw new SQLException("Error executing query: " + ex.getMessage());
+        }
+
+        try{
+            logger.log("OracleConnection executed delete");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 
     @Override

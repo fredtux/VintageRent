@@ -1,14 +1,17 @@
 package org.gui.main;
 
 import org.models.CameraModel;
-import org.models.Model;
 import org.models.ModelList;
 import org.models.RentModel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Date;
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import javax.swing.event.*;
 import javax.swing.table.TableRowSorter;
 
@@ -18,10 +21,18 @@ public class MainGUI { // Singleton
     private JPanel panel1;
     private JScrollPane jscrPane;
     private JTable tblMain;
+    private JButton btnRemove;
+
+    private enum TableType {
+        CAMERA,
+        RENT
+    }
+
+    private TableType currentTableType = null;
 
     public MainGUI() {
         // Singleton
-        if(MainGUI.instance != null)
+        if (MainGUI.instance != null)
             throw new RuntimeException("MainGUI is a singleton class. Use getInstance() instead.");
         else
             instance = this;
@@ -34,7 +45,7 @@ public class MainGUI { // Singleton
         return instance;
     }
 
-    private void initCameraTable(){
+    private void initCameraTable() {
         CameraModel cameraModel = CameraModel.getInstance();
         try {
             cameraModel.getData();
@@ -71,7 +82,7 @@ public class MainGUI { // Singleton
                     irm.DenumireTip = dtm.getValueAt(row, 8).toString();
                     irm.DenumireMontura = dtm.getValueAt(row, 9).toString();
 
-                    switch(column){
+                    switch (column) {
                         case 0:
                             irm.IDCamera = Integer.parseInt(value);
                             break;
@@ -125,6 +136,7 @@ public class MainGUI { // Singleton
             }
 
             this.tblMain.getModel().addTableModelListener(new TableModelEvents());
+            this.currentTableType = TableType.CAMERA;
         } catch (Exception e) {
             System.out.println("Error in trying to initialize camera table: " + e.getMessage());
         }
@@ -144,14 +156,14 @@ public class MainGUI { // Singleton
             RowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>(rm);
             tblMain.setRowSorter(sorter);
 
-           class TableModelEvents implements TableModelListener {
-               public boolean isCellEditable(int row, int column) {
-                   return column <= 5;
-               }
+            class TableModelEvents implements TableModelListener {
+                public boolean isCellEditable(int row, int column) {
+                    return column <= 5;
+                }
 
-                public void setValueAt(String value, int row, int column) throws Exception {
+               public void setValueAt(String value, int row, int column) throws Exception {
                     RentModel rm = RentModel.getInstance();
-                    ModelList<RentModel.InnerRentModel> modelList = new ModelList<RentModel.InnerRentModel>();
+                    ModelList<RentModel.InnerRentModel> modelList = new ModelList<>();
                     RentModel.InnerRentModel irm = new RentModel.InnerRentModel();
                     DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
 
@@ -164,7 +176,7 @@ public class MainGUI { // Singleton
                     irm.IDOBIECTIV = Integer.parseInt(dtm.getValueAt(row, 6).toString());
                     irm.IDANGAJAT = Integer.parseInt(dtm.getValueAt(row, 7).toString());
 
-                    switch(column){
+                    switch (column) {
                         case 0:
                             irm.DURATA_IN_ZILE = Integer.parseInt(value);
                             break;
@@ -197,24 +209,60 @@ public class MainGUI { // Singleton
                     rm.updateData(modelList);
                 }
 
-               @Override
-               public void tableChanged(TableModelEvent e) {
-                     if (e.getType() == TableModelEvent.UPDATE) {
-                          int row = e.getFirstRow();
-                          int column = e.getColumn();
-                          try {
+                @Override
+                public void tableChanged(TableModelEvent e) {
+                    if (e.getType() == TableModelEvent.UPDATE) {
+                        int row = e.getFirstRow();
+                        int column = e.getColumn();
+                        try {
                             setValueAt((String) tblMain.getValueAt(row, column), row, column);
-                          } catch (Exception ex) {
+                        } catch (Exception ex) {
                             System.out.println("Error in trying to update rent table: " + ex.getMessage());
-                          }
-                     }
-               }
-           }
+                        }
+                    }
+                }
+            }
 
             this.tblMain.getModel().addTableModelListener(new TableModelEvents());
+            this.currentTableType = TableType.RENT;
         } catch (Exception e) {
             System.out.println("Error in trying to initialize rent table: " + e.getMessage());
         }
+    }
+
+    private void removeRowFromCameraModel(int row) throws Exception{
+        CameraModel rm = CameraModel.getInstance();
+        ModelList<CameraModel.InnerCameraModel> modelList = new ModelList<>();
+        CameraModel.InnerCameraModel irm = new CameraModel.InnerCameraModel();
+        DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
+
+        irm.IDCamera = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+
+        modelList.add(irm);
+        rm.deleteRow(modelList);
+
+        dtm.removeRow(row);
+    }
+
+    private void removeRowFromRentModel(int row) throws Exception {
+        RentModel rm = RentModel.getInstance();
+        ModelList<RentModel.InnerRentModel> modelList = new ModelList<>();
+        RentModel.InnerRentModel irm = new RentModel.InnerRentModel();
+        DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
+
+        irm.DURATA_IN_ZILE = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+        irm.ESTE_RETURNAT = Boolean.parseBoolean(dtm.getValueAt(row, 1).toString());
+        irm.PENALIZARE = Double.parseDouble(dtm.getValueAt(row, 2).toString());
+        irm.DATA_INCHIRIERE = Date.valueOf(dtm.getValueAt(row, 3).toString());
+        irm.IDCAMERA = Integer.parseInt(dtm.getValueAt(row, 4).toString());
+        irm.IDCLIENT = Integer.parseInt(dtm.getValueAt(row, 5).toString());
+        irm.IDOBIECTIV = Integer.parseInt(dtm.getValueAt(row, 6).toString());
+        irm.IDANGAJAT = Integer.parseInt(dtm.getValueAt(row, 7).toString());
+
+        modelList.add(irm);
+        rm.deleteRow(modelList);
+
+        dtm.removeRow(row);
     }
 
     public void main(String[] args) {
@@ -268,7 +316,7 @@ public class MainGUI { // Singleton
 
         GridBagConstraints c2 = new GridBagConstraints();
         c2.gridx = 0;
-        c2.gridy = 1;
+        c2.gridy = 0;
         c2.gridwidth = 3;
         c2.gridheight = 2;
         c2.weightx = 1;
@@ -277,6 +325,39 @@ public class MainGUI { // Singleton
         c2.fill = GridBagConstraints.BOTH;
         this.panel1 = new JPanel(new GridBagLayout());
         this.panel1.add(this.jscrPane, c2);
+
+        c2.gridx = 0;
+        c2.gridy = 2;
+        c2.gridwidth = 1;
+        c2.gridheight = 1;
+        c2.weightx = 1;
+        c2.weighty = 0.1;
+        c2.anchor = GridBagConstraints.NORTH;
+        c2.fill = GridBagConstraints.BOTH;
+        this.btnRemove = new JButton("Remove");
+        this.btnRemove.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int row = tblMain.convertRowIndexToModel(tblMain.getSelectedRow());
+                if (row != -1) {
+                    try {
+                        if(currentTableType == TableType.RENT)
+                            removeRowFromRentModel(row);
+                        else
+                            removeRowFromCameraModel(row);
+                    } catch (SQLException ex) {
+                        JDialog dialog = new JDialog();
+                        dialog.setAlwaysOnTop(true);
+                        JOptionPane.showMessageDialog(dialog, "Cannot delete row because it is referenced by another table");
+
+                        System.out.println("Error in trying to remove row from table model: " + ex.getMessage());
+                    } catch (Exception ex) {
+                        System.out.println("Error in trying to remove row from table model: " + ex.getMessage());
+                    }
+                }
+            }
+        });
+        this.panel1.add(this.btnRemove, c2);
 
         frame.getContentPane().add(this.panel1);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

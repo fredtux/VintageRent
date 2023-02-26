@@ -130,6 +130,7 @@ public abstract class DatabaseConnection {
     public abstract void insert(String tableName, String[] columns, List<String[]> values) throws Exception;
 
     public abstract void delete(String tableName, String[] columns, List<String[]> values) throws Exception;
+    public abstract void delete(String tableName, Map<String, String> where) throws Exception;
 
     public abstract void drop(String tableName) throws Exception;
 
