@@ -7,7 +7,10 @@ import org.database.DatabaseConnection;
 
 import java.io.*;
 import java.sql.ResultSet;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+
 import com.mockrunner.mock.jdbc.MockResultSet;
 
 public class CsvConnection extends DatabaseConnection {
@@ -83,12 +86,6 @@ public class CsvConnection extends DatabaseConnection {
 
     @Override
     public boolean isInitialized() throws Exception {
-        try{
-            logger.log("CsvConnection check initialization");
-        } catch (Exception ex) {
-            System.out.println("Error logging to CSV: " + ex.getMessage());
-        }
-
         try {
             ClassLoader classLoader = getClass().getClassLoader();
             Reader r = new BufferedReader(new FileReader(classLoader.getResource(path).getFile()));
@@ -102,8 +99,19 @@ public class CsvConnection extends DatabaseConnection {
 
             this.reader.close();
             r.close();
+
+            try{
+                logger.log("CsvConnection check initialization");
+            } catch (Exception ex) {
+                System.out.println("Error logging to CSV: " + ex.getMessage());
+            }
             return false;
         } catch (Exception ex) {
+            try{
+                logger.log("CsvConnection check initialization");
+            } catch (Exception ex2) {
+                System.out.println("Error logging to CSV: " + ex2.getMessage());
+            }
             return false;
         }
     }
@@ -131,8 +139,69 @@ public class CsvConnection extends DatabaseConnection {
     }
 
     @Override
-    public void update(String query) throws Exception {
-        throw new UnsupportedOperationException("Not supported without primary key");
+    public void update(String tableName, Map<String, String> set, Map<String, String> where) throws Exception {
+        this.setPath(tableName);
+        ClassLoader classLoader = getClass().getClassLoader();
+        Reader r = new BufferedReader(new FileReader(classLoader.getResource("CSV/" + this.path).getFile()));
+        this.reader = new CSVReader(r);
+
+        List<String[]> lresult = this.reader.readAll();
+
+        this.reader.close();
+
+        List<String> headers = null;
+        List<String[]> sdata = null;
+        List<List<Object>> data = null;
+
+        // Get first line and set headers
+        if(lresult.size() > 0){
+            headers = Arrays.asList(lresult.get(0));
+        }
+
+        // Use the rest of the lines as data
+        if(lresult.size() > 1){
+            sdata = lresult.subList(1, lresult.size());
+        }
+
+        // Transform sdata to data
+        if(sdata != null){
+            data = new java.util.ArrayList<List<Object>>();
+            for (String[] strings : sdata) {
+                data.add(Arrays.asList(strings));
+            }
+        }
+
+        // Update data
+        for (List<Object> list : data) {
+            for (int i = 0; i < list.size(); i++) {
+                for (Map.Entry<String, String> entry : set.entrySet()) {
+                    if(headers.get(i).equals(entry.getKey()) && this.hasPrimaryKey(headers, where, list)){
+                        list.set(i, entry.getValue());
+                    }
+                }
+            }
+        }
+
+        // Write data to file
+        this.writer = new CSVWriter(new FileWriter(classLoader.getResource("CSV/" + this.path).getFile()));
+        this.writer.writeNext(headers.toArray(new String[headers.size()]));
+        for (List<Object> list : data) {
+            this.writer.writeNext(list.toArray(new String[list.size()]));
+        }
+        this.writer.close();
+    }
+
+    private boolean hasPrimaryKey(List<String> headers, Map<String, String> where, List<Object> row) {
+        int counter = 0;
+        for (Map.Entry<String, String> entry : where.entrySet()) {
+            for (int i = 0; i < headers.size(); i++) {
+                if(headers.get(i).equals(entry.getKey()) && row.get(i).equals(entry.getValue())){
+                    ++counter;
+                }
+            }
+        }
+
+        return counter == where.size();
     }
 
     @Override

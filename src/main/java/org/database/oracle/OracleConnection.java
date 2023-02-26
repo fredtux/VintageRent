@@ -8,6 +8,7 @@ import java.io.*;
 import java.sql.*;
 import java.util.List;
 import java.util.Date;
+import java.util.Map;
 
 public class OracleConnection extends DatabaseConnection {
     private static OracleConnection instance = null;
@@ -154,9 +155,20 @@ public class OracleConnection extends DatabaseConnection {
     }
 
     @Override
-    public void update(String query) throws Exception {
+    public void update(String tableName, Map<String, String> set, Map<String, String> where) throws Exception {
         Statement stmt = null;
         try{
+            String query = "UPDATE " + tableName + " SET ";
+            for(Map.Entry<String, String> entry : set.entrySet()){
+                query += entry.getKey() + " = " + entry.getValue() + ", ";
+            }
+            query = query.substring(0, query.length() - 2);
+            query += " WHERE ";
+            for(Map.Entry<String, String> entry : where.entrySet()){
+                query += entry.getKey() + " = " + entry.getValue() + " AND ";
+            }
+            query = query.substring(0, query.length() - 5);
+
             stmt = this.conn.createStatement();
             stmt.executeUpdate(query);
         } catch (SQLException ex) {

@@ -7,10 +7,13 @@ import javax.swing.table.DefaultTableModel;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RentModel extends Model implements LinkModelToDatabase<ModelList<RentModel.InnerRentModel>> {
     public static class InnerRentModel{
@@ -152,7 +155,24 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
     @Override
     public void updateData(ModelList<InnerRentModel> oneRow) throws Exception {
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
-        db.update("UPDATE " + this.tableName + " SET DURATAINZILE = " + oneRow.get(0).DURATA_IN_ZILE + ", ESTERETURNAT = " + (oneRow.get(0).ESTE_RETURNAT ? "'1'" : "'0'") + ", PENALIZARE = " + oneRow.get(0).PENALIZARE + ", DATAINCHIRIERE = DATE'" + oneRow.get(0).DATA_INCHIRIERE + "', IDCAMERA = " + oneRow.get(0).IDCAMERA + ", IDCLIENT = " + oneRow.get(0).IDCLIENT + ", IDOBIECTIV = " + oneRow.get(0).IDOBIECTIV + ", IDANGAJAT = " + oneRow.get(0).IDANGAJAT + " WHERE IDANGAJAT = " + oneRow.get(0).IDANGAJAT + " AND IDCAMERA = " + oneRow.get(0).IDCAMERA + " AND IDCLIENT = " + oneRow.get(0).IDCLIENT + " AND IDOBIECTIV = " + oneRow.get(0).IDOBIECTIV);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
+
+        Map<String, String> set = new HashMap<>();
+        set.put("DURATAINZILE", oneRow.get(0).DURATA_IN_ZILE + "");
+        set.put("ESTERETURNAT", oneRow.get(0).ESTE_RETURNAT ? "'1'" : "'0'");
+        set.put("PENALIZARE", oneRow.get(0).PENALIZARE + "");
+        if(databaseType == DatabaseConnection.DatabaseType.ORACLE)
+            set.put("DATAINCHIRIERE", "TO_DATE('" + oneRow.get(0).DATA_INCHIRIERE + "', 'YYYY-MM-DD HH24:MI:SS')");
+        else if(databaseType == DatabaseConnection.DatabaseType.CSV){
+            set.put("DATAINCHIRIERE", oneRow.get(0).DATA_INCHIRIERE + "");
+        }
+
+        Map<String, String> where = new HashMap<>();
+        where.put("IDANGAJAT", oneRow.get(0).IDANGAJAT + "");
+        where.put("IDCAMERA", oneRow.get(0).IDCAMERA + "");
+        where.put("IDCLIENT", oneRow.get(0).IDCLIENT + "");
+        where.put("IDOBIECTIV", oneRow.get(0).IDOBIECTIV + "");
+        db.update(this.tableName, set, where);
     }
 
     @Override

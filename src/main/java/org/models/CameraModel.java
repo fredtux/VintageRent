@@ -7,7 +7,9 @@ import javax.swing.table.DefaultTableModel;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CameraModel extends Model implements LinkModelToDatabase<ModelList<CameraModel.InnerCameraModel>> {
     public static class InnerCameraModel implements Comparable<InnerCameraModel> {
@@ -28,7 +30,7 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
             return this.IDCamera - o.IDCamera;
         }
     }
-    private final String tableName = "CAMERE";
+    private String tableName = "CAMERE";
 
     private static CameraModel instance = null;
     private ModelList<InnerCameraModel> modelList = null;
@@ -77,6 +79,10 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
 
         this.name = "Camera";
         this.databaseType = t;
+        if(t == DatabaseConnection.DatabaseType.CSV)
+            this.tableName = "Camere.csv";
+        else
+            this.tableName = "CAMERE";
     }
 
     private void transferToModelList(ResultSet rs) throws Exception{
@@ -172,7 +178,16 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
     @Override
     public void updateData(ModelList<InnerCameraModel> oneRow) throws Exception {
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
-        db.update("UPDATE " + this.tableName + " SET MARCA = '" + oneRow.get(0).Marca + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRET = " + oneRow.get(0).Pret + ", PRETINCHIRIERE = " + oneRow.get(0).PretInchiriere + ", ANFABRICATIE = " + oneRow.get(0).AnFabricatie + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
+        Map<String, String> set = new HashMap<>();
+        set.put("MARCA", "'" + oneRow.get(0).Marca + "'");
+        set.put("MODELCAMERA", "'" + oneRow.get(0).ModelCamera + "'");
+        set.put("PRET", String.valueOf(oneRow.get(0).Pret));
+        set.put("PRETINCHIRIERE", String.valueOf(oneRow.get(0).PretInchiriere));
+        set.put("ANFABRICATIE", String.valueOf(oneRow.get(0).AnFabricatie));
+        Map<String, String> where = new HashMap<>();
+        where.put("IDCAMERA", String.valueOf(oneRow.get(0).IDCamera));
+        db.update(this.tableName, set, where);
+//        db.update("UPDATE " + this.tableName + " SET MARCA = '" + oneRow.get(0).Marca + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRET = " + oneRow.get(0).Pret + ", PRETINCHIRIERE = " + oneRow.get(0).PretInchiriere + ", ANFABRICATIE = " + oneRow.get(0).AnFabricatie + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
     }
 
     @Override

@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public abstract class DatabaseConnection {
     protected static ArrayList<DatabaseConnection> instances = new ArrayList<>();
@@ -118,7 +119,7 @@ public abstract class DatabaseConnection {
 
     public abstract void init() throws Exception;
 
-    public abstract void update(String query) throws Exception;
+    public abstract void update(String tableName, Map<String, String> set, Map<String, String> where) throws Exception;
 
     public abstract ResultSet getAllTableData(String tableName) throws Exception;
 
