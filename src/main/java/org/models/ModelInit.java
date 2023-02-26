@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 public class ModelInit {
-    private static String[] modelNames = {"Administrator_Subdomenii", "Administratori", "Adrese", "Angajati", "Camere","Clienti", "Format", "Inchiriere", "Montura", "Obiective", "Salariu", "TipCamera", "TipClient", "Utilizatori"};
+    private static String[] modelNames = {"Inchiriere", "Administrator_Subdomenii", "Administratori", "Adrese", "Angajati", "Camere","Clienti", "Format", "Montura", "Obiective", "Salariu", "TipCamera", "TipClient", "Utilizatori"};
     public static void init() throws Exception{
         DatabaseConnection db = OracleConnection.getInstance(DatabaseConnection.DatabaseType.ORACLE);
         db.connect();
@@ -49,9 +49,8 @@ public class ModelInit {
                     ArrayList<String[]> dataStrings = new ArrayList<>();
                     for (ArrayList<String> row : data) {
                         String[] rowStrings = new String[row.size()];
-                        for (String cell : row) {
-                            rowStrings[row.indexOf(cell)] = cell;
-                        }
+                        for(int i = 0; i < row.size(); i++)
+                            rowStrings[i] = row.get(i);
                         dataStrings.add(rowStrings);
                     }
 

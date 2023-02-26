@@ -7,6 +7,8 @@ import javax.swing.table.DefaultTableModel;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +23,7 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
         public int IDOBIECTIV;
         public int IDANGAJAT;
     }
-    private final String tableName = "INCHIRIERE";
+    private String tableName = "INCHIRIERE";
 
     private static RentModel instance = null;
     private ModelList<InnerRentModel> modelList = null;
@@ -69,6 +71,10 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
 
         this.name = "Rent";
         this.databaseType = t;
+        if(t == DatabaseConnection.DatabaseType.CSV)
+            this.tableName = "Inchiriere.csv";
+        else if(t == DatabaseConnection.DatabaseType.ORACLE)
+            this.tableName = "INCHIRIERE";
     }
 
     private void transferToModelList(ResultSet rs) throws Exception{
@@ -77,7 +83,12 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
         while(rs.next()){
             InnerRentModel model = new InnerRentModel();
             model.DURATA_IN_ZILE = rs.getInt("DURATAINZILE");
-            model.DATA_INCHIRIERE = rs.getDate("DATAINCHIRIERE");
+            try {
+                model.DATA_INCHIRIERE = rs.getDate("DATAINCHIRIERE");
+            } catch (Exception e) {
+                LocalDateTime localDateTime = LocalDateTime.parse(rs.getString("DATAINCHIRIERE"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                model.DATA_INCHIRIERE = Date.valueOf(localDateTime.toLocalDate());
+            }
             model.IDANGAJAT = rs.getInt("IDANGAJAT");
             model.IDCAMERA = rs.getInt("IDCAMERA");
             model.IDCLIENT = rs.getInt("IDCLIENT");

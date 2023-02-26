@@ -139,7 +139,7 @@ public class CsvConnection extends DatabaseConnection {
     public ResultSet getAllTableData(String tableName) throws Exception {
         this.setPath(tableName);
         ClassLoader classLoader = getClass().getClassLoader();
-        Reader r = new BufferedReader(new FileReader(classLoader.getResource("/CSV/" + this.path).getFile()));
+        Reader r = new BufferedReader(new FileReader(classLoader.getResource("CSV/" + this.path).getFile()));
         this.reader = new CSVReader(r);
 
         List<String[]> lresult = this.reader.readAll();
@@ -179,7 +179,7 @@ public class CsvConnection extends DatabaseConnection {
             throw new Exception("null parameters");
         }
 
-        if (headers.size() != data.size()) {
+        if (headers.size() != data.get(0).size()) {
             throw new Exception("parameters size are not equals");
         }
 
