@@ -1,5 +1,6 @@
 package org.vintage;
 
+import com.formdev.flatlaf.FlatDarkLaf;
 import org.database.oracle.OracleConnection;
 import org.gui.main.MainGUI;
 import org.gui.splash.Splash;
@@ -14,6 +15,8 @@ public class Main {
 
     public static final String ORACLE_DB_ADDR = "172.20.128.2";
     public static void main(String[] args) {
+        FlatDarkLaf.setup();
+        System.setProperty("flatlaf.menuBarEmbedded", "false");
 
         Thread tmain = new Thread(new Runnable() {
             @Override

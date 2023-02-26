@@ -10,7 +10,6 @@ public class MainGUI { // Singleton
     private static MainGUI instance = null;
 
     private JPanel panel1;
-    private JPanel pnlMain;
     private JScrollPane jscrPane;
     private JTable tblMain;
 
@@ -30,11 +29,12 @@ public class MainGUI { // Singleton
     }
 
     private void initRentTable() {
-        this.tblMain = new JTable();
         RentModel rentModel = new RentModel();
         try {
             rentModel.getData();
-            this.tblMain.setModel(rentModel.getTableModel());
+            DefaultTableModel rm = rentModel.getTableModel();
+            this.tblMain.setModel(rm);
+            rm.fireTableDataChanged();
         } catch (Exception e) {
             System.out.println("Error in trying to initialize rent table: " + e.getMessage());
         }
@@ -42,25 +42,44 @@ public class MainGUI { // Singleton
 
     public void main(String[] args) {
         JFrame frame = new JFrame("Vintage Rent");
-        frame.setContentPane(this.panel1);
+
+        JMenuBar menuBar = new JMenuBar();
+        JMenu menu = new JMenu("File");
+        menuBar.add(menu);
+        JMenuItem menuItem = new JMenuItem("Exit");
+        menuItem.addActionListener(e -> System.exit(0));
+        menu.add(menuItem);
+
+        JMenu menu2 = new JMenu("About");
+        menuBar.add(menu2);
+
+        frame.setJMenuBar(menuBar);
+
+        this.jscrPane.setViewportView(this.tblMain);
+
+        GridBagConstraints c2 = new GridBagConstraints();
+        c2.gridx = 0;
+        c2.gridy = 1;
+        c2.gridwidth = 3;
+        c2.gridheight = 2;
+        c2.weightx = 1;
+        c2.weighty = 0.1;
+        c2.anchor = GridBagConstraints.NORTH;
+        c2.fill = GridBagConstraints.BOTH;
+        this.panel1.add(this.jscrPane,c2);
+
+        frame.getContentPane().add(this.panel1);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        // Add rent table
-        initRentTable();
-        DefaultTableModel tableModel = (DefaultTableModel) this.tblMain.getModel();
-        tableModel.fireTableStructureChanged();
-        System.out.println(this.tblMain.getModel().getRowCount());
-
-        // Center frame
-        int x = (int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() - frame.getWidth()) / 2;
-        int y = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() - frame.getHeight()) / 2;
-        frame.setLocation(x, y);
-
-        // Frame size 600x400
-//        frame.setSize(600, 400);
 
         frame.pack();
         frame.setVisible(true);
+
+        initRentTable();
+
+//        // Frame size 600x400
+        frame.setSize(800, 600);
+        frame.setLocationRelativeTo(null);
+
     }
 
 

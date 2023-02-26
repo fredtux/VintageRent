@@ -31,7 +31,7 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList> {
     public DefaultTableModel getTableModel() {
         String columns[] = {"DURATA_IN_ZILE", "ESTE_RETURNAT", "PENALIZARE", "DATA_INCHIRIERE", "IDCAMERA", "IDCLIENT", "IDOBIECTIV", "IDANGAJAT"};
 
-        DefaultTableModel tableModel = new DefaultTableModel(columns, 10);
+        DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
         for(InnerRentModel model : this.modelList.getList()){
             Object obj[] = {model.DURATA_IN_ZILE, model.ESTE_RETURNAT, model.PENALIZARE, model.DATA_INCHIRIERE, model.IDCAMERA, model.IDCLIENT, model.IDOBIECTIV, model.IDANGAJAT};
             tableModel.addRow(obj);
