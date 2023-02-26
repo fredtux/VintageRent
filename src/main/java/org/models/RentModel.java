@@ -1,13 +1,12 @@
 package org.models;
 
 import org.database.DatabaseConnection;
-import org.database.oracle.OracleConnection;
 
 import javax.swing.table.DefaultTableModel;
 import java.sql.Date;
 import java.sql.ResultSet;
 
-public class RentModel extends Model implements LinkModelToDatabase<ModelList> {
+public class RentModel extends Model implements LinkModelToDatabase<ModelList<RentModel.InnerRentModel>> {
     public static class InnerRentModel{
         public int DURATA_IN_ZILE;
         public boolean ESTE_RETURNAT;
@@ -18,7 +17,7 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList> {
         public int IDOBIECTIV;
         public int IDANGAJAT;
     }
-    private String tableName = "INCHIRIERE";
+    private final String tableName = "INCHIRIERE";
 
     private static RentModel instance = null;
     private ModelList<InnerRentModel> modelList = null;
@@ -35,11 +34,11 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList> {
     }
 
     public DefaultTableModel getTableModel() {
-        String columns[] = {"DURATA_IN_ZILE", "ESTE_RETURNAT", "PENALIZARE", "DATA_INCHIRIERE", "IDCAMERA", "IDCLIENT", "IDOBIECTIV", "IDANGAJAT"};
+        String[] columns = {"DURATA_IN_ZILE", "ESTE_RETURNAT", "PENALIZARE", "DATA_INCHIRIERE", "IDCAMERA", "IDCLIENT", "IDOBIECTIV", "IDANGAJAT"};
 
         DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
         for(InnerRentModel model : this.modelList.getList()){
-            Object obj[] = {model.DURATA_IN_ZILE, model.ESTE_RETURNAT, model.PENALIZARE, model.DATA_INCHIRIERE, model.IDCAMERA, model.IDCLIENT, model.IDOBIECTIV, model.IDANGAJAT};
+            Object[] obj = {model.DURATA_IN_ZILE, model.ESTE_RETURNAT, model.PENALIZARE, model.DATA_INCHIRIERE, model.IDCAMERA, model.IDCLIENT, model.IDOBIECTIV, model.IDANGAJAT};
             tableModel.addRow(obj);
         }
 
@@ -57,7 +56,7 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList> {
     }
 
     private void transferToModelList(ResultSet rs) throws Exception{
-        this.modelList = new ModelList<InnerRentModel>();
+        this.modelList = new ModelList<>();
 
         while(rs.next()){
             InnerRentModel model = new InnerRentModel();
@@ -75,7 +74,7 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList> {
 
     @Override
     public ModelList<InnerRentModel> getData() throws Exception{
-        DatabaseConnection db = OracleConnection.getInstance();
+        DatabaseConnection db = DatabaseConnection.getInstance();
         ResultSet rs = db.executeQuery("SELECT * FROM " + this.tableName);
 
         this.transferToModelList(rs);
@@ -85,7 +84,7 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList> {
 
     @Override
     public ModelList<InnerRentModel> getData(String whereClause)  throws Exception{
-        DatabaseConnection db = OracleConnection.getInstance();
+        DatabaseConnection db = DatabaseConnection.getInstance();
         ResultSet rs = db.executeQuery("SELECT * FROM " + this.tableName + " WHERE " + whereClause);
 
         this.transferToModelList(rs);
@@ -95,7 +94,7 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList> {
 
     @Override
     public ModelList<InnerRentModel> getData(String whereClause, String orderBy)  throws Exception{
-        DatabaseConnection db = OracleConnection.getInstance();
+        DatabaseConnection db = DatabaseConnection.getInstance();
         ResultSet rs = db.executeQuery("SELECT * FROM " + this.tableName + " WHERE " + whereClause + " ORDER BY " + orderBy);
 
         this.transferToModelList(rs);
@@ -105,7 +104,7 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList> {
 
     @Override
     public ModelList<InnerRentModel> getData(String whereClause, String orderBy, String limit)  throws Exception{
-        DatabaseConnection db = OracleConnection.getInstance();
+        DatabaseConnection db = DatabaseConnection.getInstance();
         ResultSet rs = db.executeQuery("SELECT * FROM " + this.tableName + " WHERE " + whereClause + " ORDER BY " + orderBy + " FETCH NEXT " + limit + " ROWS ONLY");
 
         this.transferToModelList(rs);
@@ -115,7 +114,7 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList> {
 
     @Override
     public ModelList<InnerRentModel> getData(String whereClause, String orderBy, String limit, String offset)  throws Exception{
-        DatabaseConnection db = OracleConnection.getInstance();
+        DatabaseConnection db = DatabaseConnection.getInstance();
         ResultSet rs = db.executeQuery("SELECT * FROM " + this.tableName + " WHERE " + whereClause + " ORDER BY " + orderBy + " OFFSET " + offset + " ROWS FETCH NEXT " + limit + " ROWS ONLY");
 
         this.transferToModelList(rs);
@@ -124,10 +123,8 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList> {
     }
 
     @Override
-    public void updateData(ModelList row) throws Exception {
-        ModelList<InnerRentModel> oneRow = (ModelList<InnerRentModel>) row;
-
-        DatabaseConnection db = OracleConnection.getInstance();
+    public void updateData(ModelList<InnerRentModel> oneRow) throws Exception {
+        DatabaseConnection db = DatabaseConnection.getInstance();
         db.update("UPDATE " + this.tableName + " SET DURATAINZILE = " + oneRow.get(0).DURATA_IN_ZILE + ", ESTERETURNAT = " + (oneRow.get(0).ESTE_RETURNAT ? "'1'" : "'0'") + ", PENALIZARE = " + oneRow.get(0).PENALIZARE + ", DATAINCHIRIERE = DATE'" + oneRow.get(0).DATA_INCHIRIERE + "', IDCAMERA = " + oneRow.get(0).IDCAMERA + ", IDCLIENT = " + oneRow.get(0).IDCLIENT + ", IDOBIECTIV = " + oneRow.get(0).IDOBIECTIV + ", IDANGAJAT = " + oneRow.get(0).IDANGAJAT + " WHERE IDANGAJAT = " + oneRow.get(0).IDANGAJAT + " AND IDCAMERA = " + oneRow.get(0).IDCAMERA + " AND IDCLIENT = " + oneRow.get(0).IDCLIENT + " AND IDOBIECTIV = " + oneRow.get(0).IDOBIECTIV);
     }
 }

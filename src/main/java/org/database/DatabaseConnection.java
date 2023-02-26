@@ -17,7 +17,7 @@ public abstract class DatabaseConnection {
     protected String port;
     protected String connString;
 
-    public static DatabaseConnection getInstance() throws Exception {
+    public static DatabaseConnection getInstance() throws RuntimeException {
         if(instance == null)
             throw new RuntimeException("No instance of DatabaseConnection has been created");
 

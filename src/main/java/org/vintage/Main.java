@@ -1,6 +1,7 @@
 package org.vintage;
 
 import com.formdev.flatlaf.FlatDarkLaf;
+import org.database.DatabaseConnection;
 import org.database.oracle.OracleConnection;
 import org.gui.main.MainGUI;
 import org.gui.splash.Splash;
@@ -32,7 +33,7 @@ public class Main {
                             public void run() {
                                 try {
                                     // Connect to Oracle Database and check if it's initialized
-                                    OracleConnection orcl = new OracleConnection(ORACLE_DB_ADDR, "c##tux", "fmilove", "oracle.jdbc.driver.OracleDriver", "ORCLCDB", "C##TUX", "1521");
+                                    DatabaseConnection orcl = new OracleConnection(ORACLE_DB_ADDR, "c##tux", "fmilove", "oracle.jdbc.driver.OracleDriver", "ORCLCDB", "C##TUX", "1521");
                                     orcl.connect();
 
                                     if(!orcl.isInitialized())

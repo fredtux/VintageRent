@@ -1,13 +1,11 @@
 package org.models;
 
 import org.database.DatabaseConnection;
-import org.database.oracle.OracleConnection;
 
 import javax.swing.table.DefaultTableModel;
-import java.sql.Date;
 import java.sql.ResultSet;
 
-public class CameraModel extends Model implements LinkModelToDatabase<ModelList> {
+public class CameraModel extends Model implements LinkModelToDatabase<ModelList<CameraModel.InnerCameraModel>> {
     public static class InnerCameraModel implements Comparable<InnerCameraModel> {
         public String Marca;
         public String ModelCamera;
@@ -26,7 +24,7 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList>
             return this.IDCamera - o.IDCamera;
         }
     }
-    private String tableName = "CAMERE";
+    private final String tableName = "CAMERE";
 
     private static CameraModel instance = null;
     private ModelList<InnerCameraModel> modelList = null;
@@ -43,11 +41,11 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList>
     }
 
     public DefaultTableModel getTableModel() {
-        String columns[] = {"IDCamera", "Marca", "ModelCamera", "AnFabricatie", "Pret", "PretInchiriere", "DenumireFormat", "LatimeFilm", "DenumireTip", "DenumireMontura"};
+        String[] columns = {"IDCamera", "Marca", "ModelCamera", "AnFabricatie", "Pret", "PretInchiriere", "DenumireFormat", "LatimeFilm", "DenumireTip", "DenumireMontura"};
 
         DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
         for(InnerCameraModel model : this.modelList.getList()){
-            Object obj[] = {model.IDCamera, model.Marca, model.ModelCamera, model.AnFabricatie, model.Pret, model.PretInchiriere, model.DenumireFormat, model.LatimeFilm, model.DenumireTip, model.DenumireMontura};
+            Object[] obj = {model.IDCamera, model.Marca, model.ModelCamera, model.AnFabricatie, model.Pret, model.PretInchiriere, model.DenumireFormat, model.LatimeFilm, model.DenumireTip, model.DenumireMontura};
             tableModel.addRow(obj);
         }
 
@@ -66,7 +64,7 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList>
     }
 
     private void transferToModelList(ResultSet rs) throws Exception{
-        this.modelList = new ModelList<InnerCameraModel>(true);
+        this.modelList = new ModelList<>(true);
 
         while(rs.next()){
             InnerCameraModel model = new InnerCameraModel();
@@ -87,7 +85,7 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList>
 
     @Override
     public ModelList<InnerCameraModel> getData() throws Exception{
-        DatabaseConnection db = OracleConnection.getInstance();
+        DatabaseConnection db = DatabaseConnection.getInstance();
         ResultSet rs = db.executeQuery("SELECT IDCAMERA, MARCA, MODELCAMERA, F.DENUMIRE AS DENUMIREFORMAT, F.LATIMEFILM, T.DENUMIRE AS DENUMIRETIP, M.DENUMIRE AS DENUMIREMONTURA, ANFABRICATIE, PRET, PRETINCHIRIERE\n" +
                 "FROM CAMERE\n" +
                 "    INNER JOIN FORMAT F on CAMERE.IDFORMAT = F.IDFORMAT\n" +
@@ -101,7 +99,7 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList>
 
     @Override
     public ModelList<InnerCameraModel> getData(String whereClause)  throws Exception{
-        DatabaseConnection db = OracleConnection.getInstance();
+        DatabaseConnection db = DatabaseConnection.getInstance();
         ResultSet rs = db.executeQuery("SELECT IDCAMERA, MARCA, MODELCAMERA, F.DENUMIRE AS DENUMIREFORMAT, F.LATIMEFILM, T.DENUMIRE AS DENUMIRETIP, M.DENUMIRE AS DENUMIREMONTURA, ANFABRICATIE, PRET, PRETINCHIRIERE\n" +
                 "FROM CAMERE\n" +
                 "    INNER JOIN FORMAT F on CAMERE.IDFORMAT = F.IDFORMAT\n" +
@@ -115,7 +113,7 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList>
 
     @Override
     public ModelList<InnerCameraModel> getData(String whereClause, String orderBy)  throws Exception{
-        DatabaseConnection db = OracleConnection.getInstance();
+        DatabaseConnection db = DatabaseConnection.getInstance();
         ResultSet rs = db.executeQuery("SELECT IDCAMERA, MARCA, MODELCAMERA, F.DENUMIRE AS DENUMIREFORMAT, F.LATIMEFILM, T.DENUMIRE AS DENUMIRETIP, M.DENUMIRE AS DENUMIREMONTURA, ANFABRICATIE, PRET, PRETINCHIRIERE\n" +
                 "FROM CAMERE\n" +
                 "    INNER JOIN FORMAT F on CAMERE.IDFORMAT = F.IDFORMAT\n" +
@@ -129,7 +127,7 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList>
 
     @Override
     public ModelList<InnerCameraModel> getData(String whereClause, String orderBy, String limit)  throws Exception{
-        DatabaseConnection db = OracleConnection.getInstance();
+        DatabaseConnection db = DatabaseConnection.getInstance();
         ResultSet rs = db.executeQuery("SELECT IDCAMERA, MARCA, MODELCAMERA, F.DENUMIRE AS DENUMIREFORMAT, F.LATIMEFILM, T.DENUMIRE AS DENUMIRETIP, M.DENUMIRE AS DENUMIREMONTURA, ANFABRICATIE, PRET, PRETINCHIRIERE\n" +
                 "FROM CAMERE\n" +
                 "    INNER JOIN FORMAT F on CAMERE.IDFORMAT = F.IDFORMAT\n" +
@@ -143,7 +141,7 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList>
 
     @Override
     public ModelList<InnerCameraModel> getData(String whereClause, String orderBy, String limit, String offset)  throws Exception{
-        DatabaseConnection db = OracleConnection.getInstance();
+        DatabaseConnection db = DatabaseConnection.getInstance();
         ResultSet rs = db.executeQuery("SELECT IDCAMERA, MARCA, MODELCAMERA, F.DENUMIRE AS DENUMIREFORMAT, F.LATIMEFILM, T.DENUMIRE AS DENUMIRETIP, M.DENUMIRE AS DENUMIREMONTURA, ANFABRICATIE, PRET, PRETINCHIRIERE\n" +
                 "FROM CAMERE\n" +
                 "    INNER JOIN FORMAT F on CAMERE.IDFORMAT = F.IDFORMAT\n" +
@@ -156,10 +154,8 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList>
     }
 
     @Override
-    public void updateData(ModelList row) throws Exception {
-        ModelList<InnerCameraModel> oneRow = (ModelList<InnerCameraModel>) row;
-
-        DatabaseConnection db = OracleConnection.getInstance();
+    public void updateData(ModelList<InnerCameraModel> oneRow) throws Exception {
+        DatabaseConnection db = DatabaseConnection.getInstance();
         db.update("UPDATE " + this.tableName + " SET MARCA = '" + oneRow.get(0).Marca + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRET = " + oneRow.get(0).Pret + ", PRETINCHIRIERE = " + oneRow.get(0).PretInchiriere + ", ANFABRICATIE = " + oneRow.get(0).AnFabricatie + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
     }
 }

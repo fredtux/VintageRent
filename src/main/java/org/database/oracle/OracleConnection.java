@@ -3,9 +3,7 @@ package org.database.oracle;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.database.DatabaseConnection;
 
-import java.awt.*;
 import java.io.*;
-import java.nio.file.Files;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
