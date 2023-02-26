@@ -1,9 +1,13 @@
 package org.models;
 
 import org.database.DatabaseConnection;
+import org.database.csv.CsvConnection;
 
 import javax.swing.table.DefaultTableModel;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CameraModel extends Model implements LinkModelToDatabase<ModelList<CameraModel.InnerCameraModel>> {
     public static class InnerCameraModel implements Comparable<InnerCameraModel> {
@@ -169,5 +173,42 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
     public void updateData(ModelList<InnerCameraModel> oneRow) throws Exception {
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         db.update("UPDATE " + this.tableName + " SET MARCA = '" + oneRow.get(0).Marca + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRET = " + oneRow.get(0).Pret + ", PRETINCHIRIERE = " + oneRow.get(0).PretInchiriere + ", ANFABRICATIE = " + oneRow.get(0).AnFabricatie + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
+    }
+
+    @Override
+    public void throwIntoCsv() throws Exception {
+        if(this.databaseType == DatabaseConnection.DatabaseType.CSV){
+            throw new Exception("Cannot throw into CSV from CSV.");
+        }
+
+        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
+        ResultSet rs = db.getAllTableData(this.tableName);
+
+        DatabaseConnection csv = null;
+        try {
+            csv = DatabaseConnection.getInstance(DatabaseConnection.DatabaseType.CSV);
+        } catch (Exception e) {
+            csv = new CsvConnection();
+        }
+
+        // Get headers from rs into String[]
+        ResultSetMetaData rsmd = rs.getMetaData();
+        int columnCount = rsmd.getColumnCount();
+        String[] headers = new String[columnCount];
+        for(int i = 0; i < columnCount; i++){
+            headers[i] = rsmd.getColumnName(i + 1);
+        }
+
+        // Get data from rs into List<String[]>
+        List<String[]> data = new ArrayList<>();
+        while(rs.next()){
+            String[] row = new String[columnCount];
+            for(int i = 0; i < columnCount; i++){
+                row[i] = rs.getString(i + 1);
+            }
+            data.add(row);
+        }
+
+        csv.createAndInsert(this.tableName + ".csv", headers, data);
     }
 }
