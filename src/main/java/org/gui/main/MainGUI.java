@@ -1,5 +1,6 @@
 package org.gui.main;
 
+import org.database.DatabaseConnection;
 import org.models.CameraModel;
 import org.models.ModelList;
 import org.models.RentModel;
@@ -11,7 +12,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import javax.swing.event.*;
 import javax.swing.table.TableRowSorter;
 
@@ -22,6 +22,7 @@ public class MainGUI { // Singleton
     private JScrollPane jscrPane;
     private JTable tblMain;
     private JButton btnRemove;
+    private JButton btnAdd;
 
     private enum TableType {
         CAMERA,
@@ -29,6 +30,8 @@ public class MainGUI { // Singleton
     }
 
     private TableType currentTableType = null;
+
+    private DatabaseConnection.DatabaseType databaseType = DatabaseConnection.DatabaseType.ORACLE;
 
     public MainGUI() {
         // Singleton
@@ -47,6 +50,7 @@ public class MainGUI { // Singleton
 
     private void initCameraTable() {
         CameraModel cameraModel = CameraModel.getInstance();
+        cameraModel.setDatabaseType(this.databaseType);
         try {
             cameraModel.getData();
             DefaultTableModel rm = cameraModel.getTableModel();
@@ -144,6 +148,7 @@ public class MainGUI { // Singleton
 
     private void initRentTable() {
         RentModel rentModel = RentModel.getInstance();
+        rentModel.setDatabaseType(this.databaseType);
         try {
             rentModel.getData();
             DefaultTableModel rm = rentModel.getTableModel();
@@ -280,13 +285,48 @@ public class MainGUI { // Singleton
         JMenuItem menuItemRent = new JMenuItem("Rent");
         menuItemRent.addActionListener(e -> {
             initRentTable();
+            this.currentTableType = TableType.RENT;
         });
         crud.add(menuItemRent);
         JMenuItem menuItemCamera = new JMenuItem("Camera");
         menuItemCamera.addActionListener(e -> {
             initCameraTable();
+            this.currentTableType = TableType.CAMERA;
         });
         crud.add(menuItemCamera);
+
+        JMenu datasources = new JMenu("Datasources");
+        menuBar.add(datasources);
+
+        JMenuItem menuItemOracle = new JMenuItem("Oracle");
+        menuItemOracle.addActionListener(e -> {
+            try {
+                this.databaseType = DatabaseConnection.DatabaseType.ORACLE;
+                if(this.currentTableType == TableType.CAMERA) {
+                    initCameraTable();
+                } else if(this.currentTableType == TableType.RENT) {
+                    initRentTable();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        datasources.add(menuItemOracle);
+
+        JMenuItem menuItemCsv = new JMenuItem("CSV");
+        menuItemCsv.addActionListener(e -> {
+            try {
+                this.databaseType = DatabaseConnection.DatabaseType.CSV;
+                if(this.currentTableType == TableType.CAMERA) {
+                    initCameraTable();
+                } else if(this.currentTableType == TableType.RENT) {
+                    initRentTable();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        datasources.add(menuItemCsv);
 
         JMenu menu2 = new JMenu("About");
         class AboutMenuListener implements MenuListener {
@@ -358,6 +398,17 @@ public class MainGUI { // Singleton
             }
         });
         this.panel1.add(this.btnRemove, c2);
+
+        c2.gridx = 1;
+        c2.gridy = 2;
+        c2.gridwidth = 1;
+        c2.gridheight = 1;
+        c2.weightx = 1;
+        c2.weighty = 0.1;
+        c2.anchor = GridBagConstraints.NORTH;
+        c2.fill = GridBagConstraints.BOTH;
+        this.btnAdd = new JButton("Add");
+        this.panel1.add(this.btnAdd, c2);
 
         frame.getContentPane().add(this.panel1);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

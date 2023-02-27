@@ -21,4 +21,6 @@ public abstract class Model {
     public void setName(String name) {
         this.name = name;
     }
+
+    public abstract void setDatabaseType(DatabaseConnection.DatabaseType databaseType);
 }

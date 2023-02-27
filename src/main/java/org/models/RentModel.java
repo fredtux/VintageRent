@@ -42,6 +42,16 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
         return instance;
     }
 
+    public void setDatabaseType(DatabaseConnection.DatabaseType databaseType) {
+        this.databaseType = databaseType;
+
+        if(databaseType == DatabaseConnection.DatabaseType.CSV){
+            this.tableName = "Inchiriere.csv";
+        } else if (databaseType == DatabaseConnection.DatabaseType.ORACLE){
+            this.tableName = "INCHIRIERE";
+        }
+    }
+
     public DefaultTableModel getTableModel() {
         String[] columns = {"DURATA_IN_ZILE", "ESTE_RETURNAT", "PENALIZARE", "DATA_INCHIRIERE", "IDCAMERA", "IDCLIENT", "IDOBIECTIV", "IDANGAJAT"};
 
