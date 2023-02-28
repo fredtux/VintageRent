@@ -368,7 +368,7 @@ public class CsvConnection extends DatabaseConnection {
     public void insertNoLog(String tableName, String[] columns, List<String[]> values) throws Exception {
         this.setPath(tableName);
         ClassLoader classLoader = getClass().getClassLoader();
-        File f = new File(classLoader.getResource(this.folder + this.path).getFile());
+        File f = new File(classLoader.getResource("Log/" + this.path).getFile());
         this.writer = new CSVWriter(new FileWriter(f, true));
         this.writer.writeNext(columns);
         this.writer.writeAll(values);

@@ -57,7 +57,7 @@ public class CsvLogger extends Logger {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
         toWrite.add(new String[]{message, sdf.format(timestamp)});
-        ((CsvConnection) CsvConnection.getInstance(DatabaseConnection.DatabaseType.CSV)).setFolder("Log/").insertNoLog(LOGGER_FILE, null, toWrite);
+        ((CsvConnection) CsvConnection.getInstance(DatabaseConnection.DatabaseType.CSV)).insertNoLog(LOGGER_FILE, null, toWrite);
     }
 
 
