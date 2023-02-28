@@ -520,7 +520,7 @@ public class MainGUI { // Singleton
         JMenuItem clientReport = new JMenuItem("Raport clienti");
         clientReport.addActionListener(e -> {
             try {
-                ClientReport cr = new ClientReport(frame, instance);
+                ClientReport cr = ClientReport.getInstance(frame, instance);
                 cr.main();
             } catch (Exception ex) {
                 ex.printStackTrace();
