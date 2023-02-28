@@ -2,6 +2,7 @@ package org.logger;
 
 import org.database.DatabaseConnection;
 import org.database.csv.CsvConnection;
+import org.models.Pair;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -58,6 +59,24 @@ public class CsvLogger extends Logger {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
         toWrite.add(new String[]{message, sdf.format(timestamp)});
         ((CsvConnection) CsvConnection.getInstance(DatabaseConnection.DatabaseType.CSV)).insertNoLog(LOGGER_FILE, null, toWrite);
+    }
+
+    public Pair<List<String>, List<List<String>>> readLog() throws Exception{
+         return  ((CsvConnection) CsvConnection.getInstance(DatabaseConnection.DatabaseType.CSV)).readAllNoLog(LOGGER_FILE);
+    }
+
+    public Pair<List<String>, List<List<String>>> readLogToday() throws Exception{
+        Pair<List<String>, List<List<String>>> log = this.readLog();
+        List<List<String>> newData = new ArrayList<>();
+        for(List<String> row : log.second){
+            if(row.get(0).contains("Starting application")){
+                newData.clear();
+            }
+
+            newData.add(row);
+        }
+
+        return new Pair<>(log.first, newData);
     }
 
 

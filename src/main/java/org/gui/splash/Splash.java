@@ -37,7 +37,7 @@ public class Splash {
         JPanel south = new JPanel(new FlowLayout(FlowLayout.CENTER));
         south.setBackground(Color.BLACK);
         JLabel lblAuthor = new JLabel(authorName);
-        lblAuthor.setFont(new Font("Fira Code", Font.BOLD, 12));
+        lblAuthor.setFont(new Font(lblAuthor.getFont().toString(), Font.BOLD, 12));
         lblAuthor.setForeground(new Color(237, 231, 228));
         south.add(lblAuthor);
 

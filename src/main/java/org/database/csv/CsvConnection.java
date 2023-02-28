@@ -272,6 +272,12 @@ public class CsvConnection extends DatabaseConnection {
             }
         }
 
+        try{
+            logger.log("CsvConnection got all table data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
+
         return this.getResultSet(headers, data);
 
     }
@@ -338,6 +344,12 @@ public class CsvConnection extends DatabaseConnection {
         this.writer.writeNext(columns);
         this.writer.writeAll(values);
         this.writer.close();
+
+        try{
+            logger.log("CsvConnection created and inserted dynamically");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 
     @Override
@@ -449,6 +461,12 @@ public class CsvConnection extends DatabaseConnection {
             this.writer.writeNext(list.toArray(new String[list.size()]));
         }
         this.writer.close();
+
+        try{
+            logger.log("CsvConnection delete");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 
     @Override
@@ -475,5 +493,40 @@ public class CsvConnection extends DatabaseConnection {
     public CsvConnection setFolder(String folder) {
         this.folder = folder;
         return this;
+    }
+
+    public Pair<List<String>, List<List<String>>> readAllNoLog(String tableName) throws Exception {
+        this.setPath(tableName);
+        ClassLoader classLoader = getClass().getClassLoader();
+        Reader r = new BufferedReader(new FileReader(classLoader.getResource("Log/" + tableName).getFile()));
+        this.reader = new CSVReader(r);
+
+        List<String[]> lresult = this.reader.readAll();
+
+        this.reader.close();
+
+        List<String> headers = null;
+        List<String[]> sdata = null;
+        List<List<String>> data = null;
+
+        // Get first line and set headers
+        if(lresult.size() > 0){
+            headers = java.util.Arrays.asList(lresult.get(0));
+        }
+
+        // Use the rest of the lines as data
+        if(lresult.size() > 1){
+            sdata = lresult.subList(1, lresult.size());
+        }
+
+        // Transform sdata to data
+        if(sdata != null){
+            data = new java.util.ArrayList<>();
+            for (String[] strings : sdata) {
+                data.add(java.util.Arrays.asList(strings));
+            }
+        }
+
+        return new Pair<>(headers, data);
     }
 }

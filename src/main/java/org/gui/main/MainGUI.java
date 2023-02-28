@@ -1,6 +1,7 @@
 package org.gui.main;
 
 import org.database.DatabaseConnection;
+import org.gui.logs.LogGUI;
 import org.gui.tables.CameraAdd;
 import org.gui.tables.CameraTypeAdd;
 import org.gui.tables.FormatAdd;
@@ -527,6 +528,20 @@ public class MainGUI { // Singleton
             }
         });
         reports.add(clientReport);
+
+        JMenu menuLog = new JMenu("Log");
+        menuBar.add(menuLog);
+
+        JMenuItem menuItemLog = new JMenuItem("Log");
+        menuItemLog.addActionListener(e -> {
+            try {
+                LogGUI lr = LogGUI.getInstance(frame, instance);
+                lr.main();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        menuLog.add(menuItemLog);
 
         JMenu menu2 = new JMenu("About");
         class AboutMenuListener implements MenuListener {
