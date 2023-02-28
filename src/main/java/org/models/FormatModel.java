@@ -133,8 +133,8 @@ public class FormatModel extends Model implements LinkModelToDatabase<ModelList<
     public void updateData(ModelList<InnerFormatModel> oneRow) throws Exception {
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         Map<String, String> set = new HashMap<>();
-        set.put("DENUMIRE", oneRow.get(0).Denumire);
-        set.put("LATIMEFILM", oneRow.get(0).LatimeFilm);
+        set.put("DENUMIRE", "'" + oneRow.get(0).Denumire + "'");
+        set.put("LATIMEFILM", "'" + oneRow.get(0).LatimeFilm + "'");
         Map<String, String> where = new HashMap<>();
         where.put("IDFORMAT", String.valueOf(oneRow.get(0).IDFormat));
         db.update(this.tableName, set, where);
@@ -189,6 +189,13 @@ public class FormatModel extends Model implements LinkModelToDatabase<ModelList<
 
     @Override
     public void insertRow(InnerFormatModel row) throws Exception {
-;
+        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
+
+        List<Pair<String, String>> values = new ArrayList<>();
+        values.add(new Pair<>("IDFORMAT", ""));
+        values.add(new Pair<>("DENUMIRE", "'" + row.Denumire + "'"));
+        values.add(new Pair<>("LATIMEFILM", "'" + row.LatimeFilm + "'"));
+
+        db.insert(this.tableName, values);
     }
 }

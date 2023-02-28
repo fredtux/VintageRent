@@ -3,11 +3,9 @@ package org.gui.main;
 import org.database.DatabaseConnection;
 import org.gui.tables.CameraAdd;
 import org.gui.tables.CameraTypeAdd;
+import org.gui.tables.FormatAdd;
 import org.gui.tables.RentAdd;
-import org.models.CameraModel;
-import org.models.CameraTypeModel;
-import org.models.ModelList;
-import org.models.RentModel;
+import org.models.*;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -35,7 +33,8 @@ public class MainGUI { // Singleton
     private enum TableType {
         CAMERA,
         RENT,
-        CAMERATYPE
+        CAMERATYPE,
+        FORMAT
     }
 
     private TableType currentTableType = TableType.RENT;
@@ -55,6 +54,69 @@ public class MainGUI { // Singleton
             return new MainGUI();
 
         return instance;
+    }
+
+    public void initFormatTable() {
+        FormatModel formatModel = FormatModel.getInstance();
+        formatModel.setDatabaseType(this.databaseType);
+        try {
+            formatModel.getData();
+            DefaultTableModel rm = formatModel.getTableModel();
+
+            this.tblMain = new JTable();
+            this.jscrPane.setViewportView(this.tblMain);
+            this.tblMain.setModel(rm);
+            rm.fireTableDataChanged();
+
+            class TableModelEvents implements TableModelListener {
+                public boolean isCellEditable(int row, int column) {
+                    return column != 0;
+                }
+
+                public void setValueAt(String value, int row, int column) throws Exception {
+                    FormatModel rm = FormatModel.getInstance();
+                    ModelList<FormatModel.InnerFormatModel> modelList = new ModelList<>();
+                    FormatModel.InnerFormatModel irm = new FormatModel.InnerFormatModel();
+                    DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
+
+                    irm.IDFormat = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+                    irm.Denumire = dtm.getValueAt(row, 1).toString();
+                    irm.LatimeFilm = dtm.getValueAt(row, 2).toString();
+
+                    switch (column) {
+                        case 1:
+                            irm.Denumire = value;
+                            break;
+                        case 2:
+                            irm.LatimeFilm = value;
+                            break;
+                        default:
+                            throw new Exception("Invalid column index");
+                    }
+
+                    modelList.add(irm);
+                    rm.updateData(modelList);
+                }
+
+                @Override
+                public void tableChanged(TableModelEvent e) {
+                    if (e.getType() == TableModelEvent.UPDATE) {
+                        int row = e.getFirstRow();
+                        int column = e.getColumn();
+                        try {
+                            setValueAt((String) tblMain.getValueAt(row, column), row, column);
+                        } catch (Exception ex) {
+                            System.out.println("Error in trying to update format table: " + ex.getMessage());
+                        }
+                    }
+                }
+            }
+
+            this.tblMain.getModel().addTableModelListener(new TableModelEvents());
+            this.currentTableType = TableType.FORMAT;
+        } catch (Exception e) {
+            System.out.println("Error in trying to initialize camera table: " + e.getMessage());
+        }
     }
 
     public void initCameraTable() {
@@ -303,6 +365,19 @@ public class MainGUI { // Singleton
         }
     }
 
+    private void removeRowFromFormatModel(int row) throws Exception{
+        FormatModel rm = FormatModel.getInstance();
+        ModelList<FormatModel.InnerFormatModel> modelList = new ModelList<>();
+        FormatModel.InnerFormatModel irm = new FormatModel.InnerFormatModel();
+        DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
+
+        irm.IDFormat = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+
+        modelList.add(irm);
+        rm.deleteRow(modelList);
+
+        dtm.removeRow(row);
+    }
     private void removeRowFromCameraTypeModel(int row) throws Exception{
         CameraTypeModel rm = CameraTypeModel.getInstance();
         ModelList<CameraTypeModel.InnerCameraTypeModel> modelList = new ModelList<>();
@@ -379,12 +454,19 @@ public class MainGUI { // Singleton
             this.currentTableType = TableType.CAMERA;
         });
         crud.add(menuItemCamera);
-        JMenuItem menuItemCameraType = new JMenuItem("Camera Type");
+        JMenuItem menuItemCameraType = new JMenuItem("Tip Camera");
         menuItemCameraType.addActionListener(e -> {
             initCameraTypeTable();
             this.currentTableType = TableType.CAMERATYPE;
         });
         crud.add(menuItemCameraType);
+
+        JMenuItem menuItemFormat = new JMenuItem("Format Camera");
+        menuItemFormat.addActionListener(e -> {
+            initFormatTable();
+            this.currentTableType = TableType.FORMAT;
+        });
+        crud.add(menuItemFormat);
 
         JMenu datasources = new JMenu("Datasources");
         menuBar.add(datasources);
@@ -399,6 +481,8 @@ public class MainGUI { // Singleton
                     initRentTable();
                 } else if(this.currentTableType == TableType.CAMERATYPE) {
                     initCameraTypeTable();
+                } else if(this.currentTableType == TableType.FORMAT){
+                    initFormatTable();
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -416,6 +500,8 @@ public class MainGUI { // Singleton
                     initRentTable();
                 } else if(this.currentTableType == TableType.CAMERATYPE) {
                     initCameraTypeTable();
+                } else if(this.currentTableType == TableType.FORMAT){
+                    initFormatTable();
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -482,6 +568,8 @@ public class MainGUI { // Singleton
                             removeRowFromCameraModel(row);
                         else if(currentTableType == TableType.CAMERATYPE)
                             removeRowFromCameraTypeModel(row);
+                        else if(currentTableType == TableType.FORMAT)
+                            removeRowFromFormatModel(row);
                     } catch (SQLException ex) {
                         JDialog dialog = new JDialog();
                         dialog.setAlwaysOnTop(true);
@@ -517,6 +605,9 @@ public class MainGUI { // Singleton
                 } else if(currentTableType == TableType.CAMERATYPE){
                     CameraTypeAdd cta = CameraTypeAdd.getInstance(frame, instance);
                     cta.main();
+                } else if(currentTableType == TableType.FORMAT){
+                    FormatAdd fa = FormatAdd.getInstance(frame, instance);
+                    fa.main();
                 }
             }
         });
