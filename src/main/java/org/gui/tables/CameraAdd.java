@@ -40,7 +40,7 @@ public class CameraAdd {
     public void main() {
         this.parentFrame.setEnabled(false);
         this.parentFrame.setFocusable(false);
-//        this.parentFrame.setVisible(false);
+        this.parentFrame.setVisible(false);
 
         JFrame frame = new JFrame("Vintage Rent");
         frame.setUndecorated(true);

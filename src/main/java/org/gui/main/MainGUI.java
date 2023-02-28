@@ -5,6 +5,7 @@ import org.gui.tables.CameraAdd;
 import org.gui.tables.CameraTypeAdd;
 import org.gui.tables.FormatAdd;
 import org.gui.tables.RentAdd;
+import org.gui.reports.*;
 import org.models.*;
 
 import javax.swing.*;
@@ -40,6 +41,10 @@ public class MainGUI { // Singleton
     private TableType currentTableType = TableType.RENT;
 
     private DatabaseConnection.DatabaseType databaseType = DatabaseConnection.DatabaseType.ORACLE;
+
+    public DatabaseConnection.DatabaseType getDatabaseType() {
+        return databaseType;
+    }
 
     public MainGUI() {
         // Singleton
@@ -508,6 +513,20 @@ public class MainGUI { // Singleton
             }
         });
         datasources.add(menuItemCsv);
+
+        JMenu reports = new JMenu("Rapoarte");
+        menuBar.add(reports);
+
+        JMenuItem clientReport = new JMenuItem("Raport clienti");
+        clientReport.addActionListener(e -> {
+            try {
+                ClientReport cr = new ClientReport(frame, instance);
+                cr.main();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        reports.add(clientReport);
 
         JMenu menu2 = new JMenu("About");
         class AboutMenuListener implements MenuListener {
