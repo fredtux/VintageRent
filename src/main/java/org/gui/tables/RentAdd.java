@@ -50,6 +50,8 @@ public class RentAdd {
         this.parentFrame.setVisible(false);
 
         JFrame frame = new JFrame("Vintage Rent");
+        frame.setUndecorated(true);
+
         createUIComponents();
         frame.setContentPane(this.pnlMain);
 
@@ -221,14 +223,7 @@ public class RentAdd {
                 e1.printStackTrace();
             }
 
-            frame.dispose();
-            caller.initRentTable();
-            this.parentFrame.setEnabled(true);
-            this.parentFrame.setFocusable(true);
-            this.parentFrame.setVisible(true);
-            Dimension size = new Dimension();
-            size.setSize(800, 600);
-            this.parentFrame.setSize(size);;
+            closeFrame(frame, true);
         });
         c3.gridy = 10;
         c3.gridx = 1;
@@ -239,13 +234,7 @@ public class RentAdd {
         this.btnExit = new JButton("Exit");
         this.btnExit.setText("Cancel");
         this.btnExit.addActionListener(e -> {
-            frame.dispose();
-            this.parentFrame.setEnabled(true);
-            this.parentFrame.setFocusable(true);
-            this.parentFrame.setVisible(true);
-            Dimension size = new Dimension();
-            size.setSize(800, 600);
-            this.parentFrame.setSize(size);
+            closeFrame(frame, false);
         });
         this.pnlMain.add(this.btnExit, c3);
 
@@ -295,5 +284,14 @@ public class RentAdd {
         this.JDatePickerImpl1.setTextEditable(false);
 
         this.pnlMain = new JPanel(new GridBagLayout());
+    }
+
+    public void closeFrame(JFrame frame, boolean initParent) {
+        frame.dispose();
+        if(initParent)
+            this.caller.initRentTable();
+        this.parentFrame.setEnabled(true);
+        this.parentFrame.setFocusable(true);
+        this.parentFrame.setVisible(true);
     }
 }

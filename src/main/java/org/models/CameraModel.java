@@ -6,6 +6,7 @@ import org.database.csv.CsvConnection;
 import javax.swing.table.DefaultTableModel;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +25,9 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
         public String LatimeFilm;
         public String DenumireTip;
         public String DenumireMontura;
+        public int IDFormat;
+        public int IDTip;
+        public int IDMontura;
 
         @Override
         public int compareTo(InnerCameraModel o) {
@@ -50,9 +54,9 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
         this.databaseType = databaseType;
 
         if(databaseType == DatabaseConnection.DatabaseType.CSV){
-            this.tableName = "Inchiriere.csv";
+            this.tableName = "Camere.csv";
         } else if (databaseType == DatabaseConnection.DatabaseType.ORACLE){
-            this.tableName = "INCHIRIERE";
+            this.tableName = "CAMERE";
         }
     }
 
@@ -100,16 +104,19 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
 
         while(rs.next()){
             InnerCameraModel model = new InnerCameraModel();
-            model.Marca = rs.getString("Marca");
-            model.ModelCamera = rs.getString("ModelCamera");
-            model.AnFabricatie = rs.getInt("AnFabricatie");
-            model.Pret = rs.getDouble("Pret");
-            model.PretInchiriere = rs.getDouble("PretInchiriere");
-            model.IDCamera = rs.getInt("IDCamera");
-            model.DenumireTip = rs.getString("DenumireTip");
-            model.DenumireFormat = rs.getString("DenumireFormat");
-            model.LatimeFilm = rs.getString("LatimeFilm");
-            model.DenumireMontura = rs.getString("DenumireMontura");
+            model.Marca = rs.getString("MARCA");
+            model.ModelCamera = rs.getString("MODELCAMERA");
+            model.AnFabricatie = rs.getInt("ANFABRICATIE");
+            model.Pret = rs.getDouble("PRET");
+            model.PretInchiriere = rs.getDouble("PRETINCHIRIERE");
+            model.IDCamera = rs.getInt("IDCAMERA");
+            model.DenumireTip = rs.getString("DENUMIRETIP");
+            model.DenumireFormat = rs.getString("DENUMIREFORMAT");
+            model.LatimeFilm = rs.getString("LATIMEFILM");
+            model.DenumireMontura = rs.getString("DENUMIREMONTURA");
+            model.IDFormat = rs.getInt("IDFORMAT");
+            model.IDTip = rs.getInt("IDTIP");
+            model.IDMontura = rs.getInt("IDMONTURA");
 
             this.modelList.add(model);
         }
@@ -161,16 +168,19 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
         this.modelList = new ModelList<>(true);
         while(cameras.next()) {
             InnerCameraModel model = new InnerCameraModel();
-            model.Marca = cameras.getString("Marca");
-            model.ModelCamera = cameras.getString("ModelCamera");
-            model.AnFabricatie = cameras.getInt("AnFabricatie");
-            model.Pret = cameras.getDouble("Pret");
-            model.PretInchiriere = cameras.getDouble("PretInchiriere");
-            model.IDCamera = cameras.getInt("IDCamera");
+            model.Marca = cameras.getString("MARCA");
+            model.ModelCamera = cameras.getString("MODELCAMERA");
+            model.AnFabricatie = cameras.getInt("ANFABRICATIE");
+            model.Pret = cameras.getDouble("PRET");
+            model.PretInchiriere = cameras.getDouble("PRETINCHIRIERE");
+            model.IDCamera = cameras.getInt("IDCAMERA");
             model.DenumireTip = typeMap.get(cameras.getInt("IDTIP"));
             model.DenumireFormat = formatMap.get(cameras.getInt("IDFORMAT"));
             model.LatimeFilm = formatMap.get(cameras.getInt("IDFORMAT"));
             model.DenumireMontura = mountMap.get(cameras.getInt("IDMONTURA"));
+            model.IDFormat = cameras.getInt("IDFORMAT");
+            model.IDTip = cameras.getInt("IDTIP");
+            model.IDMontura = cameras.getInt("IDMONTURA");
 
             this.modelList.add(model);
         }
@@ -184,9 +194,13 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
         Map<String, String> set = new HashMap<>();
         set.put("MARCA", "'" + oneRow.get(0).Marca + "'");
         set.put("MODELCAMERA", "'" + oneRow.get(0).ModelCamera + "'");
+        set.put("IDFORMAT", String.valueOf(oneRow.get(0).IDFormat));
+        set.put("IDTIP", String.valueOf(oneRow.get(0).IDTip));
+        set.put("IDMONTURA", String.valueOf(oneRow.get(0).IDMontura));
+        set.put("ANFABRICATIE", String.valueOf(oneRow.get(0).AnFabricatie));
         set.put("PRET", String.valueOf(oneRow.get(0).Pret));
         set.put("PRETINCHIRIERE", String.valueOf(oneRow.get(0).PretInchiriere));
-        set.put("ANFABRICATIE", String.valueOf(oneRow.get(0).AnFabricatie));
+
         Map<String, String> where = new HashMap<>();
         where.put("IDCAMERA", String.valueOf(oneRow.get(0).IDCamera));
         db.update(this.tableName, set, where);
@@ -241,6 +255,20 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
 
     @Override
     public void insertRow(InnerCameraModel row) throws Exception {
-;
+        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
+
+        List<Pair<String, String>> values = new ArrayList<>();
+        values.add(new Pair<>("IDCAMERA", ""));
+        values.add(new Pair<>("MARCA", "'" + row.Marca + "'"));
+        values.add(new Pair<>("MODELCAMERA", "'" + row.ModelCamera + "'"));
+        values.add(new Pair<>("IDFORMAT", String.valueOf(row.IDFormat)));
+        values.add(new Pair<>("IDTIP", String.valueOf(row.IDTip)));
+        values.add(new Pair<>("IDMONTURA", String.valueOf(row.IDMontura)));
+        values.add(new Pair<>("ANFABRICATIE", String.valueOf(row.AnFabricatie)));
+        values.add(new Pair<>("PRET", String.valueOf(row.Pret)));
+        values.add(new Pair<>("PRETINCHIRIERE", String.valueOf(row.PretInchiriere)));
+
+
+        db.insert(this.tableName, values);
     }
 }

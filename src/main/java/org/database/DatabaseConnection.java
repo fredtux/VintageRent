@@ -95,4 +95,6 @@ public abstract class DatabaseConnection {
     public abstract void truncate(String tableName) throws Exception;
 
     public abstract void init(String[] columns) throws Exception;
+
+    public abstract int getNewId(String tableName, String column) throws Exception;
 }

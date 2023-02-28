@@ -1,6 +1,7 @@
 package org.gui.main;
 
 import org.database.DatabaseConnection;
+import org.gui.tables.CameraAdd;
 import org.gui.tables.RentAdd;
 import org.models.CameraModel;
 import org.models.ModelList;
@@ -34,7 +35,7 @@ public class MainGUI { // Singleton
         RENT
     }
 
-    private TableType currentTableType = null;
+    private TableType currentTableType = TableType.RENT;
 
     private DatabaseConnection.DatabaseType databaseType = DatabaseConnection.DatabaseType.ORACLE;
 
@@ -423,7 +424,8 @@ public class MainGUI { // Singleton
                     RentAdd ra = RentAdd.getInstance(frame, instance);
                     ra.main();
                 } else {
-//                    CameraModel cm = new CameraModel();
+                    CameraAdd ca = CameraAdd.getInstance(frame, instance);
+                    ca.main();
                 }
             }
         });
@@ -435,7 +437,11 @@ public class MainGUI { // Singleton
         frame.pack();
         frame.setVisible(true);
 
-        initRentTable();
+        if(this.currentTableType == TableType.CAMERA) {
+            initCameraTable();
+        } else if(this.currentTableType == TableType.RENT) {
+            initRentTable();
+        }
 
 //        // Frame size 600x400
         frame.setSize(800, 600);

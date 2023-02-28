@@ -140,6 +140,33 @@ public class CsvConnection extends DatabaseConnection {
     }
 
     @Override
+    public int getNewId(String tableName, String column) throws Exception {
+        ClassLoader classLoader = getClass().getClassLoader();
+        Reader r = new BufferedReader(new FileReader(classLoader.getResource("CSV/" + tableName).getFile()));
+        this.reader = new CSVReader(r);
+
+        List<String[]> lresult = this.reader.readAll();
+
+        this.reader.close();
+
+        List<String[]> sdata = null;
+
+        // Use the rest of the lines as data
+        if(lresult.size() > 1){
+            sdata = lresult.subList(1, lresult.size());
+        }
+
+        int max = 0;
+        for (String[] strings : sdata) {
+            if(Integer.parseInt(strings[0]) > max)
+                max = Integer.parseInt(strings[0]);
+        }
+
+        return max + 1;
+
+    }
+
+    @Override
     public void update(String tableName, Map<String, String> set, Map<String, String> where) throws Exception {
         this.setPath(tableName);
         ClassLoader classLoader = getClass().getClassLoader();
@@ -335,6 +362,16 @@ public class CsvConnection extends DatabaseConnection {
         String[] row = new String[values.size()];
         int i = 0;
         for (Pair<String, String> pair : values) {
+            if(pair.second == ""){
+                int newId = this.getNewId(tableName, pair.first);
+                pair.second = String.valueOf(newId);
+            }
+
+            if(pair.second.substring(0,1).equals("'"))
+                pair.second = pair.second.substring(1, pair.second.length());
+            if(pair.second.substring(pair.second.length()-1, pair.second.length()).equals("'"))
+                pair.second = pair.second.substring(0, pair.second.length()-1);
+
             row[i] = pair.second;
             ++i;
         }

@@ -208,6 +208,11 @@ public class OracleConnection extends DatabaseConnection {
             query = query.substring(0, query.length() - 2);
             query += ") VALUES (";
             for(Pair<String, String> entry : values){
+                if(entry.second == ""){
+                    int max = this.getNewId(tableName, entry.first);
+                    entry.second = String.valueOf(max);
+                }
+
                 query += entry.second + ", ";
             }
             query = query.substring(0, query.length() - 2);
@@ -264,6 +269,26 @@ public class OracleConnection extends DatabaseConnection {
     @Override
     public void init(String[] columns) throws Exception {
 
+    }
+
+    @Override
+    public int getNewId(String tableName, String column) throws Exception {
+        Statement stmt = null;
+        try{
+            String query = "SELECT MAX(" + column + ") AS MAX_ID FROM " + tableName;
+
+            stmt = this.conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            int maxId = 0;
+            while(rs.next()){
+                maxId = rs.getInt("MAX_ID");
+            }
+
+            return maxId + 1;
+        } catch (SQLException ex) {
+            System.out.println("Error executing query: " + ex.getMessage());
+            throw new SQLException("Error executing query: " + ex.getMessage());
+        }
     }
 
     private Reader readFile(String resourcePath) throws Exception{
