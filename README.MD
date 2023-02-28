@@ -37,7 +37,7 @@ ___
 - Raport clienti
 ___
 - Schimbare datasource: Oracle/CSV
-__
+___
 - Logging
 - Afisare loguri
 ___
