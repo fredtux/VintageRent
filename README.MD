@@ -64,6 +64,8 @@ ___
     - CameraTypeAdd
     - FormatAdd
     - RentAdd
+  - logs
+    - LogGUI
 - logger
   - CsvLogger
 - models
