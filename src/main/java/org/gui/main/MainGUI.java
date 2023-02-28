@@ -651,6 +651,8 @@ public class MainGUI { // Singleton
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         frame.pack();
+        frame.setSize(800, 600);
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
         if(this.currentTableType == TableType.CAMERA) {
@@ -658,10 +660,6 @@ public class MainGUI { // Singleton
         } else if(this.currentTableType == TableType.RENT) {
             initRentTable();
         }
-
-//        // Frame size 600x400
-        frame.setSize(800, 600);
-        frame.setLocationRelativeTo(null);
 
     }
 
