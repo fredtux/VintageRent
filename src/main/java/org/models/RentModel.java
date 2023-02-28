@@ -123,46 +123,6 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
     }
 
     @Override
-    public ModelList<InnerRentModel> getData(String whereClause)  throws Exception{
-        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
-        ResultSet rs = db.executeQuery("SELECT * FROM " + this.tableName + " WHERE " + whereClause);
-
-        this.transferToModelList(rs);
-
-        return this.modelList;
-    }
-
-    @Override
-    public ModelList<InnerRentModel> getData(String whereClause, String orderBy)  throws Exception{
-        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
-        ResultSet rs = db.executeQuery("SELECT * FROM " + this.tableName + " WHERE " + whereClause + " ORDER BY " + orderBy);
-
-        this.transferToModelList(rs);
-
-        return this.modelList;
-    }
-
-    @Override
-    public ModelList<InnerRentModel> getData(String whereClause, String orderBy, String limit)  throws Exception{
-        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
-        ResultSet rs = db.executeQuery("SELECT * FROM " + this.tableName + " WHERE " + whereClause + " ORDER BY " + orderBy + " FETCH NEXT " + limit + " ROWS ONLY");
-
-        this.transferToModelList(rs);
-
-        return this.modelList;
-    }
-
-    @Override
-    public ModelList<InnerRentModel> getData(String whereClause, String orderBy, String limit, String offset)  throws Exception{
-        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
-        ResultSet rs = db.executeQuery("SELECT * FROM " + this.tableName + " WHERE " + whereClause + " ORDER BY " + orderBy + " OFFSET " + offset + " ROWS FETCH NEXT " + limit + " ROWS ONLY");
-
-        this.transferToModelList(rs);
-
-        return this.modelList;
-    }
-
-    @Override
     public void updateData(ModelList<InnerRentModel> oneRow) throws Exception {
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");

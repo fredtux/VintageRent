@@ -198,11 +198,6 @@ public class OracleConnection extends DatabaseConnection {
     }
 
     @Override
-    public void insert(String tableName, String[] columns, List<String[]> values) throws Exception {
-
-    }
-
-    @Override
     public void insert(String tableName, List<Pair<String, String>> values) throws Exception {
         Statement stmt = null;
         try{
@@ -230,11 +225,6 @@ public class OracleConnection extends DatabaseConnection {
         } catch (Exception ex) {
             System.out.println("Error logging to CSV: " + ex.getMessage());
         }
-    }
-
-    @Override
-    public void delete(String tableName, String[] columns, List<String[]> values) throws Exception {
-
     }
 
     @Override

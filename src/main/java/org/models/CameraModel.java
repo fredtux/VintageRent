@@ -179,62 +179,6 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
     }
 
     @Override
-    public ModelList<InnerCameraModel> getData(String whereClause)  throws Exception{
-        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
-        ResultSet rs = db.executeQuery("SELECT IDCAMERA, MARCA, MODELCAMERA, F.DENUMIRE AS DENUMIREFORMAT, F.LATIMEFILM, T.DENUMIRE AS DENUMIRETIP, M.DENUMIRE AS DENUMIREMONTURA, ANFABRICATIE, PRET, PRETINCHIRIERE\n" +
-                "FROM CAMERE\n" +
-                "    INNER JOIN FORMAT F on CAMERE.IDFORMAT = F.IDFORMAT\n" +
-                "    INNER JOIN TIPCAMERA T on CAMERE.IDTIP = T.IDTIP\n" +
-                "    INNER JOIN MONTURA M on CAMERE.IDMONTURA = M.IDMONTURA" + " WHERE " + whereClause);
-
-        this.transferToModelList(rs);
-
-        return this.modelList;
-    }
-
-    @Override
-    public ModelList<InnerCameraModel> getData(String whereClause, String orderBy)  throws Exception{
-        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
-        ResultSet rs = db.executeQuery("SELECT IDCAMERA, MARCA, MODELCAMERA, F.DENUMIRE AS DENUMIREFORMAT, F.LATIMEFILM, T.DENUMIRE AS DENUMIRETIP, M.DENUMIRE AS DENUMIREMONTURA, ANFABRICATIE, PRET, PRETINCHIRIERE\n" +
-                "FROM CAMERE\n" +
-                "    INNER JOIN FORMAT F on CAMERE.IDFORMAT = F.IDFORMAT\n" +
-                "    INNER JOIN TIPCAMERA T on CAMERE.IDTIP = T.IDTIP\n" +
-                "    INNER JOIN MONTURA M on CAMERE.IDMONTURA = M.IDMONTURA" + " WHERE " + whereClause + " ORDER BY " + orderBy);
-
-        this.transferToModelList(rs);
-
-        return this.modelList;
-    }
-
-    @Override
-    public ModelList<InnerCameraModel> getData(String whereClause, String orderBy, String limit)  throws Exception{
-        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
-        ResultSet rs = db.executeQuery("SELECT IDCAMERA, MARCA, MODELCAMERA, F.DENUMIRE AS DENUMIREFORMAT, F.LATIMEFILM, T.DENUMIRE AS DENUMIRETIP, M.DENUMIRE AS DENUMIREMONTURA, ANFABRICATIE, PRET, PRETINCHIRIERE\n" +
-                "FROM CAMERE\n" +
-                "    INNER JOIN FORMAT F on CAMERE.IDFORMAT = F.IDFORMAT\n" +
-                "    INNER JOIN TIPCAMERA T on CAMERE.IDTIP = T.IDTIP\n" +
-                "    INNER JOIN MONTURA M on CAMERE.IDMONTURA = M.IDMONTURA" + " WHERE " + whereClause + " ORDER BY " + orderBy + " FETCH NEXT " + limit + " ROWS ONLY");
-
-        this.transferToModelList(rs);
-
-        return this.modelList;
-    }
-
-    @Override
-    public ModelList<InnerCameraModel> getData(String whereClause, String orderBy, String limit, String offset)  throws Exception{
-        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
-        ResultSet rs = db.executeQuery("SELECT IDCAMERA, MARCA, MODELCAMERA, F.DENUMIRE AS DENUMIREFORMAT, F.LATIMEFILM, T.DENUMIRE AS DENUMIRETIP, M.DENUMIRE AS DENUMIREMONTURA, ANFABRICATIE, PRET, PRETINCHIRIERE\n" +
-                "FROM CAMERE\n" +
-                "    INNER JOIN FORMAT F on CAMERE.IDFORMAT = F.IDFORMAT\n" +
-                "    INNER JOIN TIPCAMERA T on CAMERE.IDTIP = T.IDTIP\n" +
-                "    INNER JOIN MONTURA M on CAMERE.IDMONTURA = M.IDMONTURA"+ " WHERE " + whereClause + " ORDER BY " + orderBy + " OFFSET " + offset + " ROWS FETCH NEXT " + limit + " ROWS ONLY");
-
-        this.transferToModelList(rs);
-
-        return this.modelList;
-    }
-
-    @Override
     public void updateData(ModelList<InnerCameraModel> oneRow) throws Exception {
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         Map<String, String> set = new HashMap<>();

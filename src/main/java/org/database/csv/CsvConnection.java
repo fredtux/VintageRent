@@ -324,23 +324,6 @@ public class CsvConnection extends DatabaseConnection {
         }
     }
 
-    @Override
-    public void insert(String tableName, String[] columns, List<String[]> values) throws Exception {
-        this.setPath(tableName);
-        ClassLoader classLoader = getClass().getClassLoader();
-        File f = new File(classLoader.getResource(this.path).getFile());
-        this.writer = new CSVWriter(new FileWriter(f, true));
-        this.writer.writeNext(columns);
-        this.writer.writeAll(values);
-        this.writer.close();
-
-        try{
-            logger.log("CsvConnection data inserted");
-        } catch (Exception ex) {
-            System.out.println("Error logging to CSV: " + ex.getMessage());
-        }
-    }
-
 
 
     @Override
@@ -373,11 +356,6 @@ public class CsvConnection extends DatabaseConnection {
         this.writer.writeNext(columns);
         this.writer.writeAll(values);
         this.writer.close();
-    }
-
-    @Override
-    public void delete(String tableName, String[] columns, List<String[]> values) throws Exception {
-
     }
 
     @Override
@@ -449,10 +427,6 @@ public class CsvConnection extends DatabaseConnection {
         } catch (Exception ex) {
             System.out.println("Error logging to CSV: " + ex.getMessage());
         }
-    }
-
-    public String getFolder() {
-        return folder;
     }
 
     public CsvConnection setFolder(String folder) {

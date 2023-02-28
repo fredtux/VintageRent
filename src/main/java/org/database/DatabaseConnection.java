@@ -44,32 +44,10 @@ public abstract class DatabaseConnection {
         throw new RuntimeException("No instance of DatabaseConnection of the specified DatabaseType has been created");
     }
 
-    public Connection getConn() {
-        return conn;
-    }
-    public String getUrl() {
-        return url;
-    }
-
     public void setUrl(String url) {
         this.url = url;
     }
 
-    public String getPort() {
-        return port;
-    }
-
-    public void setPort(String port) {
-        this.port = port;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
     public String getPassword() {
         return password;
@@ -79,32 +57,12 @@ public abstract class DatabaseConnection {
         this.password = password;
     }
 
-    public String getDriver() {
-        return driver;
-    }
-
-    public void setDriver(String driver) {
-        this.driver = driver;
-    }
-
     public String getDatabase() {
         return database;
     }
 
     public void setDatabase(String database) {
         this.database = database;
-    }
-
-    public String getSchema() {
-        return schema;
-    }
-
-    public void setSchema(String schema) {
-        this.schema = schema;
-    }
-
-    public String getConnString() {
-        return connString;
     }
 
     public abstract void makeConnectionString();
@@ -128,10 +86,8 @@ public abstract class DatabaseConnection {
 
     public abstract void createTable(String tableName, String[] columns, String[] types) throws Exception;
 
-    public abstract void insert(String tableName, String[] columns, List<String[]> values) throws Exception;
     public abstract void insert(String tableName, List<Pair<String, String>> values) throws Exception;
 
-    public abstract void delete(String tableName, String[] columns, List<String[]> values) throws Exception;
     public abstract void delete(String tableName, Map<String, String> where) throws Exception;
 
     public abstract void drop(String tableName) throws Exception;
