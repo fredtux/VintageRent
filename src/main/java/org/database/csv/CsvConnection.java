@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.mockrunner.mock.jdbc.MockResultSet;
+import org.models.Pair;
 
 public class CsvConnection extends DatabaseConnection {
     private static CsvConnection instance = null;
@@ -334,6 +335,30 @@ public class CsvConnection extends DatabaseConnection {
         this.writer.close();
 
         try{
+            logger.log("CsvConnection data inserted");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
+    }
+
+
+
+    @Override
+    public void insert(String tableName, List<Pair<String, String>> values) throws Exception {
+        this.setPath(tableName);
+        ClassLoader classLoader = getClass().getClassLoader();
+        File f = new File(classLoader.getResource("CSV/" + this.path).getFile());
+        this.writer = new CSVWriter(new FileWriter(f, true));
+        String[] row = new String[values.size()];
+        int i = 0;
+        for (Pair<String, String> pair : values) {
+            row[i] = pair.second;
+            ++i;
+        }
+        this.writer.writeNext(row);
+        this.writer.close();
+
+        try {
             logger.log("CsvConnection data inserted");
         } catch (Exception ex) {
             System.out.println("Error logging to CSV: " + ex.getMessage());

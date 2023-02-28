@@ -11,8 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CameraModel extends Model implements LinkModelToDatabase<ModelList<CameraModel.InnerCameraModel>> {
-    public static class InnerCameraModel implements Comparable<InnerCameraModel> {
+public class CameraModel extends Model implements LinkModelToDatabase<ModelList<CameraModel.InnerCameraModel>, CameraModel.InnerCameraModel> {
+    public static class InnerCameraModel extends AbstractInnerModel implements Comparable<InnerCameraModel> {
         public String Marca;
         public String ModelCamera;
         public int AnFabricatie;
@@ -293,5 +293,10 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
         }
 
         csv.createAndInsert(this.tableName + ".csv", headers, data);
+    }
+
+    @Override
+    public void insertRow(InnerCameraModel row) throws Exception {
+;
     }
 }

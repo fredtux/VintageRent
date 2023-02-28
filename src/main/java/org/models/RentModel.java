@@ -15,8 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RentModel extends Model implements LinkModelToDatabase<ModelList<RentModel.InnerRentModel>> {
-    public static class InnerRentModel{
+public class RentModel extends Model implements LinkModelToDatabase<ModelList<RentModel.InnerRentModel>, RentModel.InnerRentModel> {
+    public static class InnerRentModel extends AbstractInnerModel{
         public int DURATA_IN_ZILE;
         public boolean ESTE_RETURNAT;
         public double PENALIZARE;
@@ -232,5 +232,27 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
         }
 
         csv.createAndInsert(this.tableName + ".csv", headers, data);
+    }
+
+    @Override
+    public void insertRow(InnerRentModel row) throws Exception {
+        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        List<Pair<String, String>> values = new ArrayList<>();
+        if(databaseType == DatabaseConnection.DatabaseType.ORACLE)
+            values.add(new Pair<String, String>("DATAINCHIRIERE", "TO_DATE('" + sdf.format(row.DATA_INCHIRIERE) + "', 'YYYY-MM-DD HH24:MI:SS')"));
+        else if(databaseType == DatabaseConnection.DatabaseType.CSV){
+            values.add(new Pair<String, String>("DATAINCHIRIERE", sdf.format(row.DATA_INCHIRIERE) + ""));
+        }
+        values.add(new Pair<String, String>("DURATAINZILE", row.DURATA_IN_ZILE + ""));
+        values.add(new Pair<String, String>("IDCAMERA", row.IDCAMERA + ""));
+        values.add(new Pair<String, String>("IDCLIENT", row.IDCLIENT + ""));
+        values.add(new Pair<String, String>("IDANGAJAT", row.IDANGAJAT + ""));
+        values.add(new Pair<String, String>("IDOBIECTIV", row.IDOBIECTIV + ""));
+        values.add(new Pair<String, String>("ESTERETURNAT", row.ESTE_RETURNAT ? "'1'" : "'0'"));
+        values.add(new Pair<String, String>("PENALIZARE", row.PENALIZARE + ""));
+
+        db.insert(this.tableName, values);
     }
 }

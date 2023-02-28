@@ -7,6 +7,9 @@ public abstract class Model {
     protected DatabaseConnection.DatabaseType databaseType = null;
     String name;
 
+    public static class AbstractInnerModel {
+    }
+
     public static Model getInstance() throws Exception{
         if(instance == null)
             throw new RuntimeException("No instance of Model has been created");

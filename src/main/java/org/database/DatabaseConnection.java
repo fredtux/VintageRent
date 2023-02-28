@@ -3,6 +3,7 @@ package org.database;
 import org.database.csv.CsvConnection;
 import org.database.oracle.OracleConnection;
 import org.logger.CsvLogger;
+import org.models.Pair;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -128,6 +129,7 @@ public abstract class DatabaseConnection {
     public abstract void createTable(String tableName, String[] columns, String[] types) throws Exception;
 
     public abstract void insert(String tableName, String[] columns, List<String[]> values) throws Exception;
+    public abstract void insert(String tableName, List<Pair<String, String>> values) throws Exception;
 
     public abstract void delete(String tableName, String[] columns, List<String[]> values) throws Exception;
     public abstract void delete(String tableName, Map<String, String> where) throws Exception;

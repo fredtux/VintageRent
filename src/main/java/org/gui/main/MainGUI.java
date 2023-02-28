@@ -1,6 +1,7 @@
 package org.gui.main;
 
 import org.database.DatabaseConnection;
+import org.gui.tables.RentAdd;
 import org.models.CameraModel;
 import org.models.ModelList;
 import org.models.RentModel;
@@ -24,6 +25,10 @@ public class MainGUI { // Singleton
     private JButton btnRemove;
     private JButton btnAdd;
 
+    public Component getBtnAdd() {
+        return this.btnAdd;
+    }
+
     private enum TableType {
         CAMERA,
         RENT
@@ -43,12 +48,12 @@ public class MainGUI { // Singleton
 
     public static MainGUI getInstance() {
         if (instance == null)
-            throw new RuntimeException("No instance of MainGUI has been created");
+            return new MainGUI();
 
         return instance;
     }
 
-    private void initCameraTable() {
+    public void initCameraTable() {
         CameraModel cameraModel = CameraModel.getInstance();
         cameraModel.setDatabaseType(this.databaseType);
         try {
@@ -146,7 +151,7 @@ public class MainGUI { // Singleton
         }
     }
 
-    private void initRentTable() {
+    public void initRentTable() {
         RentModel rentModel = RentModel.getInstance();
         rentModel.setDatabaseType(this.databaseType);
         try {
@@ -408,6 +413,17 @@ public class MainGUI { // Singleton
         c2.anchor = GridBagConstraints.NORTH;
         c2.fill = GridBagConstraints.BOTH;
         this.btnAdd = new JButton("Add");
+        this.btnAdd.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(currentTableType == TableType.RENT) {
+                    RentAdd ra = RentAdd.getInstance(frame, instance);
+                    ra.main();
+                } else {
+//                    CameraModel cm = new CameraModel();
+                }
+            }
+        });
         this.panel1.add(this.btnAdd, c2);
 
         frame.getContentPane().add(this.panel1);

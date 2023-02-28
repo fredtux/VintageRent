@@ -2,12 +2,11 @@ package org.database.oracle;
 
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.database.DatabaseConnection;
-import org.database.csv.CsvConnection;
+import org.models.Pair;
 
 import java.io.*;
 import java.sql.*;
 import java.util.List;
-import java.util.Date;
 import java.util.Map;
 
 public class OracleConnection extends DatabaseConnection {
@@ -201,6 +200,36 @@ public class OracleConnection extends DatabaseConnection {
     @Override
     public void insert(String tableName, String[] columns, List<String[]> values) throws Exception {
 
+    }
+
+    @Override
+    public void insert(String tableName, List<Pair<String, String>> values) throws Exception {
+        Statement stmt = null;
+        try{
+            String query = "INSERT INTO " + tableName + " (";
+            for(Pair<String, String> entry : values){
+                query += entry.first + ", ";
+            }
+            query = query.substring(0, query.length() - 2);
+            query += ") VALUES (";
+            for(Pair<String, String> entry : values){
+                query += entry.second + ", ";
+            }
+            query = query.substring(0, query.length() - 2);
+            query += ")";
+
+            stmt = this.conn.createStatement();
+            stmt.executeUpdate(query);
+        } catch (SQLException ex) {
+            System.out.println("Error executing query: " + ex.getMessage());
+            throw new SQLException("Error executing query: " + ex.getMessage());
+        }
+
+        try{
+            logger.log("OracleConnection executed insert");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 
     @Override
