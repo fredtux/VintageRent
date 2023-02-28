@@ -9,10 +9,6 @@ import org.gui.splash.Splash;
 import org.logger.CsvLogger;
 import org.models.ModelInit;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-
 public class Main {
 
     private static final String AUTHOR = "Dinu Florin-Silviu";

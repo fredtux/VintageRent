@@ -7,7 +7,7 @@ import javax.swing.*;
 
 public class Splash {
 
-    public JWindow splash = null;
+    public JFrame splash = null;
 
     public Splash(String imageName, String authorName, String projectName) throws Exception {
         if (imageName == null || authorName == null || projectName == null) {
@@ -30,7 +30,8 @@ public class Splash {
         imgSplash = new ImageIcon(newimg);
 
         // Create splash
-        this.splash = new JWindow();
+        this.splash = new JFrame("Vintage Rent");
+        this.splash.setUndecorated(true);
 
         // South center for authorname
         JPanel south = new JPanel(new FlowLayout(FlowLayout.CENTER));
