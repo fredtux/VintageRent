@@ -204,7 +204,13 @@ public class CsvConnection extends DatabaseConnection {
             for (int i = 0; i < list.size(); i++) {
                 for (Map.Entry<String, String> entry : set.entrySet()) {
                     if(headers.get(i).equals(entry.getKey()) && this.hasPrimaryKey(headers, where, list)){
-                        list.set(i, entry.getValue());
+                        String s = entry.getValue();
+                        if (s.substring(0, 1).equals("'"))
+                            s = s.substring(1, s.length() - 1);
+                        if(s.substring(s.length() - 1, s.length()).equals("'"))
+                            s = s.substring(0, s.length() - 1);
+
+                        list.set(i, s);
                     }
                 }
             }

@@ -130,7 +130,7 @@ public class CameraTypeModel extends Model implements LinkModelToDatabase<ModelL
     public void updateData(ModelList<InnerCameraTypeModel> oneRow) throws Exception {
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         Map<String, String> set = new HashMap<>();
-        set.put("DENUMIRE", oneRow.get(0).Denumire);
+        set.put("DENUMIRE", "'" + oneRow.get(0).Denumire + "'");
         Map<String, String> where = new HashMap<>();
         where.put("IDTIP", oneRow.get(0).IDTip + "");
         db.update(this.tableName, set, where);
@@ -185,6 +185,12 @@ public class CameraTypeModel extends Model implements LinkModelToDatabase<ModelL
 
     @Override
     public void insertRow(InnerCameraTypeModel row) throws Exception {
-;
+        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
+
+        List<Pair<String, String>> values = new ArrayList<>();
+        values.add(new Pair<>("IDTIP", ""));
+        values.add(new Pair<>("DENUMIRE", "'" + row.Denumire + "'"));
+
+        db.insert(this.tableName, values);
     }
 }
