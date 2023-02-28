@@ -2,13 +2,10 @@ package org.gui.tables;
 
 import org.gui.custom.ComboItem;
 import org.gui.main.MainGUI;
-import org.jdatepicker.DateModel;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.SqlDateModel;
-import org.models.CameraModel;
-import org.models.ModelList;
-import org.models.RentModel;
+import org.models.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,7 +14,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoField;
 import java.util.Calendar;
 import java.util.Properties;
 
@@ -127,9 +123,18 @@ public class RentAdd {
         pnlMain.add(lblClient, c3);
 
         c3.gridx = 2;
-        JTextField txtClient = new JTextField();
-        txtClient.setText("5");
-        pnlMain.add(txtClient, c3);
+        JComboBox cmbClient = new JComboBox();
+        ClientModel clientModel = ClientModel.getInstance();
+        ModelList<ClientModel.InnerClientModel> listClients = null;
+        try {
+            listClients = clientModel.getData();
+        } catch (Exception e) {
+            listClients = new ModelList<>();
+        }
+        for (ClientModel.InnerClientModel client : listClients.getList()) {
+            cmbClient.addItem(new ComboItem(client.NumeClient, client.IDUtilizator + ""));
+        }
+        pnlMain.add(cmbClient, c3);
 
         c3.gridy = 6;
         c3.gridx = 1;
@@ -138,9 +143,18 @@ public class RentAdd {
         pnlMain.add(lblAngajat, c3);
 
         c3.gridx = 2;
-        JTextField txtAngajat = new JTextField();
-        txtAngajat.setText("10");
-        pnlMain.add(txtAngajat, c3);
+        JComboBox cmbAngajat = new JComboBox();
+        EmployeeModel angajatModel = EmployeeModel.getInstance();
+        ModelList<EmployeeModel.InnerEmployeeModel> listEmployees = null;
+        try {
+            listEmployees = angajatModel.getData();
+        } catch (Exception e) {
+            listEmployees = new ModelList<>();
+        }
+        for (EmployeeModel.InnerEmployeeModel angajat : listEmployees.getList()) {
+            cmbAngajat.addItem(new ComboItem(angajat.NumeAngajat, angajat.IDUtilizator + ""));
+        }
+        pnlMain.add(cmbAngajat, c3);
 
         c3.gridy = 7;
         c3.gridx = 1;
@@ -149,9 +163,18 @@ public class RentAdd {
         pnlMain.add(lblObiectiv, c3);
 
         c3.gridx = 2;
-        JTextField txtObiectiv = new JTextField();
-        txtObiectiv.setText("1");
-        pnlMain.add(txtObiectiv, c3);
+        JComboBox cmbObiectiv = new JComboBox();
+        ObjectiveModel obiectivModel = ObjectiveModel.getInstance();
+        ModelList<ObjectiveModel.InnerObjectiveModel> listObjectives = null;
+        try {
+            listObjectives = obiectivModel.getData();
+        } catch (Exception e) {
+            listObjectives = new ModelList<>();
+        }
+        for (ObjectiveModel.InnerObjectiveModel obiectiv : listObjectives.getList()) {
+            cmbObiectiv.addItem(new ComboItem(obiectiv.Denumire, obiectiv.IDObiectiv + ""));
+        }
+        pnlMain.add(cmbObiectiv, c3);
 
         c3.gridy = 8;
         c3.gridx = 1;
@@ -183,9 +206,9 @@ public class RentAdd {
             RentModel rentModel = RentModel.getInstance();
             RentModel.InnerRentModel rent = new RentModel.InnerRentModel();
             rent.IDCAMERA = Integer.parseInt(((ComboItem) cmbCamera.getSelectedItem()).getValue());
-            rent.IDCLIENT = Integer.parseInt(txtClient.getText());
-            rent.IDANGAJAT = Integer.parseInt(txtAngajat.getText());
-            rent.IDOBIECTIV = Integer.parseInt(txtObiectiv.getText());
+            rent.IDCLIENT = Integer.parseInt(((ComboItem) cmbClient.getSelectedItem()).getValue());
+            rent.IDANGAJAT = Integer.parseInt(((ComboItem) cmbAngajat.getSelectedItem()).getValue());
+            rent.IDOBIECTIV = Integer.parseInt(((ComboItem) cmbObiectiv.getSelectedItem()).getValue());
             rent.DURATA_IN_ZILE = Integer.parseInt(txtDurata.getText());
             int ret = Integer.parseInt(((ComboItem) cmbEsteReturnat.getSelectedItem()).getValue());
             rent.ESTE_RETURNAT = ret == 1;
@@ -202,8 +225,10 @@ public class RentAdd {
             caller.initRentTable();
             this.parentFrame.setEnabled(true);
             this.parentFrame.setFocusable(true);
-            this.parentFrame.setSize(800, 600);
             this.parentFrame.setVisible(true);
+            Dimension size = new Dimension();
+            size.setSize(800, 600);
+            this.parentFrame.setSize(size);;
         });
         c3.gridy = 10;
         c3.gridx = 1;
@@ -217,8 +242,10 @@ public class RentAdd {
             frame.dispose();
             this.parentFrame.setEnabled(true);
             this.parentFrame.setFocusable(true);
-            this.parentFrame.setSize(800, 600);
             this.parentFrame.setVisible(true);
+            Dimension size = new Dimension();
+            size.setSize(800, 600);
+            this.parentFrame.setSize(size);
         });
         this.pnlMain.add(this.btnExit, c3);
 

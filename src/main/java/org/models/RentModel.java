@@ -25,6 +25,10 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
         public int IDCLIENT;
         public int IDOBIECTIV;
         public int IDANGAJAT;
+        public String NUME_CAMERA;
+        public String NUME_CLIENT;
+        public String NUME_OBIECTIV;
+        public String NUME_ANGAJAT;
     }
     private String tableName = "INCHIRIERE";
 
@@ -115,9 +119,68 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
     @Override
     public ModelList<InnerRentModel> getData() throws Exception{
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
-        ResultSet rs = db.getAllTableData(this.tableName);
+        Map<String, String> tables = null;
+        if(databaseType == DatabaseConnection.DatabaseType.CSV) {
+            tables = new HashMap<>();
+            tables.put("INCHIRIERE", "Inchiriere.csv");
+            tables.put("CAMERE", "Camere.csv");
+            tables.put("CLIENTI", "Clienti.csv");
+            tables.put("ANGAJATI", "Angajati.csv");
+            tables.put("OBIECTIVE", "Obiective.csv");
+        } else {
+            tables = new HashMap<>();
+            tables.put("INCHIRIERE", "INCHIRIERE");
+            tables.put("CAMERE", "CAMERE");
+            tables.put("CLIENTI", "CLIENTI");
+            tables.put("ANGAJATI", "ANGAJATI");
+            tables.put("OBIECTIVE", "OBIECTIVE");
+        }
 
-        this.transferToModelList(rs);
+
+        ResultSet inchiriere = db.getAllTableData(tables.get("INCHIRIERE"));
+        ResultSet camere = db.getAllTableData(tables.get("CAMERE"));
+        ResultSet clienti = db.getAllTableData(tables.get("CLIENTI"));
+        ResultSet angajati = db.getAllTableData(tables.get("ANGAJATI"));
+        ResultSet obiective = db.getAllTableData(tables.get("OBIECTIVE"));
+
+        Map<Integer, String> camereMap = new HashMap<>();
+        while(camere.next())
+            camereMap.put(camere.getInt("IDCAMERA"), camere.getString("MODELCAMERA"));
+
+        Map<Integer, String> clientiMap = new HashMap<>();
+        while(clienti.next())
+            clientiMap.put(clienti.getInt("IDUTILIZATOR"), clienti.getString("IDUTILIZATOR"));
+
+        Map<Integer, String> angajatiMap = new HashMap<>();
+        while(angajati.next())
+            angajatiMap.put(angajati.getInt("IDUTILIZATOR"), angajati.getString("IDUTILIZATOR"));
+
+        Map<Integer, String> obiectiveMap = new HashMap<>();
+        while(obiective.next())
+            obiectiveMap.put(obiective.getInt("IDOBIECTIV"), obiective.getString("DENUMIRE"));
+
+        this.modelList = new ModelList<>();
+        while(inchiriere.next()){
+            InnerRentModel model = new InnerRentModel();
+            try {
+                model.DATA_INCHIRIERE = inchiriere.getDate("DATAINCHIRIERE");
+            } catch (Exception e) {
+                LocalDateTime localDateTime = LocalDateTime.parse(inchiriere.getString("DATAINCHIRIERE"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                model.DATA_INCHIRIERE = Date.valueOf(localDateTime.toLocalDate());
+            }
+            model.DURATA_IN_ZILE = inchiriere.getInt("DURATAINZILE");
+            model.IDCAMERA = inchiriere.getInt("IDCAMERA");
+            model.IDCLIENT = inchiriere.getInt("IDCLIENT");
+            model.IDANGAJAT = inchiriere.getInt("IDANGAJAT");
+            model.IDOBIECTIV = inchiriere.getInt("IDOBIECTIV");
+            model.ESTE_RETURNAT = inchiriere.getBoolean("ESTERETURNAT");
+            model.PENALIZARE = inchiriere.getDouble("PENALIZARE");
+//            model.NUME_CAMERA = camereMap.get(model.IDCAMERA);
+//            model.NUME_CLIENT = clientiMap.get(model.IDCLIENT);
+//            model.NUME_ANGAJAT = angajatiMap.get(model.IDANGAJAT);
+//            model.NUME_OBIECTIV = obiectiveMap.get(model.IDOBIECTIV);
+            this.modelList.add(model);
+        }
 
         return this.modelList;
     }

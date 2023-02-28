@@ -163,7 +163,7 @@ public class MainGUI { // Singleton
             rm.fireTableDataChanged();
 
             // Make table sortable
-            RowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>(rm);
+            RowSorter<DefaultTableModel> sorter = new TableRowSorter<>(rm);
             tblMain.setRowSorter(sorter);
 
             class TableModelEvents implements TableModelListener {
@@ -277,6 +277,9 @@ public class MainGUI { // Singleton
 
     public void main(String[] args) {
         JFrame frame = new JFrame("Vintage Rent");
+        Dimension minSize = new Dimension();
+        minSize.setSize(800, 600);
+        frame.setMinimumSize(minSize);
 
         JMenuBar menuBar = new JMenuBar();
         JMenu menu = new JMenu("File");
