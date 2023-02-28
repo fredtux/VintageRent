@@ -7,6 +7,7 @@ import javax.swing.table.DefaultTableModel;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -140,9 +141,10 @@ public class ClientModel extends Model implements LinkModelToDatabase<ModelList<
         // Add fields to cameras
         this.modelList = new ModelList<>(true);
         while(clienti.next()) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             InnerClientModel model = new InnerClientModel();
             model.IDUtilizator = clienti.getInt("IDUtilizator");
-            model.DataNasterii = clienti.getDate("DataNasterii");
+            model.DataNasterii = new Date(sdf.parse(clienti.getString("DataNasterii")).getTime());
             model.IDTip = clienti.getInt("IDTip");
             model.DenumireTip = typeMap.get(clienti.getInt("IDTip"));
             model.DiscountTip = discountMap.get(clienti.getInt("IDTip"));

@@ -46,6 +46,9 @@ public class MainGUI { // Singleton
     public DatabaseConnection.DatabaseType getDatabaseType() {
         return databaseType;
     }
+    public DatabaseConnection.DatabaseType setDatabaseType(DatabaseConnection.DatabaseType databaseType) {
+        return this.databaseType = databaseType;
+    }
 
     public MainGUI() {
         // Singleton

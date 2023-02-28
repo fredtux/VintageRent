@@ -7,6 +7,7 @@ import javax.swing.table.DefaultTableModel;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -145,10 +146,11 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
         // Add fields to cameras
         this.modelList = new ModelList<>(true);
         while(angajati.next()) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             InnerEmployeeModel model = new InnerEmployeeModel();
             model.IDUtilizator = angajati.getInt("IDUTILIZATOR");
-            model.DataNasterii = angajati.getDate("DATANASTERII");
-            model.DataAngajarii = angajati.getDate("DATAANGAJARII");
+            model.DataNasterii = new Date(sdf.parse(angajati.getString("DATANASTERII")).getTime());
+            model.DataAngajarii = new Date(sdf.parse(angajati.getString("DATAANGAJARII")).getTime());
             model.IDManager = angajati.getInt("IDMANAGER");
             model.IDSalariu = angajati.getInt("IDSALARIU");
             model.Salariu = salariuMap.get(model.IDSalariu);

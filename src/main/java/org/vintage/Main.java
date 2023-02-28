@@ -2,12 +2,13 @@ package org.vintage;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 import org.database.DatabaseConnection;
-import org.database.csv.CsvConnection;
 import org.database.oracle.OracleConnection;
 import org.gui.main.MainGUI;
 import org.gui.splash.Splash;
 import org.logger.CsvLogger;
 import org.models.ModelInit;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Main {
 
@@ -18,6 +19,8 @@ public class Main {
     private static final int SPLASH_TIME = 0;
 
     public static final String ORACLE_DB_ADDR = "172.20.128.2";
+
+    private static AtomicBoolean isOracleUp = new AtomicBoolean(true);
     public static void main(String[] args) {
         FlatDarkLaf.setup();
         System.setProperty("flatlaf.menuBarEmbedded", "false");
@@ -52,6 +55,7 @@ public class Main {
                                     ModelInit.init();
                                 } catch (Exception ex) {
                                     System.out.println("Error connecting to database: " + ex.getMessage());
+                                    isOracleUp.set(false);
                                 }
                             }
                         });
@@ -76,6 +80,8 @@ public class Main {
 
                     // Show main GUI
                     MainGUI mainGUI = new MainGUI();
+                    if(!isOracleUp.get())
+                        mainGUI.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
                     mainGUI.main(null);
                 } catch (Exception ex) {
                     System.out.println("Error sleeping main thread: " + ex.getMessage());

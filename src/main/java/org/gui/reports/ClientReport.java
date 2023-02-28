@@ -63,6 +63,7 @@ public class ClientReport {
         c3.gridx = 2;
         JComboBox<ComboItem> cmbClient = new JComboBox<>();
         ClientModel clientModel = ClientModel.getInstance();
+        clientModel.setDatabaseType(caller.getDatabaseType());
         clientModel.getData();
         for (ClientModel.InnerClientModel client : clientModel.getModelList().getList()) {
             cmbClient.addItem(new ComboItem(client.NumeClient, client.IDUtilizator + ""));
