@@ -2,10 +2,7 @@ package org.gui.main;
 
 import org.database.DatabaseConnection;
 import org.gui.logs.LogGUI;
-import org.gui.tables.CameraAdd;
-import org.gui.tables.CameraTypeAdd;
-import org.gui.tables.FormatAdd;
-import org.gui.tables.RentAdd;
+import org.gui.tables.*;
 import org.gui.reports.*;
 import org.models.*;
 
@@ -36,7 +33,8 @@ public class MainGUI { // Singleton
         CAMERA,
         RENT,
         CAMERATYPE,
-        FORMAT
+        FORMAT,
+        EMPLOYEE
     }
 
     private TableType currentTableType = TableType.RENT;
@@ -65,6 +63,77 @@ public class MainGUI { // Singleton
         return instance;
     }
 
+    public void initEmployeeTable() {
+        EmployeeModel employeeModel = EmployeeModel.getInstance();
+        employeeModel.setDatabaseType(this.databaseType);
+        try {
+            employeeModel.getData();
+            DefaultTableModel rm = employeeModel.getTableModel();
+
+            this.tblMain = new JTable();
+            this.jscrPane.setViewportView(this.tblMain);
+            this.tblMain.setModel(rm);
+            rm.fireTableDataChanged();
+
+            class TableModelEvents implements TableModelListener {
+                public boolean isCellEditable(int row, int column) {
+                    return column != 0;
+                }
+
+                public void setValueAt(String value, int row, int column) throws Exception {
+                    EmployeeModel rm = EmployeeModel.getInstance();
+                    ModelList<EmployeeModel.InnerEmployeeModel> modelList = new ModelList<>();
+                    EmployeeModel.InnerEmployeeModel irm = new EmployeeModel.InnerEmployeeModel();
+                    DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
+
+                    irm.IDUtilizator = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+                    irm.DataNasterii = Date.valueOf(dtm.getValueAt(row, 1).toString());
+                    irm.DataAngajarii = Date.valueOf(dtm.getValueAt(row, 2).toString());
+                    irm.IDManager = Integer.parseInt(dtm.getValueAt(row, 3).toString());
+                    irm.IDSalariu = Integer.parseInt(dtm.getValueAt(row, 4).toString());
+
+
+                    switch (column) {
+                        case 2:
+                            irm.DataAngajarii = Date.valueOf(value);
+                            break;
+                        case 1:
+                            irm.DataNasterii = Date.valueOf(value);
+                            break;
+                        case 3:
+                            irm.IDManager = Integer.parseInt(value);
+                            break;
+                        case 4:
+                            irm.IDSalariu = Integer.parseInt(value);
+                            break;
+                        default:
+                            throw new Exception("Invalid column index");
+                    }
+
+                    modelList.add(irm);
+                    rm.updateData(modelList);
+                }
+
+                @Override
+                public void tableChanged(TableModelEvent e) {
+                    if (e.getType() == TableModelEvent.UPDATE) {
+                        int row = e.getFirstRow();
+                        int column = e.getColumn();
+                        try {
+                            setValueAt((String) tblMain.getValueAt(row, column), row, column);
+                        } catch (Exception ex) {
+                            System.out.println("Error in trying to update format table: " + ex.getMessage());
+                        }
+                    }
+                }
+            }
+
+            this.tblMain.getModel().addTableModelListener(new TableModelEvents());
+            this.currentTableType = TableType.EMPLOYEE;
+        } catch (Exception e) {
+            System.out.println("Error in trying to initialize camera table: " + e.getMessage());
+        }
+    }
     public void initFormatTable() {
         FormatModel formatModel = FormatModel.getInstance();
         formatModel.setDatabaseType(this.databaseType);
@@ -374,6 +443,19 @@ public class MainGUI { // Singleton
         }
     }
 
+    private void removeRowFromEmployeeModel(int row) throws Exception{
+        EmployeeModel rm = EmployeeModel.getInstance();
+        ModelList<EmployeeModel.InnerEmployeeModel> modelList = new ModelList<>();
+        EmployeeModel.InnerEmployeeModel irm = new EmployeeModel.InnerEmployeeModel();
+        DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
+
+        irm.IDUtilizator = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+
+        modelList.add(irm);
+        rm.deleteRow(modelList);
+
+        dtm.removeRow(row);
+    }
     private void removeRowFromFormatModel(int row) throws Exception{
         FormatModel rm = FormatModel.getInstance();
         ModelList<FormatModel.InnerFormatModel> modelList = new ModelList<>();
@@ -477,6 +559,13 @@ public class MainGUI { // Singleton
         });
         crud.add(menuItemFormat);
 
+        JMenuItem menuItemEmployees = new JMenuItem("Angajati");
+        menuItemEmployees.addActionListener(e -> {
+            initEmployeeTable();
+            this.currentTableType = TableType.EMPLOYEE;
+        });
+        crud.add(menuItemEmployees);
+
         JMenu datasources = new JMenu("Datasources");
         menuBar.add(datasources);
 
@@ -511,6 +600,8 @@ public class MainGUI { // Singleton
                     initCameraTypeTable();
                 } else if(this.currentTableType == TableType.FORMAT){
                     initFormatTable();
+                } else if(this.currentTableType == TableType.EMPLOYEE){
+                    initEmployeeTable();
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -607,6 +698,8 @@ public class MainGUI { // Singleton
                             removeRowFromCameraTypeModel(row);
                         else if(currentTableType == TableType.FORMAT)
                             removeRowFromFormatModel(row);
+                        else if(currentTableType == TableType.EMPLOYEE)
+                            removeRowFromEmployeeModel(row);
                     } catch (SQLException ex) {
                         JDialog dialog = new JDialog();
                         dialog.setAlwaysOnTop(true);
@@ -645,6 +738,9 @@ public class MainGUI { // Singleton
                 } else if(currentTableType == TableType.FORMAT){
                     FormatAdd fa = FormatAdd.getInstance(frame, instance);
                     fa.main();
+                } else if(currentTableType == TableType.EMPLOYEE){
+                    EmployeeAdd ea = EmployeeAdd.getInstance(frame, instance);
+                    ea.main();
                 }
             }
         });

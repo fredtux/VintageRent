@@ -18,7 +18,7 @@ public class CsvConnection extends DatabaseConnection {
     private static CsvConnection instance = null;
 
     private String path = null;
-    private String folder = "/CSV/";
+    private String folder = "CSV/";
     private CSVReader reader = null;
     private CSVWriter writer = null;
     private CSVParser parser = null;
@@ -319,6 +319,13 @@ public class CsvConnection extends DatabaseConnection {
             this.writer = new CSVWriter(new FileWriter(f));
             if(columns != null)
                 this.writer.writeNext(columns);
+            for(String[] s : values){
+                for(int i = 0; i < s.length; i++){
+                    if(s[i] == null){
+                        s[i] = "";
+                    }
+                }
+            }
             this.writer.writeAll(values);
             this.writer.close();
         } catch (NullPointerException e) {

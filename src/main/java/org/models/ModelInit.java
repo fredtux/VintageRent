@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 public class ModelInit {
-    private static String[] modelNames = {"Inchiriere", "Administrator_Subdomenii", "Administratori", "Adrese", "Angajati", "Camere","Clienti", "Format", "Montura", "Obiective", "Salariu", "TipCamera", "TipClient", "Utilizatori"};
+    private static String[] modelNames = {"Angajati", "Inchiriere", "Administrator_Subdomenii", "Administratori", "Adrese", "Camere","Clienti", "Format", "Montura", "Obiective", "Salariu", "TipCamera", "TipClient", "Utilizatori"};
     public static void init() throws Exception{
         DatabaseConnection db = OracleConnection.getInstance(DatabaseConnection.DatabaseType.ORACLE);
         db.connect();
