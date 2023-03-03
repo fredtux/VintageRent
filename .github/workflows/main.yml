@@ -18,11 +18,14 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Step 3 - Deploy to Github Package Registry
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          mkdir -p ~/.m2
-          echo "<settings><servers><server><id>gh</id><username>$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $1}')</username><password>\${env.GITHUB_TOKEN}</password></server></servers></settings>" > ~/.m2/settings.xml
-          REPO="gh::default::https://maven.pkg.github.com/${GITHUB_REPOSITORY}"
-          mvn deploy -DaltReleaseDeploymentRepository="${REPO}" -DaltSnapshotDeploymentRepository="${REPO}"
+      - name: Step 3 - have GitHub Actions Build Maven Project
+        run: mvn --batch-mode --update-snapshots verify
+
+      - name: Step 4 - Make staging directory
+        run: mkdir staging && cp target/*.jar staging
+
+      - name: Step 5 - Upload package
+        uses: actions/upload-artifact@v3
+        with:
+          name: VintageRent-1.0.0-SNAPSHOT.jar
+          path: staging
