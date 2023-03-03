@@ -22,7 +22,7 @@ jobs:
           
       - name: Step 3 - Get Maven project version
         id: get-version
-        run: echo "name=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $PROJECT_VERSION
+        run: echo "$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $PROJECT_VERSION
 
       - name: Step 4 - have GitHub Actions Build Maven Project
         run: mvn package -B
