@@ -34,11 +34,12 @@ jobs:
           path: target/VintageRent-${{ env.project_version }}.jar
 
       - name: Step 6 - Create release package
+        id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v$GITHUB_OUTPUT
+          tag_name: v${{ env.project_version }}
           release_name: This is version ${{ env.project_version }} of the project.
           body: This is version ${{ env.project_version }} of the project.
           draft: false
