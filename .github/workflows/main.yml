@@ -36,24 +36,24 @@ jobs:
       - name: Step 6 - Create release package
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_OUTPUT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v${{ env.GITHUB_OUTPUT }}
           release_name: This is version ${{ env.GITHUB_OUTPUT }} of the project.
           body: This is version ${{ env.GITHUB_OUTPUT }} of the project.
           draft: false
           prerelease: true
-          files: |
-            target/VintageRent-${{ steps.get-version.outputs.version }}.jar
-          token: ${{ secrets.GITHUB_TOKEN }}
+#           files: |
+#             target/VintageRent-${{ steps.get-version.outputs.version }}.jar
+#           opts.auth: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: "target/VintageRent-${{ steps.get-version.outputs.version }}.jar"
             
       - name: Step 7 - Attach release asset
         uses: actions/upload-release-asset@v1
         env: 
-          $GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: target/VintageRent-${{ env.GITHUB_OUTPUT }}.jar
           asset_name: VintageRent-${{ env.GITHUB_OUTPUT }}.jar
           asset_content_type: application/java-archive
-          token: ${{ secrets.GITHUB_TOKEN }}
