@@ -17,15 +17,23 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
+          
+      - name: Step 3 - Get Maven project version
+        id: get-version
+        run: echo "::set-output name=version::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
 
-      - name: Step 3 - have GitHub Actions Build Maven Project
-        run: mvn --batch-mode --update-snapshots verify
+      - name: Step 4 - have GitHub Actions Build Maven Project
+        run: mvn package -B
 
-      - name: Step 4 - Make staging directory
-        run: mkdir staging && cp target/*.jar staging
-
-      - name: Step 5 - Upload package
-        uses: actions/upload-artifact@v3
+      - name: Step 5 - Create release package
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: VintageRent-1.0.0-SNAPSHOT.jar
-          path: staging
+          tag_name: v${{ steps.get-version.outputs.version }}
+          release_name: This is version ${{ steps.get-version.outputs.version }} of the project.
+          body: This is the first release of the project.
+          draft: false
+          prerelease: true
+          files: |
+            target/VintageRent-${{ steps.get-version.outputs.version }}.jar
