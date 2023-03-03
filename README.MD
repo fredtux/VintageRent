@@ -130,5 +130,5 @@ ___
 - [x] Versiunea Java o sa fie MINIM 17.
 - [x] O sa folosim Docker & Docker-Compose pentru baza de date.
   - Implementare proprie: baza de date fiind Oracle, trebuie configurata mai intai. Am inclus un submodul de docker pentru Oracle 21c, dar nu pot adauga toata configuratia din cauza licentei 
-- [ ] O sa folosim Github Workflows pentru pipelines. Se pot accepta alternative pentru cei care vor sa foloseasca altceva.
+- [x] O sa folosim Github Workflows pentru pipelines. Se pot accepta alternative pentru cei care vor sa foloseasca altceva.
 - [ ] Cei mai activi o sa aiba o surpriza la final de semestru.
