@@ -1,8 +1,9 @@
 name: Java CI
 
 on:
-  push:
-    branches: [ main ]
+#   push:
+#     branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -25,16 +26,30 @@ jobs:
 
       - name: Step 4 - have GitHub Actions Build Maven Project
         run: mvn package -B
+        
+      - name: Step 5 - Upload release asset
+        uses: actions/upload-artifact@v2
+        with:
+          name: release-package
+          path: target/VintageRent-${{ steps.get-version.outputs.version }}.jar
 
-      - name: Step 5 - Create release package
+      - name: Step 6 - Create release package
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v${{ steps.get-version.outputs.version }}
           release_name: This is version ${{ steps.get-version.outputs.version }} of the project.
-          body: This is the first release of the project.
+          body: This is version ${{ steps.get-version.outputs.version }} of the project.
           draft: false
           prerelease: true
           files: |
             target/VintageRent-${{ steps.get-version.outputs.version }}.jar
+            
+      - name: Step 7 - Attach release asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: target/VintageRent-${{ steps.get-version.outputs.version }}.jar
+          asset_name: VintageRent-${{ steps.get-version.outputs.version }}.jar
+          asset_content_type: application/java-archive
