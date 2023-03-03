@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2022/dev/Debian) (preloaded format=xelatex 2023.3.2)  3 MAR 2023 23:46
+This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2022/dev/Debian) (preloaded format=xelatex 2023.3.2)  3 MAR 2023 23:53
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -855,7 +855,7 @@ File: ./img//addgui.png Graphic file (type bmp)
  [3]
 File: ./img//loggui.png Graphic file (type bmp)
 <./img//loggui.png>
- [4] [5] (./Documentatie.aux) ) 
+ [4] [5] [6] (./Documentatie.aux) ) 
 Here is how much of TeX's memory you used:
  36540 strings out of 477600
  821509 string characters out of 5839384
@@ -865,4 +865,4 @@ Here is how much of TeX's memory you used:
  350 hyphenation exceptions out of 8191
  100i,6n,104p,1706b,1042s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on Documentatie.pdf (6 pages).
+Output written on Documentatie.pdf (7 pages).

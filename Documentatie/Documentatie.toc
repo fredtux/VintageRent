@@ -30,7 +30,7 @@
 \contentsline {section}{\numberline {6}Serviciul de audit}{4}{section.6}%
 \contentsline {paragraph}{CsvLogger}{4}{section.6}%
 \contentsline {paragraph}{Metoda de scriere}{4}{section.6}%
-\contentsline {paragraph}{Metodele de citire}{4}{section.6}%
+\contentsline {paragraph}{Metodele de citire}{5}{section.6}%
 \contentsline {section}{\numberline {7}Rapoarte}{5}{section.7}%
 \contentsline {paragraph}{}{5}{section.7}%
 \contentsline {subsection}{\numberline {7.1}Raport client}{5}{subsection.7.1}%
@@ -43,5 +43,5 @@
 \contentsline {section}{\numberline {10}Alte mentiuni despre cod}{5}{section.10}%
 \contentsline {section}{\numberline {11}Workflow GitHub}{5}{section.11}%
 \contentsline {paragraph}{}{5}{section.11}%
-\contentsline {paragraph}{}{5}{Item.23}%
-\contentsline {paragraph}{}{5}{Item.23}%
+\contentsline {paragraph}{}{6}{Item.23}%
+\contentsline {paragraph}{}{6}{Item.23}%
