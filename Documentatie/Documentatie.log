@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2022/dev/Debian) (preloaded format=xelatex 2023.3.2)  3 MAR 2023 23:28
+This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2022/dev/Debian) (preloaded format=xelatex 2023.3.2)  3 MAR 2023 23:46
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -832,11 +832,11 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 78.
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) (./Documentatie.toc
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 10.
+(Font)              <10> on input line 11.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 10.
+(Font)              <7> on input line 11.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 10.
+(Font)              <5> on input line 11.
 )
 \tf@toc=\write5
 \openout5 = `Documentatie.toc'.
@@ -846,18 +846,20 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 ]
 File: ./img//diagrama.png Graphic file (type bmp)
 <./img//diagrama.png>
+ [1]
 File: ./img//program.png Graphic file (type bmp)
 <./img//program.png>
- [1] [2]
+ [2]
 File: ./img//addgui.png Graphic file (type bmp)
 <./img//addgui.png>
+ [3]
 File: ./img//loggui.png Graphic file (type bmp)
 <./img//loggui.png>
- [3] [4] [5] (./Documentatie.aux) ) 
+ [4] [5] (./Documentatie.aux) ) 
 Here is how much of TeX's memory you used:
  36540 strings out of 477600
  821509 string characters out of 5839384
- 1194835 words of memory out of 5000000
+ 1195835 words of memory out of 5000000
  56662 multiletter control sequences out of 15000+600000
  493982 words of font info for 69 fonts, out of 8000000 for 9000
  350 hyphenation exceptions out of 8191

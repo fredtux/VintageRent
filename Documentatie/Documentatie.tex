@@ -92,6 +92,8 @@ extendedchars=true,
     \label{fig:diagrama}
 \end{figure}
 
+\paragraph{!!! ATENTIE !!! \textcolor{red}{Programul poate fi rulat de sine statator si va folosi fisierele CSV ca data source. Daca se doreste folosirea unei baze de date, atunci trebuie clonat submodului docker\_oracle\_21 si urmate instructiunile din el. Ideea este ca daca as pune un container neconfigurabil de Oracle 21c, ar trebui sa folosesc un fisier care se gaseste pe siteul Oracle si pentru care se cere user si parola. Asa ca din ratiuni de drepturi de autor, am decis sa nu-l folosesc. Configurarea este straight forward, apoi intervin 2 comenzi pentru crearea utilizatorului. Recomand pentru acest lucru citirea fisierului README.md pentru ca el contine toate explicatiile. In mod normal, baza de date ar fi setata deja, iar utilizatorul nu ar trebui sa se preocupe de aceste aspecte.}}
+
 \section[Main]{Main}
 \paragraph{}Entry pointul in program se afla in \textbf{org.vintage.Main}, metoda \textbf{main}. Mai intai se initializeaza tema pentru GUI, apoi se porneste serviciul de audit \textbf{CsvLogger}. Apoi din main se lanseaza un thread separat si se asteapta sa se faca joinul. Acest lucru ne permite sa detectam cand programul este inchis si sa logam aceasta operatie. 
 \paragraph{} Threadul deschis de main incepe prin a afisa splash screenul. In timpul afisarii se deschide un thread nou pentru conectarea la \textbf{baza de date Oracle} si se verifica fisierele \textbf{csv} pentru a avea putea fi procesate de al doilea tip de datasource. Atributul atomic boolean \textbf{isOracleUp} tine cont daca s-a putut realiza conexiunea la baza de date. Daca aceasta s-a realizat, atunci se va folosi default baza de date, daca nu, atunci se va folosi default csvul. Datasourceul poate fi schimbat in timpul rularii programului din meniul corespunzator, deci in aceasta etapa doar definim defaulturile.
@@ -203,6 +205,17 @@ Pentru tema am folosit \textbf{com.formdev.flatlaf} si am initializat \textbf{Fl
 \paragraph{} Deoarece in Java nu exista un tip pair nativ, am scris o clasa care foloseste doua templateuri, T si U, si creaza o pereche mapand obiectele pe atributele first si second. Acesta sunt publice, dar se pot accesa si prin getteri.
 
 \section[Resurse]{Resurse}
+\paragraph{}Folderul de resurse este impartit in:
+\begin{enumerate}
+    \item CSV cu fisierele CSV
+    \item \begin{enumerate}
+        \item Fisierele corespunzatoare tabelelor
+        \item Folderul Log
+    \end{enumerate}
+    \item META-INF cu manifestul
+    \item Migrations cu fisierul sql care este rulat pentru a popula baza de date
+    \item Spalsh cu imaginea pentru spalsh screen
+\end{enumerate}
 
 \section[Alte mentiuni despre cod]{Alte mentiuni despre cod}
 
