@@ -33,7 +33,7 @@ jobs:
         with:
           tag_name: v${{ steps.get-version.outputs.version }}
           release_name: This is version ${{ steps.get-version.outputs.version }} of the project.
-          body: This is the first release of the project.
+          body: This is version ${{ steps.get-version.outputs.version }} of the project.
           draft: false
           prerelease: true
           files: |
