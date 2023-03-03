@@ -22,7 +22,7 @@ jobs:
           
       - name: Step 3 - Get Maven project version
         id: get-version
-        run: echo "$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $PROJECT_VERSION
+        run: echo "{name}=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_OUTPUT
 
       - name: Step 4 - have GitHub Actions Build Maven Project
         run: mvn package -B
@@ -31,16 +31,16 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: release-package
-          path: target/VintageRent-${{ env.PROJECT_VERSION }}.jar
+          path: target/VintageRent-${{ env.GITHUB_OUTPUT }}.jar
 
       - name: Step 6 - Create release package
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_OUTPUT }}
         with:
-          tag_name: v${{ env.PROJECT_VERSION }}
-          release_name: This is version ${{ env.PROJECT_VERSION }} of the project.
-          body: This is version ${{ env.PROJECT_VERSION }} of the project.
+          tag_name: v${{ env.GITHUB_OUTPUT }}
+          release_name: This is version ${{ env.GITHUB_OUTPUT }} of the project.
+          body: This is version ${{ env.GITHUB_OUTPUT }} of the project.
           draft: false
           prerelease: true
           files: |
@@ -50,6 +50,6 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: target/VintageRent-${{ env.PROJECT_VERSION }}.jar
-          asset_name: VintageRent-${{ env.PROJECT_VERSION }}.jar
+          asset_path: target/VintageRent-${{ env.GITHUB_OUTPUT }}.jar
+          asset_name: VintageRent-${{ env.GITHUB_OUTPUT }}.jar
           asset_content_type: application/java-archive
