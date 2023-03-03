@@ -6,6 +6,7 @@ on:
 
 jobs:
   build:
+    permissions: write-all
     runs-on: ubuntu-latest
     steps:
       - name: Step 1 - Checkout main branch from GitHub
@@ -15,7 +16,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
-          distribution: 'temurin'
+          distribution: 'oracle'
           cache: maven
           
       - name: Step 3 - Get Maven project version
