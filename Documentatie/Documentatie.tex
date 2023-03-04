@@ -185,6 +185,52 @@ Pentru tema am folosit \textbf{com.formdev.flatlaf} si am initializat \textbf{Fl
 
 \section[Conexiunea la data sourceuri]{Conexiunea la data sourceuri}
 
+\begin{figure}[ht]
+    \centering
+    \noindent\includegraphics[scale=0.7]{diagramadb.png}
+    \caption{Diagrama claselor care se ocupa de relatia cu data sourceurile}
+    \label{fig:diagramadb}
+\end{figure}
+
+
+\paragraph{Clasa abstracta} \textbf{org.database.DatabaseConnection} contine atributele si metodele necesare de implementat de catre \textbf{OracleConnection} si \textbf{CsvConnection} care o mostenesc. 
+
+\paragraph{} Deoarece clasa nu poate fi initializata, ea functioneaza si pe post de \textbf{factory} pentru celelalte clase. Astfel ca e nevoie de un \textbf{public enum DatabaseType} pentru a da tipul de data source care se doreste in metoda \textbf{getInstance}. De asemenea, pentru ca celelalte 2 clase sunt de tip \textbf{singleton}, aceasta are un pool de conexiuni pe care il completeaza pe masura ce se creaza instante din clasele noi. Pool-ul este in \textbf{protected static ArrayList<DatabaseConnection> instances}.
+
+\paragraph{OracleConnection} este clasa care mosteneste DatabaseConnection si implementeaza metodele acesteia de conectare la baza de date si manipulare a datelor. Evident ca toate sunt in functie de cerintele necesare sistemului de gestiune a bazelor de date Oracle careia ii trimite queryuri. Aceste queryuri nu sunt protejate la un atac de tip sql injection, ramane in lista de todo de implementat o astfel de protectie.
+
+\paragraph{CsvConnection} este clasa care, de asemenea, mosteneste DatabaseConnection si implementeaza metodele de manipulare a fisierelor Csv. Aici sunt cateva particularitati.
+
+\paragraph{} In primul rand, fisierele Csv nu au integritate referentiala, iar programul nu este un sistem de gestiune a lor asemanator cu unul al unei baze de date. Asadar, utilizatorul trebuie sa fie atent la modificarea fisierelor astfel incat sa nu strice integritatea lor.
+
+\paragraph{} Pentru manipularea datelor am folosit \textbf{com.opencsv.opencsv}. Codul din pom.xml pentru aceasta dependenta este urmatorul:
+
+\begin{center}
+    \begin{lstlisting}
+<dependency>
+    <groupId>com.opencsv</groupId>
+    <artifactId>opencsv</artifactId>
+    <version>5.7.1</version>
+</dependency>
+    \end{lstlisting}
+\end{center}
+
+\paragraph{} Deoarece apar diferente fata de bazele de date care au deja rezultate implementate ca \textbf{ResultSet}, am folosit \textbf{com.mockrunner.mockrunner-jdbc} pentru a simula acest tip de date astfel incat metodele sa aiba o valoare returnata standard. Codul din pom.xml pentru acesta este urmatorul:
+
+\begin{center}
+    \begin{lstlisting}
+<dependency>
+    <groupId>com.mockrunner</groupId>
+    <artifactId>mockrunner-jdbc</artifactId>
+    <version>2.0.1</version>
+</dependency>
+    \end{lstlisting}
+\end{center}
+
+\paragraph{} Deoarece clasa este folosita si de serviciul de audit, aceasta impelmenteaza cateva metode care nu se regasesc in celelalte conexiuni. Aceste metode sunt \textbf{insertNoLog} care face inserarea fara a scrie acest lucru in loguri (altfel s-ar crea o bucla infinita) si \textbf{readAllNoLog} care citeste un fisier de log, la fel fara a scrie acest lucru in loguri. In serviciul de audit se face un upcasting catre aceasta clasa la instanta de DatabaseConnection pentru a-i folosi metodele specifice.
+
+\paragraph{} Pentru ca resursele pot sa nu fie alocate deja, am facut un hack si am inclus un fisier \textbf{CSV/mock.csv} careia sa-i ia calea in caz ca doreste sa creeze un fisier care inca nu exista al unei tabele. Acest comportament poate fi observat in metoda \textbf{createAndINsertDynamically}.
+
 \section[Modele]{Modele}
 
 \section[Serviciul de audit]{Serviciul de audit}
@@ -192,7 +238,7 @@ Pentru tema am folosit \textbf{com.formdev.flatlaf} si am initializat \textbf{Fl
 
 \paragraph{Metoda de scriere} log primeste un mesaj de tip String si il scrie in fisier.
 
-\paragraph{Metodele de citire} readLog() si readLogToday() citesc intreg fisierul de log, respectiv doar cel de la inceputul sesiunii si pana acum si corespund optiunilor din interfata grafica. Ambele returneaza un \textbf{Pair<List<String>{}>, List<List<String>{}>{}>} cu headerul, respectiv corpul fisierului.
+\paragraph{Metodele de citire} readLog() si readLogToday() citesc intreg fisierul de log, respectiv doar cel de la inceputul sesiunii si pana acum si corespund optiunilor din interfata grafica. Ambele returneaza un \textbf{Pair<List<String>, List<List<String>{}>{}>} cu headerul, respectiv corpul fisierului.
 
 \section[Rapoarte]{Rapoarte}
 \paragraph{} Rapoartele si alte actiuni pot fi accesate direct din \textbf{org.actions.MainService}.
@@ -203,6 +249,9 @@ Pentru tema am folosit \textbf{com.formdev.flatlaf} si am initializat \textbf{Fl
 \section[Clase ajutatoare]{Clase ajutatoare}
 \subsection[Pair<T, U>]{Pair<T, U>}
 \paragraph{} Deoarece in Java nu exista un tip pair nativ, am scris o clasa care foloseste doua templateuri, T si U, si creaza o pereche mapand obiectele pe atributele first si second. Acesta sunt publice, dar se pot accesa si prin getteri.
+
+\subsection[ModelInit]{ModelInit}
+\paragraph{} Aceasta clasa se ocupa cu initializarea modelului pentru fisierele CSV corespunzatoare tabelelor. Daca acestea nu sunt gasite, programul va lua pe rand tabelele din baza de date si le va arunca datele in fisiere CSV corespunzatoare pentru ca modelele sa functioneze si cu acest tip de fisiere.
 
 \section[Resurse]{Resurse}
 \paragraph{}Folderul de resurse este impartit in:
