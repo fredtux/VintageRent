@@ -91,26 +91,27 @@ ___
   - CsvLogger
 - models
   - Model
+    - AbstractInnerModel 
   - CameraModel extends Model
-    - InnerCameraModel
+    - InnerCameraModel extends AbstractInnerModel
   - CameraTypeModel extends Model implements LinkModelToDatabase
-    - InnerCameraTypeModel
+    - InnerCameraTypeModel extends AbstractInnerModel
   - ClientModel extends Model implements LinkModelToDatabase
-    - InnerClient
+    - InnerClient extends AbstractInnerModel
   - EmployeeModel extends Model implements LinkModelToDatabase
-    - InnerEmployeeModel
+    - InnerEmployeeModel extends AbstractInnerModel
   - FormatModel extends Model implements LinkModelToDatabase
-    - InnerFormatModel
+    - InnerFormatModel extends AbstractInnerModel
   - MountModel extends Model implements LinkModelToDatabase
-    - InnerMountModel
+    - InnerMountModel extends AbstractInnerModel
   - ObjectiveModel extends Model implements LinkModelToDatabase
-    - InnerObjectiveModel
+    - InnerObjectiveModel extends AbstractInnerModel
   - RentModel extends Model implements LinkModelToDatabase
-    - InnerRentModel
+    - InnerRentModel extends AbstractInnerModel
   - SalaryModel extends Model implements LinkModelToDatabase
-    - InnerSalaryModel
+    - InnerSalaryModel extends AbstractInnerModel
   - UserModel extends Model implements LinkModelToDatabase
-    - InnerUserModel
+    - InnerUserModel extends AbstractInnerModel
   - LinkModelToDatabase (interface)
   - ModelInit
   - Pair<T,U>
