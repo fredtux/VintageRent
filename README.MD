@@ -26,6 +26,8 @@ GRANT ALL PRIVILEGES TO C##TUX
 
 Aceste instructiuni creaza user-ul, baza de date fiind creata de aplicatie.
 
+**Pentru explicatii suplimentare referitoare la motivul pentru care am adaugat acest pas, consultati documentatia.**
+
 ## Documentatie
 Documentatia se gaseste in format PDF in fisierul [Documentatie.pdf](https://github.com/fredtux/VintageRent/blob/main/Documentatie.pdf)
 
