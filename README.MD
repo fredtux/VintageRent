@@ -37,11 +37,20 @@ ___
 - Stergere format camera
 - Creare format camera
 ___
-___
 - Vizualizare angajati
 - Modificare angajat
 - Stergere angajat
 - Creare angajat
+___
+- Vizualizare salarii
+- Modificare salariu
+- Stergere salariu
+- Creare salariu
+___
+- Vizualizare utilizatori
+- Modificare utilizator
+- Stergere utilizator
+- Creare utilizator
 ___
 - Raport clienti
 ___
@@ -98,6 +107,10 @@ ___
     - InnerObjectiveModel
   - RentModel extends Model implements LinkModelToDatabase
     - InnerRentModel
+  - SalaryModel extends Model implements LinkModelToDatabase
+    - InnerSalaryModel
+  - UserModel extends Model implements LinkModelToDatabase
+    - InnerUserModel
   - LinkModelToDatabase (interface)
   - ModelInit
   - Pair<T,U>
