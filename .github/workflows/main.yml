@@ -27,34 +27,19 @@ jobs:
       - name: Step 4 - Build Maven Project
         run: mvn package -B
         
-      - name: Step 5 - Upload release asset
-        uses: actions/upload-artifact@v2
-        with:
-          name: release-package
-          path: target/VintageRent-${{ env.project_version }}.jar
+#      - name: Step 5 - Upload release asset
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: release-package
+#          path: target/VintageRent-${{ env.project_version }}.jar
 
-      - name: Step 6 - Create release package
+      - name: Step 5 - Create release package
         id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: "marvinpinto/action-automatic-releases@1.2.1"
         with:
-          tag_name: v${{ env.project_version }}
-          release_name: This is version ${{ env.project_version }} of the project.
-          body: This is version ${{ env.project_version }} of the project.
-          draft: false
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "v${{ env.project_version }}"
           prerelease: true
-#           files: |
-#             target/VintageRent-${{ steps.get-version.outputs.version }}.jar
-#           opts.auth: ${{ secrets.GITHUB_TOKEN }}
-          artifacts: "target/VintageRent-${{ steps.get-version.outputs.version }}.jar"
-            
-      - name: Step 7 - Attach release asset
-        uses: actions/upload-release-asset@v1
-        env: 
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: target/VintageRent-${{ env.project_version }}.jar
-          asset_name: VintageRent-${{ env.project_version }}.jar
-          asset_content_type: application/java-archive
+          title: "VintageRent ${{ env.project_version }}
+          files: |
+            "target/VintageRent-${{ env.project_version }}.jar"
