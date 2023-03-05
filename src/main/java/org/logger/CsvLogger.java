@@ -30,7 +30,7 @@ public class CsvLogger extends Logger {
      * @throws MissingResourceException if the resourceBundleName is non-null and
      *                                  no corresponding resource can be found.
      */
-    public CsvLogger(String name, String resourceBundleName) throws RuntimeException {
+    private CsvLogger(String name, String resourceBundleName) throws RuntimeException {
         super(name, resourceBundleName);
 
         if(instance != null)

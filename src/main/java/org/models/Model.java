@@ -7,7 +7,7 @@ public abstract class Model {
     protected DatabaseConnection.DatabaseType databaseType = null;
     String name;
 
-    public static class AbstractInnerModel {
+    public static abstract class AbstractInnerModel {
     }
 
     public static Model getInstance() throws Exception{

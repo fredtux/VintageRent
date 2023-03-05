@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.lang.Comparable;
 
-public class ModelList <T>{
+public class ModelList <T extends Model.AbstractInnerModel>{
     private List<T> list;
 
     public ModelList(List<T> list) {
@@ -46,6 +46,13 @@ public class ModelList <T>{
             T oldItem = super.set(index, item);
             sort(null);
             return oldItem;
+        }
+
+        @Override
+        public T remove(int index) {
+            T item = super.remove(index);
+            sort(null);
+            return item;
         }
 
     }

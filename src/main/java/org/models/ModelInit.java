@@ -10,9 +10,9 @@ import java.util.ArrayList;
 public class ModelInit {
     private static String[] modelNames = {"Angajati", "Inchiriere", "Administrator_Subdomenii", "Administratori", "Adrese", "Camere","Clienti", "Format", "Montura", "Obiective", "Salariu", "TipCamera", "TipClient", "Utilizatori"};
     public static void init() throws Exception{
-        DatabaseConnection db = OracleConnection.getInstance(DatabaseConnection.DatabaseType.ORACLE);
+        DatabaseConnection db = DatabaseConnection.getInstance(DatabaseConnection.DatabaseType.ORACLE);
         db.connect();
-        DatabaseConnection csv = CsvConnection.getInstance(DatabaseConnection.DatabaseType.CSV);
+        DatabaseConnection csv = DatabaseConnection.getInstance(DatabaseConnection.DatabaseType.CSV);
 
         for(String modelName : modelNames) {
             try{

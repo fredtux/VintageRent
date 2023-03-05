@@ -1,8 +1,8 @@
 name: Java CI
 
 on:
-#   push:
-#     branches: [ main ]
+  push:
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -24,7 +24,7 @@ jobs:
         id: get-version
         run: echo "project_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
 
-      - name: Step 4 - have GitHub Actions Build Maven Project
+      - name: Step 4 - Build Maven Project
         run: mvn package -B
         
       - name: Step 5 - Upload release asset
