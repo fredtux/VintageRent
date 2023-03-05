@@ -231,7 +231,7 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
 
         DatabaseConnection csv = null;
         try {
-            csv = DatabaseConnection.getInstance(DatabaseConnection.DatabaseType.CSV);
+            csv = ((CsvConnection) DatabaseConnection.getInstance(DatabaseConnection.DatabaseType.CSV));
         } catch (Exception e) {
             csv = new CsvConnection();
         }

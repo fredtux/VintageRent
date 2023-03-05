@@ -33,6 +33,7 @@
 
 \graphicspath{ {./img/} }
 
+
 \lstset{
 %  tabsize=4,
 extendedchars=true,
@@ -49,7 +50,7 @@ extendedchars=true,
         % keywordstyle=\color[rgb]{0,0,1},
         % commentstyle=\color[rgb]{0.133,0.545,0.133},
         % stringstyle=\color[rgb]{0.627,0.126,0.941},
-        % language=SQL
+        % language=Java
         frame=lines,
         literate=%
     {€}{\euro}1%
@@ -69,6 +70,17 @@ extendedchars=true,
     {¼}{\textonequarter}1%
     {½}{\textonehalf}1%
     {¢}{\textcent}1%
+}
+
+\lstdefinelanguage{pom}
+{
+  morestring=[b]",
+  morestring=[s]{>}{<},
+  morecomment=[s]{<?}{?>},
+  stringstyle=\color{black},
+  identifierstyle=\color{darkblue},
+  keywordstyle=\color{cyan},
+  morekeywords={dependency, groupId, artifactId, version}
 }
 
 
@@ -111,7 +123,7 @@ extendedchars=true,
 
 Pentru tema am folosit \textbf{com.formdev.flatlaf} si am initializat \textbf{FlatDarkLaf}. Mai jos este codul dependentei din \textbf{pom.xml}.
 \begin{center}
-    \begin{lstlisting}
+    \begin{lstlisting}[language=pom]
     <dependency>
         <groupId>com.formdev</groupId>
         <artifactId>flatlaf</artifactId>
@@ -161,7 +173,7 @@ Pentru tema am folosit \textbf{com.formdev.flatlaf} si am initializat \textbf{Fl
 
 \paragraph{JDatePickerImpl} reprezinta un date picker de la \textbf{org.jdatepicker.jdatepicker}. Acesta poate vine cu un panou care se afiseaza dinamic pentru alegerea datei calendaristice. Codul pentru dependenta adaugat in \textbf{pom.xml} este:
 \begin{center}
-    \begin{lstlisting}
+    \begin{lstlisting}[language=pom]
 <dependency>
     <groupId>org.jdatepicker</groupId>
     <artifactId>jdatepicker</artifactId>
@@ -206,7 +218,7 @@ Pentru tema am folosit \textbf{com.formdev.flatlaf} si am initializat \textbf{Fl
 \paragraph{} Pentru manipularea datelor am folosit \textbf{com.opencsv.opencsv}. Codul din pom.xml pentru aceasta dependenta este urmatorul:
 
 \begin{center}
-    \begin{lstlisting}
+    \begin{lstlisting}[language=pom]
 <dependency>
     <groupId>com.opencsv</groupId>
     <artifactId>opencsv</artifactId>
@@ -218,7 +230,7 @@ Pentru tema am folosit \textbf{com.formdev.flatlaf} si am initializat \textbf{Fl
 \paragraph{} Deoarece apar diferente fata de bazele de date care au deja rezultate implementate ca \textbf{ResultSet}, am folosit \textbf{com.mockrunner.mockrunner-jdbc} pentru a simula acest tip de date astfel incat metodele sa aiba o valoare returnata standard. Codul din pom.xml pentru acesta este urmatorul:
 
 \begin{center}
-    \begin{lstlisting}
+    \begin{lstlisting}[language=pom]
 <dependency>
     <groupId>com.mockrunner</groupId>
     <artifactId>mockrunner-jdbc</artifactId>
@@ -232,6 +244,51 @@ Pentru tema am folosit \textbf{com.formdev.flatlaf} si am initializat \textbf{Fl
 \paragraph{} Pentru ca resursele pot sa nu fie alocate deja, am facut un hack si am inclus un fisier \textbf{CSV/mock.csv} careia sa-i ia calea in caz ca doreste sa creeze un fisier care inca nu exista al unei tabele. Acest comportament poate fi observat in metoda \textbf{createAndINsertDynamically}.
 
 \section[Modele]{Modele}
+\subsection[Model]{Model}
+\paragraph{}Clasa abstracta \textbf{Model} contine ceea ce este necesar pentru a crea un model concret:
+\begin{enumerate}
+    \item Atributul de instanta pentru a fi singleton
+    \item Atributul de tip de baza de date pentru conectare
+    \item Atributul de nume cu getter si setter
+    \item Metoda statica de preluare a instantei pentru a asigura proprietatea de singleton
+    \item Metoda de setare a unui tip de baze de date
+    \item O clasa interioara statica si abstracta denumita \textbf{AbstractInnerModel} unde vor fi puse atributele necesare fiecarui model atunci cand le preia din data source
+\end{enumerate}
+
+\subsection[ModelList]{ModelList}
+\paragraph{} Clasa \textbf{ModelList <T extends Model.AbstractInnerModel>} contine un template pentru a limita tipul de date al listelor pe care le creaza la cel specificat, precum si un atribut privat de tip \textbf{List<T>} unde va stoca lista.
+\paragraph{} Are 3 constructori, unul parametrizat pentru initializarea listei cu o lista data, altul neparametrizat care initializeaza lista implicit cu un ArrayList, iar altul parametrizat cu un boolean pentru a initializa cu un SortedArrayList.
+\paragraph{} Contine o clasa denumita \textbf{SortedArrayList<T>} care mosteneste ArrayList si face override pe metodele de adaugare, actualizare si stergere specifice astfel incat sa poata pastra lista sortata.
+\paragraph{} Contine mai multe metode de a manipula lista continuta.
+
+\subsection[LinkModelToDatabase]{LinkModelToDatabase}
+\paragraph{} Contine mai multe metode necesare unui model pentru a lucra cu baza de date (CRUD), precum si o metoda specifica aplicatiei pentru a scrie datele din baza de date intr-un fisier CSV.
+
+\paragraph{} In semnatura sa, \textbf{public interface LinkModelToDatabase<T extends ModelList, U extends Model.AbstractInnerModel>} apar 2 templateuri, unul pentru a fi sigur ca este de tip ModelList, iar altul pentru a fi sigur ca extinde clasa de campuri continuta de fiecare model in parte.
+
+\section[*Model]{*Model}
+\paragraph{} Prin acest lucru definesc orice model. Deoarece modelele functioneaza pe acelasi principiu, dar cu o alta multime de campuri mapate din data source, este de preferat sa fac o descriere generala pentru a putea implementa orice alt model pe viitor.
+
+\begin{figure}[ht]
+    \centering
+    \noindent\includegraphics[scale=0.7]{rentmodel.png}
+    \caption{Diagrama RentModel}
+    \label{fig:rentmodel}
+\end{figure}
+
+\paragraph{} Clasele modelelor concrete, extind clasa Model si implementeaza interfata LinkModelToDatabase oferindu-i valori corecte pentru template. Un exemplu de astfel de semnatura este: \textbf{public class RentModel extends Model implementsLinkModelToDatabase < ModelList <RentModel.InnerRentModel>, RentModel.InnerRentModel>}.
+
+\paragraph{} Contin o clasa interioara statica ce extinde AbstractInnerModel in care se definesc campurile care se vor utiliza.
+\paragraph{} Mentionez in continuare modalitatea standard de implementare pentru cele mai importante metode:
+\begin{enumerate}
+    \item getTableModel defineste un array de string-uri cu coloanele si apoi creaza si returneaza un DefaultTableModel
+    \item transferToModelList transfera un ResultSet in ModelList-ul corespunzator
+    \item getData() incepe prin a defini un map cu denumirea generala a tabelelor si locul unde se pot gasi in baza de date. Apoi preia ResultSet-uri din mai multe tabele, iar in afara de cel principal, pe celelalte le pune intr-un Map<Integer, String> pentru a avea cheia primara si valoarea care se doreste extrasa. Apoi, pentru fiecare inregistrara din tabela principala, va mapa datele obtinute din celelalte tabele si va popula ModelList-ul. Am ales aceasta metoda deoarece este comuna atat bazelor de date relationale, cat si fisierelor csv.
+    \item updateData primeste un rand de actualizat sub forma unui ModelList si mapeaza pe baza lui toate campurile ce pot fi actualizate, apoi intr-o mapare separata va pune campurile care definesc cheia primara. La sfarsit ia obiectul data sourceului si apeleaza functia de update
+    \item deleteRow preia un rand sub forma unui ModelList si creaza clauza where specifica stergerii pe care o trimite mai departe obiectului data sourceului si apeleaza functia delete.
+    \item throwIntoCsv verifica daca are o conexiune la o baza de date, apoi ia pe rand toate rezultatele, inclusiv din metadatele ResultSet-ului coloanele, apoi apeleaza metoda de creare si inserare din CsvConnection
+    \item insertRow preia un model ce extinde AbstractInnerModel si creaza o lista de valori de forma \textbf{List<Pair<String, String>{}>} in care adauga pe rand valorile. Daca in spate modelul are o cheie primara care se incrementeaza, acesta exclude valoarea noua a cheii primare.
+\end{enumerate}
 
 \section[Serviciul de audit]{Serviciul de audit}
 \paragraph{CsvLogger} este numele serviciului de audit care scrie logurile intr-un fisier csv. Acesta extinde \textbf{java.util.logging.Logger} si este de tip singleton. Are un constructor privat si singurul mod in care poate fi creata instanta este prin metoda statica \textbf{getInstance}.
@@ -257,7 +314,7 @@ Pentru tema am folosit \textbf{com.formdev.flatlaf} si am initializat \textbf{Fl
 \paragraph{}Folderul de resurse este impartit in:
 \begin{enumerate}
     \item CSV cu fisierele CSV
-    \item \begin{enumerate}
+    \begin{enumerate}
         \item Fisierele corespunzatoare tabelelor
         \item Folderul Log
     \end{enumerate}
@@ -265,8 +322,6 @@ Pentru tema am folosit \textbf{com.formdev.flatlaf} si am initializat \textbf{Fl
     \item Migrations cu fisierul sql care este rulat pentru a popula baza de date
     \item Spalsh cu imaginea pentru spalsh screen
 \end{enumerate}
-
-\section[Alte mentiuni despre cod]{Alte mentiuni despre cod}
 
 \section[Workflow GitHub]{Workflow GitHub}
 \paragraph{} Actiunea de publicare a unei versiuni noi pe GitHub are urmatorii pasi:
@@ -283,5 +338,9 @@ Pentru tema am folosit \textbf{com.formdev.flatlaf} si am initializat \textbf{Fl
 \paragraph{} Toate aceste lucruri se pot face atat manual cat si la fiecare push pe main. De aceea pentru fiecare versiune noua se va lucra pe un branch separat.
 
 \paragraph{} Fisierul de workflow se afla in \textbf{./.github/workflows/main.yml}.
+
+\section[Alte mentiuni despre cod]{Alte mentiuni despre cod}
+\paragraph{} Codul se refera la un produs MVP de gestionare a unui magazin de vanzare a camerelor foto vintage. Pe parcurs am spus ce poate fi imbunatatit, iar in fisierul {\color{blue}\url{https://github.com/fredtux/VintageRent/blob/main/README.MD}} se pot gasi mai multe informatii referitoare la indeplinirea cerintelor.
+
 
 \end{document}

@@ -55,7 +55,7 @@ Documentatia se gaseste in format PDF in fisierul [Documentatie.pdf](https://git
 
 ### Observatii
 - [x] Toata lumea trebuie sa foloseasca Git & Maven. Proiectele nu se trimit ca arhiva.
-- [ ] Proiectul trebuie sa aiba documentatie. Fiecare scrie documentatia cum vrea, in doc/pdf sau in cod. Trebuie sa stii sa explici ce ai facut in cod, nu e de ajuns doar sa-l scrii.
+- [x] Proiectul trebuie sa aiba documentatie. Fiecare scrie documentatia cum vrea, in doc/pdf sau in cod. Trebuie sa stii sa explici ce ai facut in cod, nu e de ajuns doar sa-l scrii.
 - [x] Versiunea Java o sa fie MINIM 17.
 - [x] O sa folosim Docker & Docker-Compose pentru baza de date.
   - Implementare proprie: baza de date fiind Oracle, trebuie configurata mai intai. Am inclus un submodul de docker pentru Oracle 21c, dar nu pot adauga toata configuratia din cauza licentei
