@@ -107,6 +107,7 @@ public class RentAdd {
         c3.gridx = 2;
         JComboBox cmbCamera = new JComboBox();
         CameraModel cameraModel = CameraModel.getInstance();
+        cameraModel.setDatabaseType(caller.getDatabaseType());
         ModelList<CameraModel.InnerCameraModel> listCameras = null;
         try {
             listCameras = cameraModel.getData();
@@ -127,6 +128,7 @@ public class RentAdd {
         c3.gridx = 2;
         JComboBox cmbClient = new JComboBox();
         ClientModel clientModel = ClientModel.getInstance();
+        clientModel.setDatabaseType(caller.getDatabaseType());
         ModelList<ClientModel.InnerClientModel> listClients = null;
         try {
             listClients = clientModel.getData();
@@ -147,6 +149,7 @@ public class RentAdd {
         c3.gridx = 2;
         JComboBox cmbAngajat = new JComboBox();
         EmployeeModel angajatModel = EmployeeModel.getInstance();
+        angajatModel.setDatabaseType(caller.getDatabaseType());
         ModelList<EmployeeModel.InnerEmployeeModel> listEmployees = null;
         try {
             listEmployees = angajatModel.getData();
@@ -167,6 +170,7 @@ public class RentAdd {
         c3.gridx = 2;
         JComboBox cmbObiectiv = new JComboBox();
         ObjectiveModel obiectivModel = ObjectiveModel.getInstance();
+        obiectivModel.setDatabaseType(caller.getDatabaseType());
         ModelList<ObjectiveModel.InnerObjectiveModel> listObjectives = null;
         try {
             listObjectives = obiectivModel.getData();
