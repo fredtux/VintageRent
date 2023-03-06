@@ -2,6 +2,7 @@ package org.database.oracle;
 
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.database.DatabaseConnection;
+import org.models.ModelInit;
 import org.models.Pair;
 
 import java.io.*;
@@ -11,7 +12,7 @@ import java.util.Map;
 
 public class OracleConnection extends DatabaseConnection {
     private static OracleConnection instance = null;
-    private static final String DB_INIT_FILE = "Migrations/init.sql";
+    private static final String DB_INIT_FILE = "/Migrations/init.sql";
     public OracleConnection(String url, String username, String password, String driver, String database, String schema, String port) {
         // Singleton
         if(instance != null)
@@ -133,6 +134,8 @@ public class OracleConnection extends DatabaseConnection {
     @Override
     public void init() throws Exception {
         try {
+//            ModelInit.oracleInit();
+
             Reader initScript = readFile(DB_INIT_FILE);
             ScriptRunner sr = new ScriptRunner(this.conn);
             sr.setLogWriter(null);
@@ -147,9 +150,6 @@ public class OracleConnection extends DatabaseConnection {
         } catch (IOException ex) {
             System.out.println("Error reading init script: " + ex.getMessage());
             throw new IOException("Error reading init script: " + ex.getMessage());
-        } catch (SQLException ex) {
-            System.out.println("Error initializing database: " + ex.getMessage());
-            throw new SQLException("Error initializing database: " + ex.getMessage());
         }
     }
 
@@ -291,9 +291,11 @@ public class OracleConnection extends DatabaseConnection {
         }
     }
 
-    private Reader readFile(String resourcePath) throws Exception{
-        ClassLoader classLoader = getClass().getClassLoader();
-        return new BufferedReader(new FileReader(classLoader.getResource(resourcePath).getFile()));
+    private Reader readFile(String resourcePath) throws IOException{
+        InputStream in = getClass().getResourceAsStream(resourcePath);
+        InputStreamReader isr = new InputStreamReader(in);
+        return new BufferedReader(isr);
+//        return new BufferedReader(new FileReader(classLoader.getResource(resourcePath).getFile()));
     }
 
 

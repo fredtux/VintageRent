@@ -19,19 +19,27 @@ public class ModelInit {
     public static void copyFromJar(URI uri, final Path target) throws IOException {
 //        URI uri = new URI(source);
         Path myPath;
-        if (uri.getScheme().equals("jar")) {
-            FileSystem fileSystem = FileSystems.newFileSystem(uri, Collections.<String, Object>emptyMap());
-            myPath = fileSystem.getPath("/CSV/");
-        } else {
-            myPath = Paths.get(uri);
-        }
+//        if (uri.getScheme().equals("jar")) {
+//            FileSystem fileSystem = FileSystems.newFileSystem(uri, Collections.<String, Object>emptyMap());
+//            myPath = fileSystem.getPath("/CSV/");
+//        } else {
+//            myPath = Paths.get(uri);
+//        }
+        myPath = Paths.get(uri);
+        System.out.println("1111111");
         Files.walkFileTree(myPath, new SimpleFileVisitor<Path>() {
             @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                Files.copy(file, target.resolve(file.getFileName()));
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+                try {
+                    Files.copy(file, target.resolve(file.getFileName()));
+                } catch (Exception e){
+                    System.out.println("Error copying file: " + e.getMessage());
+                }
                 return FileVisitResult.CONTINUE;
             }
         });
+
+        System.out.println("222222");
     }
 
     public static void logInit() throws Exception{
