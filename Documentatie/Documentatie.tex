@@ -31,6 +31,8 @@
 \usepackage{bookmark}
 \usepackage{lmodern}
 
+\setmainfont{Roboto}
+
 \graphicspath{ {./img/} }
 
 
@@ -296,7 +298,7 @@ Pentru tema am folosit \textbf{com.formdev.flatlaf} si am initializat \textbf{Fl
 
 \paragraph{} In semnatura sa, \textbf{public interface LinkModelToDatabase<T extends ModelList, U extends Model.AbstractInnerModel>} apar 2 templateuri, unul pentru a fi sigur ca este de tip ModelList, iar altul pentru a fi sigur ca extinde clasa de campuri continuta de fiecare model in parte.
 
-\section[*Model]{*Model}
+\subsection[*Model]{*Model}
 \paragraph{} Prin acest lucru definesc orice model. Deoarece modelele functioneaza pe acelasi principiu, dar cu o alta multime de campuri mapate din data source, este de preferat sa fac o descriere generala pentru a putea implementa orice alt model pe viitor.
 
 \begin{figure}[ht]
