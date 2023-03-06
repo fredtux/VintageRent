@@ -1,3 +1,0 @@
-[submodule "docker_oracle_21"]
-	path = docker_oracle_21
-	url = git@github.com:fredtux/docker_oracledb_21.git

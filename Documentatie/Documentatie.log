@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2022/dev/Debian) (preloaded format=xelatex 2023.3.2)  5 MAR 2023 14:25
+This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2022/dev/Debian) (preloaded format=xelatex 2023.3.2)  6 MAR 2023 12:15
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -832,11 +832,11 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 90.
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) (./Documentatie.toc
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 11.
+(Font)              <10> on input line 12.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 11.
+(Font)              <7> on input line 12.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 11.
+(Font)              <5> on input line 12.
 )
 \tf@toc=\write5
 \openout5 = `Documentatie.toc'.
@@ -846,7 +846,9 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 ]
 File: ./img//diagrama.png Graphic file (type bmp)
 <./img//diagrama.png>
- [1]
+ (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2020/03/24 1.8d listings language file
+) [1]
 File: ./img//program.png Graphic file (type bmp)
 <./img//program.png>
  [2]
@@ -862,12 +864,12 @@ File: ./img//rentmodel.png Graphic file (type bmp)
 <./img//rentmodel.png>
  [6] [7] [8] [9] (./Documentatie.aux) ) 
 Here is how much of TeX's memory you used:
- 36586 strings out of 477600
- 822257 string characters out of 5839384
- 1219189 words of memory out of 5000000
- 56706 multiletter control sequences out of 15000+600000
+ 36825 strings out of 477600
+ 825104 string characters out of 5839384
+ 1401237 words of memory out of 5000000
+ 56941 multiletter control sequences out of 15000+600000
  493982 words of font info for 69 fonts, out of 8000000 for 9000
  350 hyphenation exceptions out of 8191
- 100i,6n,104p,1706b,1131s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 100i,6n,104p,1706b,1321s stack positions out of 5000i,500n,10000p,200000b,80000s
 
 Output written on Documentatie.pdf (10 pages).
