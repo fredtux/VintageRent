@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2022/dev/Debian) (preloaded format=xelatex 2023.3.2)  6 MAR 2023 13:46
+This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2022/dev/Debian) (preloaded format=xelatex 2023.3.2)  6 MAR 2023 22:02
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -846,8 +846,6 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 ]
 File: ./img//diagrama.png Graphic file (type bmp)
 <./img//diagrama.png>
-File: ./img//databaseconnection.png Graphic file (type bmp)
-<./img//databaseconnection.png>
  (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2020/03/24 1.8d listings language file
 ) [1]
@@ -864,14 +862,18 @@ File: ./img//diagramadb.png Graphic file (type bmp)
  [4] [5] [6]
 File: ./img//rentmodel.png Graphic file (type bmp)
 <./img//rentmodel.png>
- [7] [8] [9] (./Documentatie.aux) ) 
+ [7] [8] [9] (./Documentatie.aux)
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
 Here is how much of TeX's memory you used:
- 36836 strings out of 477600
- 825445 string characters out of 5839384
- 1402180 words of memory out of 5000000
- 56951 multiletter control sequences out of 15000+600000
+ 36827 strings out of 477600
+ 825151 string characters out of 5839384
+ 1401861 words of memory out of 5000000
+ 56943 multiletter control sequences out of 15000+600000
  493982 words of font info for 69 fonts, out of 8000000 for 9000
  350 hyphenation exceptions out of 8191
- 100i,6n,104p,1706b,1321s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 100i,6n,104p,1706b,1857s stack positions out of 5000i,500n,10000p,200000b,80000s
 
 Output written on Documentatie.pdf (10 pages).

@@ -3,9 +3,10 @@
 \contentsline {paragraph}{}{1}{section.1}%
 \contentsline {paragraph}{}{1}{section.1}%
 \contentsline {paragraph}{}{1}{figure.1}%
-\contentsline {paragraph}{Datele de conectare}{1}{figure.1}%
-\contentsline {paragraph}{}{1}{figure.2}%
-\contentsline {paragraph}{}{1}{lstnumber.-1.2}%
+\contentsline {paragraph}{Pe Linux}{1}{figure.1}%
+\contentsline {paragraph}{Pe Windows}{1}{figure.1}%
+\contentsline {paragraph}{}{2}{figure.1}%
+\contentsline {paragraph}{}{2}{lstnumber.-1.2}%
 \contentsline {section}{\numberline {2}Main}{2}{section.2}%
 \contentsline {paragraph}{}{2}{section.2}%
 \contentsline {paragraph}{}{2}{section.2}%
@@ -14,36 +15,36 @@
 \contentsline {subsection}{\numberline {3.1}MainGUI}{2}{subsection.3.1}%
 \contentsline {paragraph}{}{2}{subsection.3.1}%
 \contentsline {paragraph}{}{2}{lstnumber.-2.5}%
-\contentsline {paragraph}{Bara de meniu}{3}{lstnumber.-2.5}%
+\contentsline {paragraph}{Bara de meniu}{2}{lstnumber.-2.5}%
 \contentsline {paragraph}{JTable}{3}{Item.6}%
 \contentsline {paragraph}{Butonul remove}{3}{Item.6}%
 \contentsline {paragraph}{Butonul add}{3}{Item.6}%
 \contentsline {subsection}{\numberline {3.2}Add}{3}{subsection.3.2}%
-\contentsline {paragraph}{}{3}{figure.4}%
-\contentsline {paragraph}{}{4}{figure.4}%
+\contentsline {paragraph}{}{4}{figure.3}%
+\contentsline {paragraph}{}{4}{figure.3}%
 \contentsline {paragraph}{}{4}{Item.10}%
 \contentsline {paragraph}{JComboBox}{4}{Item.10}%
 \contentsline {paragraph}{JDatePickerImpl}{4}{Item.10}%
 \contentsline {subsection}{\numberline {3.3}Rapoarte}{4}{subsection.3.3}%
 \contentsline {paragraph}{Raport clienti}{4}{subsection.3.3}%
 \contentsline {subsection}{\numberline {3.4}Log}{4}{subsection.3.4}%
+\contentsline {paragraph}{}{4}{figure.4}%
+\contentsline {section}{\numberline {4}Conexiunea la data sourceuri}{4}{section.4}%
+\contentsline {paragraph}{Clasa abstracta}{4}{figure.5}%
 \contentsline {paragraph}{}{4}{figure.5}%
-\contentsline {section}{\numberline {4}Conexiunea la data sourceuri}{5}{section.4}%
-\contentsline {paragraph}{Clasa abstracta}{5}{figure.6}%
-\contentsline {paragraph}{}{5}{figure.6}%
-\contentsline {paragraph}{OracleConnection}{5}{figure.6}%
-\contentsline {paragraph}{CsvConnection}{6}{figure.6}%
-\contentsline {paragraph}{}{6}{figure.6}%
-\contentsline {paragraph}{}{6}{figure.6}%
+\contentsline {paragraph}{OracleConnection}{5}{figure.5}%
+\contentsline {paragraph}{CsvConnection}{5}{figure.5}%
+\contentsline {paragraph}{}{5}{figure.5}%
+\contentsline {paragraph}{}{5}{figure.5}%
 \contentsline {paragraph}{}{6}{lstnumber.-4.5}%
 \contentsline {paragraph}{}{6}{lstnumber.-5.5}%
 \contentsline {paragraph}{}{6}{lstnumber.-5.5}%
 \contentsline {section}{\numberline {5}Modele}{6}{section.5}%
 \contentsline {subsection}{\numberline {5.1}Model}{6}{subsection.5.1}%
 \contentsline {paragraph}{}{6}{subsection.5.1}%
-\contentsline {subsection}{\numberline {5.2}ModelList}{7}{subsection.5.2}%
-\contentsline {paragraph}{}{7}{subsection.5.2}%
-\contentsline {paragraph}{}{7}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.2}ModelList}{6}{subsection.5.2}%
+\contentsline {paragraph}{}{6}{subsection.5.2}%
+\contentsline {paragraph}{}{6}{subsection.5.2}%
 \contentsline {paragraph}{}{7}{subsection.5.2}%
 \contentsline {paragraph}{}{7}{subsection.5.2}%
 \contentsline {subsection}{\numberline {5.3}LinkModelToDatabase}{7}{subsection.5.3}%
@@ -51,9 +52,9 @@
 \contentsline {paragraph}{}{7}{subsection.5.3}%
 \contentsline {section}{\numberline {6}*Model}{7}{section.6}%
 \contentsline {paragraph}{}{7}{section.6}%
-\contentsline {paragraph}{}{7}{figure.7}%
-\contentsline {paragraph}{}{7}{figure.7}%
-\contentsline {paragraph}{}{8}{figure.7}%
+\contentsline {paragraph}{}{7}{figure.6}%
+\contentsline {paragraph}{}{7}{figure.6}%
+\contentsline {paragraph}{}{7}{figure.6}%
 \contentsline {section}{\numberline {7}Serviciul de audit}{8}{section.7}%
 \contentsline {paragraph}{CsvLogger}{8}{section.7}%
 \contentsline {paragraph}{Metoda de scriere}{8}{section.7}%
@@ -62,11 +63,11 @@
 \contentsline {paragraph}{}{8}{section.8}%
 \contentsline {subsection}{\numberline {8.1}Raport client}{8}{subsection.8.1}%
 \contentsline {paragraph}{}{8}{subsection.8.1}%
-\contentsline {section}{\numberline {9}Clase ajutatoare}{9}{section.9}%
-\contentsline {subsection}{\numberline {9.1}Pair<T, U>}{9}{subsection.9.1}%
-\contentsline {paragraph}{}{9}{subsection.9.1}%
-\contentsline {subsection}{\numberline {9.2}ModelInit}{9}{subsection.9.2}%
-\contentsline {paragraph}{}{9}{subsection.9.2}%
+\contentsline {section}{\numberline {9}Clase ajutatoare}{8}{section.9}%
+\contentsline {subsection}{\numberline {9.1}Pair<T, U>}{8}{subsection.9.1}%
+\contentsline {paragraph}{}{8}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}ModelInit}{8}{subsection.9.2}%
+\contentsline {paragraph}{}{8}{subsection.9.2}%
 \contentsline {section}{\numberline {10}Resurse}{9}{section.10}%
 \contentsline {paragraph}{}{9}{section.10}%
 \contentsline {section}{\numberline {11}Workflow GitHub}{9}{section.11}%
