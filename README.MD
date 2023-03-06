@@ -1,32 +1,21 @@
 # Vintage Rent
 ## !!! ATENTIE !!!
-Va trebui sa clonati submodulul de docker din proiect si sa-l configurati asa cum apare in README.md-ul lui.
+Pentru conexiunea cu baza de date, va trebui sa intrati in folderul **docker_oracle_21c** si sa rulati
 
-Pentru clonare cu submodule, folositi:
 ```bash
-git clone --recurse-submodules git@github.com:fredtux/VintageRent.git
+docker-compose up
 ```
-
-Daca ati clonat deja, rulati
-```bash
-git submodule init
-git submodule update
-```
-
-Pentru a face containerul de docker functional, urmati intructiunile din README.md-ul sau: [https://github.com/fredtux/docker_oracledb_21](https://github.com/fredtux/docker_oracledb_21) 
 
 Apoi rulati comenzile urmatoare pentru a crea userul folosit de program:
 ```sql
-CREATE USER C##TUX IDENTIFIED BY 'fmilove';
+CREATE USER C##TUX IDENTIFIED BY "fmilove";
 ```
 si
 ```sql
-GRANT ALL PRIVILEGES TO C##TUX
+GRANT ALL PRIVILEGES TO C##TUX;
 ```
 
 Aceste instructiuni creaza user-ul, baza de date fiind creata de aplicatie.
-
-**Pentru explicatii suplimentare referitoare la motivul pentru care am adaugat acest pas, consultati documentatia.**
 
 ## Documentatie
 Documentatia se gaseste in format PDF in fisierul [Documentatie.pdf](https://github.com/fredtux/VintageRent/blob/main/Documentatie.pdf)

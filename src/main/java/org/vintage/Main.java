@@ -18,7 +18,7 @@ public class Main {
     private static final String PROJECT_NAME = "Vintage Rent";
     private static final int SPLASH_TIME = 0;
 
-    public static final String ORACLE_DB_ADDR = "172.20.128.2";
+    public static final String ORACLE_DB_ADDR = "172.21.128.2";
 
     private static AtomicBoolean isOracleUp = new AtomicBoolean(true);
     public static void main(String[] args) {
@@ -46,7 +46,7 @@ public class Main {
                             public void run() {
                                 try {
                                     // Connect to Oracle Database and check if it's initialized
-                                    DatabaseConnection orcl = new OracleConnection(ORACLE_DB_ADDR, "c##tux", "fmilove", "oracle.jdbc.driver.OracleDriver", "ORCLCDB", "C##TUX", "1521");
+                                    DatabaseConnection orcl = new OracleConnection(ORACLE_DB_ADDR, "c##tux", "fmilove", "oracle.jdbc.driver.OracleDriver", "XE", "C##TUX", "1521");
                                     orcl.connect();
 
                                     if(!orcl.isInitialized())

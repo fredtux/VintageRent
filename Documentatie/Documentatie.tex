@@ -47,9 +47,9 @@ extendedchars=true,
         showtabs=false,
         showspaces=false,
         identifierstyle=\ttfamily,
-        % keywordstyle=\color[rgb]{0,0,1},
-        % commentstyle=\color[rgb]{0.133,0.545,0.133},
-        % stringstyle=\color[rgb]{0.627,0.126,0.941},
+        keywordstyle=\color[rgb]{0,0,1},
+        commentstyle=\color[rgb]{0.133,0.545,0.133},
+        stringstyle=\color[rgb]{0.627,0.126,0.941},
         % language=Java
         frame=lines,
         literate=%
@@ -104,7 +104,16 @@ extendedchars=true,
     \label{fig:diagrama}
 \end{figure}
 
-\paragraph{!!! ATENTIE !!! \textcolor{red}{Programul poate fi rulat de sine statator si va folosi fisierele CSV ca data source. Daca se doreste folosirea unei baze de date, atunci trebuie clonat submodului docker\_oracle\_21 si urmate instructiunile din el. Ideea este ca daca as pune un container neconfigurabil de Oracle 21c, ar trebui sa folosesc un fisier care se gaseste pe siteul Oracle si pentru care se cere user si parola. Asa ca din ratiuni de drepturi de autor, am decis sa nu-l folosesc. Configurarea este straight forward, apoi intervin 2 comenzi pentru crearea utilizatorului. Recomand pentru acest lucru citirea fisierului README.md pentru ca el contine toate explicatiile. In mod normal, baza de date ar fi setata deja, iar utilizatorul nu ar trebui sa se preocupe de aceste aspecte.}}
+\paragraph{} Pentru conexiunea la baza de date Oracle, va trebui sa intrati in folderul \textbf{docker\_oracle\_21c} si sa rulati \textbf{docker-compose up} . Dupa acest lucru, adaugati in baza de date urmatorul utilizator:
+
+\begin{center}
+    \begin{lstlisting}[language=sql]
+        CREATE USER C##TUX IDENTIFIED BY "fmilove";
+        GRANT ALL PRIVILEGES TO C##TUX;
+    \end{lstlisting}
+\end{center}
+
+\paragraph{} Motivul pentru care acest utilizator exista, este ca sa nu se faca niciodata conexiunea cu SYSTEM sau alt utilizator privilegiat, ca si in viata reala.
 
 \section[Main]{Main}
 \paragraph{}Entry pointul in program se afla in \textbf{org.vintage.Main}, metoda \textbf{main}. Mai intai se initializeaza tema pentru GUI, apoi se porneste serviciul de audit \textbf{CsvLogger}. Apoi din main se lanseaza un thread separat si se asteapta sa se faca joinul. Acest lucru ne permite sa detectam cand programul este inchis si sa logam aceasta operatie. 
