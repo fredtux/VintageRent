@@ -25,6 +25,13 @@ public class Main {
         FlatDarkLaf.setup();
         System.setProperty("flatlaf.menuBarEmbedded", "false");
 
+        try {
+            ModelInit.logInit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
         CsvLogger logger = CsvLogger.getInstance();
         try{
             logger.log("Starting application");
