@@ -6,6 +6,8 @@ import com.opencsv.CSVWriter;
 import org.database.DatabaseConnection;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
 import java.sql.ResultSet;
 import java.util.Arrays;
 import java.util.List;
@@ -71,13 +73,13 @@ public class CsvConnection extends DatabaseConnection {
 
     @Override
     public void connect() throws Exception {
-        ClassLoader classLoader = getClass().getClassLoader();
-        this.reader = new CSVReader(new FileReader(classLoader.getResource(this.path).getFile()));
+//        ClassLoader classLoader = getClass().getClassLoader();
+//        this.reader = new CSVReader(new FileReader(classLoader.getResource(this.path).getFile()));
     }
 
     @Override
     public void disconnect() throws Exception {
-        this.reader.close();
+//        this.reader.close();
     }
 
     @Override
@@ -88,8 +90,9 @@ public class CsvConnection extends DatabaseConnection {
     @Override
     public boolean isInitialized() throws Exception {
         try {
-            ClassLoader classLoader = getClass().getClassLoader();
-            Reader r = new BufferedReader(new FileReader(classLoader.getResource(path).getFile()));
+            String filePath = Paths.get(System.getProperty("user.dir") + path).toString();
+
+            Reader r = new BufferedReader(new FileReader(filePath));
             this.reader = new CSVReader(r);
             String line[] = null;
             if ((line = this.reader.readNext()) != null) {
@@ -123,12 +126,14 @@ public class CsvConnection extends DatabaseConnection {
     }
 
     public void init(String[] columns) throws Exception {
-        ClassLoader classLoader = getClass().getClassLoader();
+        String filePath = Paths.get(System.getProperty("user.dir") + "/CSV/" + path).toString();
+
+//        ClassLoader classLoader = getClass().getClassLoader();
         // Create file at this.path
-        File f = new File(classLoader.getResource(path).getFile());
+        File f = new File(filePath);
         f.createNewFile();
 
-        this.writer = new CSVWriter(new FileWriter(classLoader.getResource(path).getFile()));
+        this.writer = new CSVWriter(new FileWriter(filePath));
         this.writer.writeNext(columns);
         this.writer.close();
 
@@ -141,8 +146,8 @@ public class CsvConnection extends DatabaseConnection {
 
     @Override
     public int getNewId(String tableName, String column) throws Exception {
-        ClassLoader classLoader = getClass().getClassLoader();
-        Reader r = new BufferedReader(new FileReader(classLoader.getResource("CSV/" + tableName).getFile()));
+        String filePath = Paths.get(System.getProperty("user.dir") + "/CSV/" + tableName).toString();
+        Reader r = new BufferedReader(new FileReader(filePath));
         this.reader = new CSVReader(r);
 
         List<String[]> lresult = this.reader.readAll();
@@ -169,8 +174,8 @@ public class CsvConnection extends DatabaseConnection {
     @Override
     public void update(String tableName, Map<String, String> set, Map<String, String> where) throws Exception {
         this.setPath(tableName);
-        ClassLoader classLoader = getClass().getClassLoader();
-        Reader r = new BufferedReader(new FileReader(classLoader.getResource("CSV/" + this.path).getFile()));
+        String filePath = Paths.get(System.getProperty("user.dir") + "/CSV/" + this.path).toString();
+        Reader r = new BufferedReader(new FileReader(filePath));
         this.reader = new CSVReader(r);
 
         List<String[]> lresult = this.reader.readAll();
@@ -217,7 +222,7 @@ public class CsvConnection extends DatabaseConnection {
         }
 
         // Write data to file
-        this.writer = new CSVWriter(new FileWriter(classLoader.getResource("CSV/" + this.path).getFile()));
+        this.writer = new CSVWriter(new FileWriter(filePath));
         this.writer.writeNext(headers.toArray(new String[headers.size()]));
         for (List<Object> list : data) {
             this.writer.writeNext(list.toArray(new String[list.size()]));
@@ -242,8 +247,9 @@ public class CsvConnection extends DatabaseConnection {
     @Override
     public ResultSet getAllTableData(String tableName) throws Exception {
         this.setPath(tableName);
-        ClassLoader classLoader = getClass().getClassLoader();
-        Reader r = new BufferedReader(new FileReader(classLoader.getResource("CSV/" + this.path).getFile()));
+        String filePath = Paths.get(System.getProperty("user.dir") + "/CSV/" + tableName).toString();
+//        ClassLoader classLoader = getClass().getClassLoader();
+        Reader r = new BufferedReader(new FileReader(filePath));
         this.reader = new CSVReader(r);
 
         List<String[]> lresult = this.reader.readAll();
@@ -314,8 +320,10 @@ public class CsvConnection extends DatabaseConnection {
     public void createAndInsert(String tableName, String[] columns, List<String[]> values) throws Exception {
         try {
             this.setPath(tableName);
-            ClassLoader classLoader = getClass().getClassLoader();
-            File f = new File(classLoader.getResource(this.folder + this.path).getFile());
+            String filePath = Paths.get(System.getProperty("user.dir") + "/CSV/" + tableName).toString();
+
+//            ClassLoader classLoader = getClass().getClassLoader();
+            File f = new File(filePath);
             this.writer = new CSVWriter(new FileWriter(f));
             if(columns != null)
                 this.writer.writeNext(columns);
@@ -340,11 +348,13 @@ public class CsvConnection extends DatabaseConnection {
     }
 
     public void createAndInsertDynamically(String tableName, String[] columns, List<String[]> values) throws Exception {
-        ClassLoader classLoader = getClass().getClassLoader();
-        File mock = new File(this.getClass().getResource("/CSV/mock.csv").getFile());
+        String filePath = Paths.get(System.getProperty("user.dir") + "/CSV/" + "mock.csv").toString();
+
+//        ClassLoader classLoader = getClass().getClassLoader();
+        File mock = new File(filePath);
         File parent = mock.getParentFile();
 
-        System.out.println(parent.getPath());
+//        System.out.println(parent.getPath());
         File f = new File(parent, tableName);
         f.createNewFile();
         this.writer = new CSVWriter(new FileWriter(f));
@@ -361,11 +371,13 @@ public class CsvConnection extends DatabaseConnection {
 
     @Override
     public void createTable(String tableName, String[] columns, String[] types) throws Exception {
-        ClassLoader classLoader = getClass().getClassLoader();
-        File mock = new File(this.getClass().getResource("/CSV/mock.csv").getFile());
+        String filePath = Paths.get(System.getProperty("user.dir") + "/CSV/" + "mock.csv").toString();
+
+//        ClassLoader classLoader = getClass().getClassLoader();
+        File mock = new File(filePath);
         File parent = mock.getParentFile();
 
-        System.out.println(parent.getPath());
+//        System.out.println(parent.getPath());
         File f = new File(parent, tableName);
         f.createNewFile();
 
@@ -381,8 +393,10 @@ public class CsvConnection extends DatabaseConnection {
     @Override
     public void insert(String tableName, List<Pair<String, String>> values) throws Exception {
         this.setPath(tableName);
-        ClassLoader classLoader = getClass().getClassLoader();
-        File f = new File(classLoader.getResource("CSV/" + this.path).getFile());
+        String filePath = Paths.get(System.getProperty("user.dir") + "/CSV/" + tableName).toString();
+
+//        ClassLoader classLoader = getClass().getClassLoader();
+        File f = new File(filePath);
         this.writer = new CSVWriter(new FileWriter(f, true));
         String[] row = new String[values.size()];
         int i = 0;
@@ -412,8 +426,11 @@ public class CsvConnection extends DatabaseConnection {
 
     public void insertNoLog(String tableName, String[] columns, List<String[]> values) throws Exception {
         this.setPath(tableName);
-        ClassLoader classLoader = getClass().getClassLoader();
-        File f = new File(classLoader.getResource("Log/" + this.path).getFile());
+        String filePath = Paths.get(System.getProperty("user.dir") + "/Log/Log.csv" ).toString();
+
+//        ClassLoader classLoader = getClass().getClassLoader();
+//        String filePath =  Paths.get(System.getProperty("user.dir") + "/Log/Log.csv").toString();
+        File f = new File(filePath);
         this.writer = new CSVWriter(new FileWriter(f, true));
         this.writer.writeNext(columns);
         this.writer.writeAll(values);
@@ -423,8 +440,10 @@ public class CsvConnection extends DatabaseConnection {
     @Override
     public void delete(String tableName, Map<String, String> where) throws Exception {
         this.setPath(tableName);
-        ClassLoader classLoader = getClass().getClassLoader();
-        Reader r = new BufferedReader(new FileReader(classLoader.getResource("CSV/" + this.path).getFile()));
+        String filePath = Paths.get(System.getProperty("user.dir") + "/CSV/" + tableName).toString();
+
+//        ClassLoader classLoader = getClass().getClassLoader();
+        Reader r = new BufferedReader(new FileReader(filePath));
         this.reader = new CSVReader(r);
 
         List<String[]> lresult = this.reader.readAll();
@@ -462,7 +481,7 @@ public class CsvConnection extends DatabaseConnection {
         }
 
         // Write data to file
-        this.writer = new CSVWriter(new FileWriter(classLoader.getResource("CSV/" + this.path).getFile()));
+        this.writer = new CSVWriter(new FileWriter(filePath));
         this.writer.writeNext(headers.toArray(new String[headers.size()]));
         for (List<Object> list : data) {
             this.writer.writeNext(list.toArray(new String[list.size()]));
@@ -484,8 +503,10 @@ public class CsvConnection extends DatabaseConnection {
     @Override
     public void truncate(String tableName) throws Exception {
         this.setPath(tableName);
-        ClassLoader classLoader = getClass().getClassLoader();
-        File f = new File(classLoader.getResource(this.folder + this.path).getFile());
+        String filePath = Paths.get(System.getProperty("user.dir") + "/CSV/" + tableName).toString();
+
+//        ClassLoader classLoader = getClass().getClassLoader();
+        File f = new File(filePath);
         this.writer = new CSVWriter(new FileWriter(f));
         this.writer.writeNext(null); // write nothing
         this.writer.close();
@@ -504,9 +525,11 @@ public class CsvConnection extends DatabaseConnection {
 
     public Pair<List<String>, List<List<String>>> readAllNoLog(String tableName) throws Exception {
         this.setPath(tableName);
-        ClassLoader classLoader = getClass().getClassLoader();
-        Reader r = new BufferedReader(new FileReader(classLoader.getResource("Log/" + tableName).getFile()));
-        this.reader = new CSVReader(r);
+        String filePath = Paths.get(System.getProperty("user.dir") + "/Log/Log.csv").toString();
+
+//        String filePath = Paths.get(System.getProperty("user.dir") + "/CSV/" + tableName).toString();
+        Reader reader = new BufferedReader(new FileReader(filePath));
+        this.reader = new CSVReader(reader);
 
         List<String[]> lresult = this.reader.readAll();
 
