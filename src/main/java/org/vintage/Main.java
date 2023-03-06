@@ -67,6 +67,11 @@ public class Main {
                                 } catch (Exception ex) {
                                     System.out.println("Error connecting to database: " + ex.getMessage());
                                     isOracleUp.set(false);
+                                    try {
+                                        ModelInit.csvInit();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                             }
                         });
