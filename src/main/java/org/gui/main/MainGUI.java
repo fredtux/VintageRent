@@ -776,7 +776,7 @@ public class MainGUI { // Singleton
         c2.gridx = 0;
         c2.gridy = 0;
         c2.gridwidth = 3;
-        c2.gridheight = 2;
+        c2.gridheight = 3;
         c2.weightx = 1;
         c2.weighty = 0.1;
         c2.anchor = GridBagConstraints.NORTH;
@@ -785,7 +785,7 @@ public class MainGUI { // Singleton
         this.panel1.add(this.jscrPane, c2);
 
         c2.gridx = 0;
-        c2.gridy = 2;
+        c2.gridy = 3;
         c2.gridwidth = 1;
         c2.gridheight = 1;
         c2.weightx = 1;
@@ -826,7 +826,6 @@ public class MainGUI { // Singleton
         this.panel1.add(this.btnRemove, c2);
 
         c2.gridx = 1;
-        c2.gridy = 2;
         c2.gridwidth = 1;
         c2.gridheight = 1;
         c2.weightx = 1;
