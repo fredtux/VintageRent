@@ -119,6 +119,7 @@ ___
     - CameraTypeAdd
     - FormatAdd
     - RentAdd
+    - EmployeeAdd
   - logs
     - LogGUI
 - logger
