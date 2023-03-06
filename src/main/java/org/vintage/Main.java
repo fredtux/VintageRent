@@ -1,6 +1,7 @@
 package org.vintage;
 
 import com.formdev.flatlaf.FlatDarkLaf;
+import org.apache.commons.lang3.SystemUtils;
 import org.database.DatabaseConnection;
 import org.database.oracle.OracleConnection;
 import org.gui.main.MainGUI;
@@ -18,10 +19,13 @@ public class Main {
     private static final String PROJECT_NAME = "Vintage Rent";
     private static final int SPLASH_TIME = 0;
 
-    public static final String ORACLE_DB_ADDR = "172.21.128.2";
+    public static String ORACLE_DB_ADDR = "172.21.128.2";
 
     private static AtomicBoolean isOracleUp = new AtomicBoolean(true);
     public static void main(String[] args) {
+        if(SystemUtils.IS_OS_WINDOWS)
+            ORACLE_DB_ADDR = "0.0.0.0";
+
         FlatDarkLaf.setup();
         System.setProperty("flatlaf.menuBarEmbedded", "false");
 
@@ -63,6 +67,11 @@ public class Main {
                                 } catch (Exception ex) {
                                     System.out.println("Error connecting to database: " + ex.getMessage());
                                     isOracleUp.set(false);
+                                    try {
+                                        ModelInit.csvInit();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                             }
                         });

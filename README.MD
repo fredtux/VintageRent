@@ -6,14 +6,19 @@ Pentru conexiunea cu baza de date, va trebui sa intrati in folderul **docker_ora
 docker-compose up
 ```
 
-Apoi va conectati cu:
+Apoi va conectati pe Linux cu:
 - host: 172.21.128.2
 - port: 1521
 - SID: XE
 - user: SYSTEM
 - parola: fmilove
 
-![Conexiune BD](Documentatie/img/databaseconnection.png)
+Sau pe Windows cu:
+- host: 0.0.0.0
+- port: 1521
+- SID: XE
+- user: SYSTEM
+- parola: fmilove
 
 Dupa aceea rulati comenzile urmatoare pentru a crea userul folosit de program:
 ```sql

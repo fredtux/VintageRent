@@ -31,6 +31,8 @@
 \usepackage{bookmark}
 \usepackage{lmodern}
 
+\setmainfont{Roboto}
+
 \graphicspath{ {./img/} }
 
 
@@ -106,7 +108,7 @@ extendedchars=true,
 
 \paragraph{} Pentru conexiunea la baza de date Oracle, va trebui sa intrati in folderul \textbf{docker\_oracle\_21c} si sa rulati \textbf{docker-compose up} 
 
-\paragraph{Datele de conectare} sunt urmatoarele:
+\paragraph{Pe Linux} datele de conectare sunt urmatoarele:
 \begin{itemize}
     \item host: 172.21.128.2
     \item port: 1521
@@ -115,12 +117,14 @@ extendedchars=true,
     \item parola: fmilove
 \end{itemize}
 
-\begin{figure}[ht]
-    \centering
-    \noindent\includegraphics[scale=0.5]{databaseconnection.png}
-    \caption{Conexiunea originala la baza de date asa cum apare in DataGrip}
-    \label{fig:databaseconnection}
-\end{figure}
+\paragraph{Pe Windows} datele de conectare sunt urmatoarele:
+\begin{itemize}
+    \item host: 0.0.0.0
+    \item port: 1521
+    \item SID: XE
+    \item user: SYSTEM
+    \item parola: fmilove
+\end{itemize}
 
 \paragraph{}Dupa aceea rulati comenzile urmatoare pentru a crea userul folosit de program:
 
@@ -294,7 +298,7 @@ Pentru tema am folosit \textbf{com.formdev.flatlaf} si am initializat \textbf{Fl
 
 \paragraph{} In semnatura sa, \textbf{public interface LinkModelToDatabase<T extends ModelList, U extends Model.AbstractInnerModel>} apar 2 templateuri, unul pentru a fi sigur ca este de tip ModelList, iar altul pentru a fi sigur ca extinde clasa de campuri continuta de fiecare model in parte.
 
-\section[*Model]{*Model}
+\subsection[*Model]{*Model}
 \paragraph{} Prin acest lucru definesc orice model. Deoarece modelele functioneaza pe acelasi principiu, dar cu o alta multime de campuri mapate din data source, este de preferat sa fac o descriere generala pentru a putea implementa orice alt model pe viitor.
 
 \begin{figure}[ht]
