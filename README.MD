@@ -129,6 +129,7 @@ ___
     - FormatAdd
     - RentAdd
     - EmployeeAdd
+    - UserAdd
   - logs
     - LogGUI
 - logger

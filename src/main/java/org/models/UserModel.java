@@ -4,6 +4,8 @@ import org.database.DatabaseConnection;
 import org.database.csv.CsvConnection;
 
 import javax.swing.table.DefaultTableModel;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -157,7 +159,7 @@ public class UserModel extends Model implements LinkModelToDatabase<ModelList<Us
         set.put("EMAIL", "'" + oneRow.get(0).Email + "'");
 
         Map<String, String> where = new HashMap<>();
-        where.put("IDUtilizator", String.valueOf(oneRow.get(0).IDUtilizator));
+        where.put("IDUTILIZATOR", String.valueOf(oneRow.get(0).IDUtilizator));
 
         db.update(this.tableName, set, where);
 //        db.update("UPDATE " + this.tableName + " SET MARCA = '" + oneRow.get(0).Marca + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRET = " + oneRow.get(0).Pret + ", PRETINCHIRIERE = " + oneRow.get(0).PretInchiriere + ", ANFABRICATIE = " + oneRow.get(0).AnFabricatie + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
@@ -215,13 +217,29 @@ public class UserModel extends Model implements LinkModelToDatabase<ModelList<Us
 
         List<Pair<String, String>> values = new ArrayList<>();
         values.add(new Pair<>("IDUTILIZATOR",""));
-        values.add(new Pair<>("NUMEUTILIZATOR", row.NumeUtilizator));
-        values.add(new Pair<>("PAROLA", row.Parola));
-        values.add(new Pair<>("NUME", row.Nume));
-        values.add(new Pair<>("PRENUME", row.Prenume));
-        values.add(new Pair<>("CNP", row.CNP));
-        values.add(new Pair<>("EMAIL", row.Email));
+        values.add(new Pair<>("NUMEUTILIZATOR", "'" + row.NumeUtilizator + "'"));
+        values.add(new Pair<>("PAROLA", "'" + makeMD5(row.Parola) + "'"));
+        values.add(new Pair<>("NUME", "'" + row.Nume + "'"));
+        values.add(new Pair<>("PRENUME", "'" + row.Prenume + "'"));
+        values.add(new Pair<>("CNP", "'" + row.CNP + "'"));
+        values.add(new Pair<>("EMAIL", "'" + row.Email + "'"));
 
         db.insert(this.tableName, values);
+    }
+
+    private String makeMD5(String plainText){
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(plainText.getBytes());
+            byte[] digest = md.digest();
+            StringBuffer sb = new StringBuffer();
+            for (byte b : digest) {
+                sb.append(String.format("%02x", b & 0xff));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

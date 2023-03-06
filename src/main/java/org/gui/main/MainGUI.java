@@ -34,7 +34,8 @@ public class MainGUI { // Singleton
         RENT,
         CAMERATYPE,
         FORMAT,
-        EMPLOYEE
+        EMPLOYEE,
+        USER
     }
 
     private TableType currentTableType = TableType.RENT;
@@ -61,6 +62,87 @@ public class MainGUI { // Singleton
             return new MainGUI();
 
         return instance;
+    }
+
+    public void initUserTable() {
+        UserModel userModel = UserModel.getInstance();
+        userModel.setDatabaseType(this.databaseType);
+        try {
+            userModel.getData();
+            DefaultTableModel rm = userModel.getTableModel();
+
+            this.tblMain = new JTable();
+            this.jscrPane.setViewportView(this.tblMain);
+            this.tblMain.setModel(rm);
+            rm.fireTableDataChanged();
+
+            class TableModelEvents implements TableModelListener {
+                public boolean isCellEditable(int row, int column) {
+                    return column != 0;
+                }
+
+                public void setValueAt(String value, int row, int column) throws Exception {
+                    UserModel rm = UserModel.getInstance();
+                    ModelList<UserModel.InnerUserModel> modelList = new ModelList<>();
+                    UserModel.InnerUserModel irm = new UserModel.InnerUserModel();
+                    DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
+
+                    irm.IDUtilizator = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+                    irm.NumeUtilizator = dtm.getValueAt(row, 1).toString();
+                    irm.Parola = dtm.getValueAt(row, 2).toString();
+                    irm.Nume = dtm.getValueAt(row, 3).toString();
+                    irm.Prenume = dtm.getValueAt(row, 4).toString();
+                    Object cnp = dtm.getValueAt(row, 5);
+                    irm.CNP = cnp == null ? "" : cnp.toString();
+                    irm.Email = dtm.getValueAt(row, 6).toString();
+
+
+                    switch (column) {
+                        case 1:
+                            irm.NumeUtilizator = value;
+                            break;
+                        case 2:
+                            irm.Parola = value;
+                            break;
+                        case 3:
+                            irm.Nume = value;
+                            break;
+                        case 4:
+                            irm.Prenume = value;
+                            break;
+                        case 5:
+                            irm.CNP = value;
+                            break;
+                        case 6:
+                            irm.Email = value;
+                            break;
+                        default:
+                            throw new Exception("Invalid column index");
+                    }
+
+                    modelList.add(irm);
+                    rm.updateData(modelList);
+                }
+
+                @Override
+                public void tableChanged(TableModelEvent e) {
+                    if (e.getType() == TableModelEvent.UPDATE) {
+                        int row = e.getFirstRow();
+                        int column = e.getColumn();
+                        try {
+                            setValueAt((String) tblMain.getValueAt(row, column), row, column);
+                        } catch (Exception ex) {
+                            System.out.println("Error in trying to update user table: " + ex.getMessage());
+                        }
+                    }
+                }
+            }
+
+            this.tblMain.getModel().addTableModelListener(new TableModelEvents());
+            this.currentTableType = TableType.USER;
+        } catch (Exception e) {
+            System.out.println("Error in trying to initialize camera table: " + e.getMessage());
+        }
     }
 
     public void initEmployeeTable() {
@@ -443,6 +525,20 @@ public class MainGUI { // Singleton
         }
     }
 
+    private void removeRowFromUserModel(int row) throws Exception{
+        UserModel rm = UserModel.getInstance();
+        ModelList<UserModel.InnerUserModel> modelList = new ModelList<>();
+        UserModel.InnerUserModel irm = new UserModel.InnerUserModel();
+        DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
+
+        irm.IDUtilizator = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+
+        modelList.add(irm);
+        rm.deleteRow(modelList);
+
+        dtm.removeRow(row);
+    }
+
     private void removeRowFromEmployeeModel(int row) throws Exception{
         EmployeeModel rm = EmployeeModel.getInstance();
         ModelList<EmployeeModel.InnerEmployeeModel> modelList = new ModelList<>();
@@ -545,26 +641,33 @@ public class MainGUI { // Singleton
             this.currentTableType = TableType.CAMERA;
         });
         crud.add(menuItemCamera);
-        JMenuItem menuItemCameraType = new JMenuItem("Tip Camera");
+        JMenuItem menuItemCameraType = new JMenuItem("Camera Type");
         menuItemCameraType.addActionListener(e -> {
             initCameraTypeTable();
             this.currentTableType = TableType.CAMERATYPE;
         });
         crud.add(menuItemCameraType);
 
-        JMenuItem menuItemFormat = new JMenuItem("Format Camera");
+        JMenuItem menuItemFormat = new JMenuItem("Camera Format");
         menuItemFormat.addActionListener(e -> {
             initFormatTable();
             this.currentTableType = TableType.FORMAT;
         });
         crud.add(menuItemFormat);
 
-        JMenuItem menuItemEmployees = new JMenuItem("Angajati");
+        JMenuItem menuItemEmployees = new JMenuItem("Employees");
         menuItemEmployees.addActionListener(e -> {
             initEmployeeTable();
             this.currentTableType = TableType.EMPLOYEE;
         });
         crud.add(menuItemEmployees);
+
+        JMenuItem menuItemUsers = new JMenuItem("Users");
+        menuItemUsers.addActionListener(e -> {
+            initUserTable();
+            this.currentTableType = TableType.USER;
+        });
+        crud.add(menuItemUsers);
 
         JMenu datasources = new JMenu("Datasources");
         menuBar.add(datasources);
@@ -581,6 +684,10 @@ public class MainGUI { // Singleton
                     initCameraTypeTable();
                 } else if(this.currentTableType == TableType.FORMAT){
                     initFormatTable();
+                } else if(this.currentTableType == TableType.EMPLOYEE){
+                    initEmployeeTable();
+                } else if(this.currentTableType == TableType.USER){
+                    initUserTable();
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -602,6 +709,8 @@ public class MainGUI { // Singleton
                     initFormatTable();
                 } else if(this.currentTableType == TableType.EMPLOYEE){
                     initEmployeeTable();
+                } else if(this.currentTableType == TableType.USER){
+                    initUserTable();
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -609,10 +718,10 @@ public class MainGUI { // Singleton
         });
         datasources.add(menuItemCsv);
 
-        JMenu reports = new JMenu("Rapoarte");
+        JMenu reports = new JMenu("Reports");
         menuBar.add(reports);
 
-        JMenuItem clientReport = new JMenuItem("Raport clienti");
+        JMenuItem clientReport = new JMenuItem("Client report");
         clientReport.addActionListener(e -> {
             try {
                 ClientReport cr = ClientReport.getInstance(frame, instance);
@@ -641,7 +750,7 @@ public class MainGUI { // Singleton
         class AboutMenuListener implements MenuListener {
             @Override
             public void menuSelected(MenuEvent e) {
-                JOptionPane.showMessageDialog(null, "Vintage Rent v1.0.0\nDeveloped by Dinu Florin-Silviu");
+                JOptionPane.showMessageDialog(null, "Vintage Rent v1.0.0\nDeveloped by Dinu Florin-Silviu\nFor the PAO class of 2023");
             }
 
             @Override
@@ -700,6 +809,8 @@ public class MainGUI { // Singleton
                             removeRowFromFormatModel(row);
                         else if(currentTableType == TableType.EMPLOYEE)
                             removeRowFromEmployeeModel(row);
+                        else if(currentTableType == TableType.USER)
+                            removeRowFromUserModel(row);
                     } catch (SQLException ex) {
                         JDialog dialog = new JDialog();
                         dialog.setAlwaysOnTop(true);
@@ -741,6 +852,9 @@ public class MainGUI { // Singleton
                 } else if(currentTableType == TableType.EMPLOYEE){
                     EmployeeAdd ea = EmployeeAdd.getInstance(frame, instance);
                     ea.main();
+                } else if(currentTableType == TableType.USER){
+                    UserAdd ua = UserAdd.getInstance(frame, instance);
+                    ua.main();
                 }
             }
         });

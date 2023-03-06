@@ -207,7 +207,7 @@ public class CsvConnection extends DatabaseConnection {
                         String s = entry.getValue();
                         if (s.substring(0, 1).equals("'"))
                             s = s.substring(1, s.length() - 1);
-                        if(s.substring(s.length() - 1, s.length()).equals("'"))
+                        if(s.length() > 0 && s.substring(s.length() - 1, s.length()).equals("'"))
                             s = s.substring(0, s.length() - 1);
 
                         list.set(i, s);
