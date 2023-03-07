@@ -185,6 +185,12 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
             this.modelList.add(model);
         }
 
+        try{
+            logger.log("CameraModel got data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
+
         return this.modelList;
     }
 
@@ -204,6 +210,11 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
         Map<String, String> where = new HashMap<>();
         where.put("IDCAMERA", String.valueOf(oneRow.get(0).IDCamera));
         db.update(this.tableName, set, where);
+        try{
+            logger.log("CameraModel update data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
 //        db.update("UPDATE " + this.tableName + " SET MARCA = '" + oneRow.get(0).Marca + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRET = " + oneRow.get(0).Pret + ", PRETINCHIRIERE = " + oneRow.get(0).PretInchiriere + ", ANFABRICATIE = " + oneRow.get(0).AnFabricatie + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
     }
 
@@ -214,6 +225,11 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
         Map<String, String> where = new HashMap<>();
         where.put("IDCAMERA", row.get(0).IDCamera + "");
         db.delete(this.tableName, where);
+        try{
+            logger.log("CameraModel delete data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 
     @Override
@@ -251,6 +267,11 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
         }
 
         csv.createAndInsert(this.tableName + ".csv", headers, data);
+        try{
+            logger.log("CameraModel throw data into csv");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 
     @Override
@@ -270,5 +291,10 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
 
 
         db.insert(this.tableName, values);
+        try{
+            logger.log("CameraModel insert data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 }

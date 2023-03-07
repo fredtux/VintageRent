@@ -123,6 +123,12 @@ public class CameraTypeModel extends Model implements LinkModelToDatabase<ModelL
             this.modelList.add(model);
         }
 
+        try{
+            logger.log("CameraTypeModel got data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
+
         return this.modelList;
     }
 
@@ -134,6 +140,11 @@ public class CameraTypeModel extends Model implements LinkModelToDatabase<ModelL
         Map<String, String> where = new HashMap<>();
         where.put("IDTIP", oneRow.get(0).IDTip + "");
         db.update(this.tableName, set, where);
+        try{
+            logger.log("CameraTypeModel update data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
 //        db.update("UPDATE " + this.tableName + " SET MARCA = '" + oneRow.get(0).Marca + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRET = " + oneRow.get(0).Pret + ", PRETINCHIRIERE = " + oneRow.get(0).PretInchiriere + ", ANFABRICATIE = " + oneRow.get(0).AnFabricatie + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
     }
 
@@ -144,6 +155,11 @@ public class CameraTypeModel extends Model implements LinkModelToDatabase<ModelL
         Map<String, String> where = new HashMap<>();
         where.put("IDTIP", row.get(0).IDTip + "");
         db.delete(this.tableName, where);
+        try{
+            logger.log("CameraTypeModel delete data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 
     @Override
@@ -181,6 +197,11 @@ public class CameraTypeModel extends Model implements LinkModelToDatabase<ModelL
         }
 
         csv.createAndInsert(this.tableName + ".csv", headers, data);
+        try{
+            logger.log("CameraTypeModel throw data into csv");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 
     @Override
@@ -192,5 +213,10 @@ public class CameraTypeModel extends Model implements LinkModelToDatabase<ModelL
         values.add(new Pair<>("DENUMIRE", "'" + row.Denumire + "'"));
 
         db.insert(this.tableName, values);
+        try{
+            logger.log("CameraTypeModel insert data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 }

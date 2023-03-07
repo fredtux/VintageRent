@@ -143,6 +143,12 @@ public class UserModel extends Model implements LinkModelToDatabase<ModelList<Us
             this.modelList.add(model);
         }
 
+        try{
+            logger.log("UserModel got data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
+
         return this.modelList;
     }
 
@@ -162,6 +168,11 @@ public class UserModel extends Model implements LinkModelToDatabase<ModelList<Us
         where.put("IDUTILIZATOR", String.valueOf(oneRow.get(0).IDUtilizator));
 
         db.update(this.tableName, set, where);
+        try{
+            logger.log("UserModel update data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
 //        db.update("UPDATE " + this.tableName + " SET MARCA = '" + oneRow.get(0).Marca + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRET = " + oneRow.get(0).Pret + ", PRETINCHIRIERE = " + oneRow.get(0).PretInchiriere + ", ANFABRICATIE = " + oneRow.get(0).AnFabricatie + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
     }
 
@@ -172,6 +183,11 @@ public class UserModel extends Model implements LinkModelToDatabase<ModelList<Us
         Map<String, String> where = new HashMap<>();
         where.put("IDUTILIZATOR", row.get(0).IDUtilizator + "");
         db.delete(this.tableName, where);
+        try{
+            logger.log("UserModel delete data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 
     @Override
@@ -209,6 +225,11 @@ public class UserModel extends Model implements LinkModelToDatabase<ModelList<Us
         }
 
         csv.createAndInsert(this.tableName + ".csv", headers, data);
+        try{
+            logger.log("UserModel throw data into csv");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 
     @Override
@@ -225,6 +246,12 @@ public class UserModel extends Model implements LinkModelToDatabase<ModelList<Us
         values.add(new Pair<>("EMAIL", "'" + row.Email + "'"));
 
         db.insert(this.tableName, values);
+
+        try{
+            logger.log("UserModel insert data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 
     private String makeMD5(String plainText){

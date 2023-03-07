@@ -165,6 +165,12 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
             this.modelList.add(model);
         }
 
+        try{
+            logger.log("EmployeeMOdel got data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
+
         return this.modelList;
     }
 
@@ -190,6 +196,11 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
         where.put("IDUtilizator", String.valueOf(oneRow.get(0).IDUtilizator));
 
         db.update(this.tableName, set, where);
+        try{
+            logger.log("EmployeeModel update data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
 //        db.update("UPDATE " + this.tableName + " SET MARCA = '" + oneRow.get(0).Marca + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRET = " + oneRow.get(0).Pret + ", PRETINCHIRIERE = " + oneRow.get(0).PretInchiriere + ", ANFABRICATIE = " + oneRow.get(0).AnFabricatie + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
     }
 
@@ -200,6 +211,11 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
         Map<String, String> where = new HashMap<>();
         where.put("IDUTILIZATOR", row.get(0).IDUtilizator + "");
         db.delete(this.tableName, where);
+        try{
+            logger.log("EmployeeModel delete data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 
     @Override
@@ -237,6 +253,11 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
         }
 
         csv.createAndInsert(this.tableName + ".csv", headers, data);
+        try{
+            logger.log("EmployeeModel throw data into csv");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 
     @Override
@@ -262,5 +283,10 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
         values.add(new Pair<>("IDSALARIU", row.IDSalariu + ""));
 
         db.insert(this.tableName, values);
+        try{
+            logger.log("EmployeeModel insert data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 }

@@ -61,7 +61,6 @@ Documentatia se gaseste in format PDF in fisierul [Documentatie.pdf](https://git
 - [x] Proiectul trebuie sa aiba documentatie. Fiecare scrie documentatia cum vrea, in doc/pdf sau in cod. Trebuie sa stii sa explici ce ai facut in cod, nu e de ajuns doar sa-l scrii.
 - [x] Versiunea Java o sa fie MINIM 17.
 - [x] O sa folosim Docker & Docker-Compose pentru baza de date.
-  - Implementare proprie: baza de date fiind Oracle, trebuie configurata mai intai. Am inclus un submodul de docker pentru Oracle 21c, dar nu pot adauga toata configuratia din cauza licentei
 - [x] O sa folosim Github Workflows pentru pipelines. Se pot accepta alternative pentru cei care vor sa foloseasca altceva.
 - [ ] Cei mai activi o sa aiba o surpriza la final de semestru.
 

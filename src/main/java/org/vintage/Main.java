@@ -109,6 +109,12 @@ public class Main {
         try {
             tmain.start();
             tmain.join();
+
+            try{
+                logger.log("Ending Main");
+            } catch (Exception ex) {
+                System.out.println("Error logging to CSV: " + ex.getMessage());
+            }
         } catch (InterruptedException ex) {
             System.out.println("Error starting main thread: " + ex.getMessage());
         }

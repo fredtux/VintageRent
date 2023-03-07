@@ -175,11 +175,13 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
             model.IDOBIECTIV = inchiriere.getInt("IDOBIECTIV");
             model.ESTE_RETURNAT = inchiriere.getBoolean("ESTERETURNAT");
             model.PENALIZARE = inchiriere.getDouble("PENALIZARE");
-//            model.NUME_CAMERA = camereMap.get(model.IDCAMERA);
-//            model.NUME_CLIENT = clientiMap.get(model.IDCLIENT);
-//            model.NUME_ANGAJAT = angajatiMap.get(model.IDANGAJAT);
-//            model.NUME_OBIECTIV = obiectiveMap.get(model.IDOBIECTIV);
             this.modelList.add(model);
+        }
+
+        try{
+            logger.log("RentModel got data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
         }
 
         return this.modelList;
@@ -206,6 +208,11 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
         where.put("IDCLIENT", oneRow.get(0).IDCLIENT + "");
         where.put("IDOBIECTIV", oneRow.get(0).IDOBIECTIV + "");
         db.update(this.tableName, set, where);
+        try{
+            logger.log("RentModel update data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 
     @Override
@@ -218,6 +225,11 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
         where.put("IDCLIENT", row.get(0).IDCLIENT + "");
         where.put("IDOBIECTIV", row.get(0).IDOBIECTIV + "");
         db.delete(this.tableName, where);
+        try{
+            logger.log("RentModel delete data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 
     @Override
@@ -255,6 +267,11 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
         }
 
         csv.createAndInsert(this.tableName + ".csv", headers, data);
+        try{
+            logger.log("RentModel throw data into csv");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 
     @Override
@@ -277,5 +294,11 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
         values.add(new Pair<String, String>("PENALIZARE", row.PENALIZARE + ""));
 
         db.insert(this.tableName, values);
+
+        try{
+            logger.log("RentModel insert data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 }

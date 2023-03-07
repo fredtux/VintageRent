@@ -4,6 +4,7 @@ import org.database.DatabaseConnection;
 import org.gui.logs.LogGUI;
 import org.gui.tables.*;
 import org.gui.reports.*;
+import org.logger.CsvLogger;
 import org.models.*;
 
 import javax.swing.*;
@@ -11,6 +12,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.Date;
 import java.sql.SQLException;
 import javax.swing.event.*;
@@ -48,6 +51,8 @@ public class MainGUI { // Singleton
     public DatabaseConnection.DatabaseType setDatabaseType(DatabaseConnection.DatabaseType databaseType) {
         return this.databaseType = databaseType;
     }
+
+    private CsvLogger logger = CsvLogger.getInstance();
 
     public MainGUI() {
         // Singleton
@@ -624,7 +629,20 @@ public class MainGUI { // Singleton
         JMenu menu = new JMenu("File");
         menuBar.add(menu);
         JMenuItem menuItemExit = new JMenuItem("Exit");
-        menuItemExit.addActionListener(e -> System.exit(0));
+        menuItemExit.addActionListener(e -> {
+            int confirmed = JOptionPane.showConfirmDialog(null,
+                    "Are you sure you want to exit the program?", "Exit Program Message Box",
+                    JOptionPane.YES_NO_OPTION);
+
+            if (confirmed == JOptionPane.YES_OPTION) {
+                try{
+                    logger.log("Exiting application by user request");
+                } catch (Exception ex) {
+                    System.out.println("Error logging to CSV: " + ex.getMessage());
+                }
+                System.exit(0);
+            }
+        });
         menu.add(menuItemExit);
 
         JMenu crud = new JMenu("CRUD");
@@ -689,6 +707,12 @@ public class MainGUI { // Singleton
                 } else if(this.currentTableType == TableType.USER){
                     initUserTable();
                 }
+
+                try{
+                    logger.log("Changed data source to Oracle");
+                } catch (Exception ex) {
+                    System.out.println("Error logging to CSV: " + ex.getMessage());
+                }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -712,6 +736,12 @@ public class MainGUI { // Singleton
                 } else if(this.currentTableType == TableType.USER){
                     initUserTable();
                 }
+
+                try{
+                    logger.log("Changed data source to CSV");
+                } catch (Exception ex) {
+                    System.out.println("Error logging to CSV: " + ex.getMessage());
+                }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -731,6 +761,17 @@ public class MainGUI { // Singleton
             }
         });
         reports.add(clientReport);
+
+        JMenuItem formatReport = new JMenuItem("Format report");
+        formatReport.addActionListener(e -> {
+            try {
+                FormatSalesReport cr = FormatSalesReport.getInstance(frame, instance);
+                cr.main();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        reports.add(formatReport);
 
         JMenu menuLog = new JMenu("Log");
         menuBar.add(menuLog);
@@ -860,7 +901,24 @@ public class MainGUI { // Singleton
         this.panel1.add(this.btnAdd, c2);
 
         frame.getContentPane().add(this.panel1);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                int confirmed = JOptionPane.showConfirmDialog(null,
+                        "Are you sure you want to exit the program?", "Exit Program Message Box",
+                        JOptionPane.YES_NO_OPTION);
+
+                if (confirmed == JOptionPane.YES_OPTION) {
+                    try{
+                        logger.log("Exiting application from main menu");
+                    } catch (Exception ex) {
+                        System.out.println("Error logging to CSV: " + ex.getMessage());
+                    }
+                    System.exit(0);
+                }
+            }
+        });
 
         frame.pack();
         frame.setSize(800, 600);

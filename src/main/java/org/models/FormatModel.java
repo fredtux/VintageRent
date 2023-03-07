@@ -126,6 +126,12 @@ public class FormatModel extends Model implements LinkModelToDatabase<ModelList<
             this.modelList.add(model);
         }
 
+        try{
+            logger.log("FormatModel got data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
+
         return this.modelList;
     }
 
@@ -138,6 +144,11 @@ public class FormatModel extends Model implements LinkModelToDatabase<ModelList<
         Map<String, String> where = new HashMap<>();
         where.put("IDFORMAT", String.valueOf(oneRow.get(0).IDFormat));
         db.update(this.tableName, set, where);
+        try{
+            logger.log("FormatModel update data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
 //        db.update("UPDATE " + this.tableName + " SET MARCA = '" + oneRow.get(0).Marca + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRET = " + oneRow.get(0).Pret + ", PRETINCHIRIERE = " + oneRow.get(0).PretInchiriere + ", ANFABRICATIE = " + oneRow.get(0).AnFabricatie + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
     }
 
@@ -148,6 +159,11 @@ public class FormatModel extends Model implements LinkModelToDatabase<ModelList<
         Map<String, String> where = new HashMap<>();
         where.put("IDFORMAT", row.get(0).IDFormat + "");
         db.delete(this.tableName, where);
+        try{
+            logger.log("FormatModel delete data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 
     @Override
@@ -185,6 +201,11 @@ public class FormatModel extends Model implements LinkModelToDatabase<ModelList<
         }
 
         csv.createAndInsert(this.tableName + ".csv", headers, data);
+        try{
+            logger.log("FormatModel throw data into csv");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 
     @Override
@@ -197,5 +218,11 @@ public class FormatModel extends Model implements LinkModelToDatabase<ModelList<
         values.add(new Pair<>("LATIMEFILM", "'" + row.LatimeFilm + "'"));
 
         db.insert(this.tableName, values);
+
+        try{
+            logger.log("FormatModel insert data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 }
