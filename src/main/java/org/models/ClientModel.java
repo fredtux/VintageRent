@@ -153,6 +153,12 @@ public class ClientModel extends Model implements LinkModelToDatabase<ModelList<
             this.modelList.add(model);
         }
 
+        try{
+            logger.log("ClientModel got data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
+
         return this.modelList;
     }
 
@@ -167,6 +173,11 @@ public class ClientModel extends Model implements LinkModelToDatabase<ModelList<
         where.put("IDUtilizator", String.valueOf(oneRow.get(0).IDUtilizator));
 
         db.update(this.tableName, set, where);
+        try{
+            logger.log("ClientModel update data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
 //        db.update("UPDATE " + this.tableName + " SET MARCA = '" + oneRow.get(0).Marca + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRET = " + oneRow.get(0).Pret + ", PRETINCHIRIERE = " + oneRow.get(0).PretInchiriere + ", ANFABRICATIE = " + oneRow.get(0).AnFabricatie + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
     }
 
@@ -177,6 +188,11 @@ public class ClientModel extends Model implements LinkModelToDatabase<ModelList<
         Map<String, String> where = new HashMap<>();
         where.put("IDUtilizator", row.get(0).IDUtilizator + "");
         db.delete(this.tableName, where);
+        try{
+            logger.log("ClientModel delete data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 
     @Override
@@ -214,10 +230,29 @@ public class ClientModel extends Model implements LinkModelToDatabase<ModelList<
         }
 
         csv.createAndInsert(this.tableName + ".csv", headers, data);
+        try{
+            logger.log("ClientModel throw data into csv");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 
     @Override
     public void insertRow(InnerClientModel row) throws Exception {
-        ;
+        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
+
+        List<Pair<String, String>> values = new ArrayList<>();
+        values.add(new Pair<>("IDUTILIZATOR", row.IDUtilizator + ""));
+        values.add(new Pair<>("IDTIP", row.IDTip + ""));
+        values.add(new Pair<>("DATANASTERII", row.DataNasterii + ""));
+
+
+        db.insert(this.tableName, values);
+
+        try{
+            logger.log("ClientModel insert data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 }

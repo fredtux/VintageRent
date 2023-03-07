@@ -106,6 +106,7 @@ public class EmployeeAdd {
         c3.gridx = 2;
         JComboBox cmbManager = new JComboBox();
         EmployeeModel managerModel = EmployeeModel.getInstance();
+        managerModel.setDatabaseType(caller.getDatabaseType());
         ModelList<EmployeeModel.InnerEmployeeModel> listManagers = null;
         try {
             listManagers = managerModel.getData();
@@ -126,6 +127,7 @@ public class EmployeeAdd {
         c3.gridx = 2;
         JComboBox cmbSalariu = new JComboBox();
         SalaryModel salaryModel = SalaryModel.getInstance();
+        salaryModel.setDatabaseType(caller.getDatabaseType());
         ModelList<SalaryModel.InnerSalaryModel> listSalaries = null;
         try {
             listSalaries = salaryModel.getData();

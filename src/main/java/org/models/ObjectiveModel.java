@@ -152,6 +152,12 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
             this.modelList.add(model);
         }
 
+        try{
+            logger.log("ObjectiveModel got data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
+
         return this.modelList;
     }
 
@@ -171,6 +177,11 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
         where.put("IDOBIECTIV", oneRow.get(0).IDObiectiv + "");
 
         db.update(this.tableName, set, where);
+        try{
+            logger.log("ObjectiveModel update data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
 //        db.update("UPDATE " + this.tableName + " SET MARCA = '" + oneRow.get(0).Marca + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRET = " + oneRow.get(0).Pret + ", PRETINCHIRIERE = " + oneRow.get(0).PretInchiriere + ", ANFABRICATIE = " + oneRow.get(0).AnFabricatie + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
     }
 
@@ -181,6 +192,11 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
         Map<String, String> where = new HashMap<>();
         where.put("IDOBIECTIV", row.get(0).IDObiectiv + "");
         db.delete(this.tableName, where);
+        try{
+            logger.log("ObjectiveModel delete data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 
     @Override
@@ -218,10 +234,33 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
         }
 
         csv.createAndInsert(this.tableName + ".csv", headers, data);
+        try{
+            logger.log("ObjectiveModel throw data into csv");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 
     @Override
     public void insertRow(InnerObjectiveModel row) throws Exception {
-        ;
+        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
+
+        List<Pair<String, String>> values = new ArrayList<>();
+        values.add(new Pair<>("IDOBIECTIV", ""));
+        values.add(new Pair<>("DENUMIRE", "'" + row.Denumire + "'"));
+        values.add(new Pair<>("DISTANTAFOCALA", "'"+String.valueOf(row.DistantaFocala)+"'"));
+        values.add(new Pair<>("DIAFRAGMAMINIMA", "'"+String.valueOf(row.DiafragmaMinima)+"'"));
+        values.add(new Pair<>("DIAMETRU", "'"+String.valueOf(row.Diametru)+"'"));
+        values.add(new Pair<>("PRET", "'"+String.valueOf(row.Pret)+"'"));
+        values.add(new Pair<>("PRETINCHIRIERE", "'"+String.valueOf(row.PretInchiriere)+"'"));
+        values.add(new Pair<>("IDMONTURA", "'"+String.valueOf(row.IDMontura)+"'"));
+
+
+        db.insert(this.tableName, values);
+        try{
+            logger.log("ObjectiveModel insert data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 }

@@ -30,6 +30,7 @@
 \usepackage{mathtools}
 \usepackage{bookmark}
 \usepackage{lmodern}
+\usepackage{float}
 
 \setmainfont{Roboto}
 
@@ -147,7 +148,7 @@ extendedchars=true,
 \paragraph{}
 \begin{figure}[ht]
     \centering
-    \noindent\includegraphics[scale=0.4]{program.png}
+    \noindent\includegraphics[width=\linewidth]{program.png}
     \caption{Main GUI}
     \label{fig:maingui}
 \end{figure}
@@ -184,7 +185,7 @@ Pentru tema am folosit \textbf{com.formdev.flatlaf} si am initializat \textbf{Fl
 \subsection[Add]{Add}
 \begin{figure}[ht]
     \centering
-    \noindent\includegraphics[scale=0.7]{addgui.png}
+    \noindent\includegraphics[scale=0.6]{addgui.png}
     \caption{Add GUI}
     \label{fig:addgui}
 \end{figure}
@@ -217,9 +218,11 @@ Pentru tema am folosit \textbf{com.formdev.flatlaf} si am initializat \textbf{Fl
 \subsection[Rapoarte]{Rapoarte}
 \paragraph{Raport clienti} reprezinta raportul in care se pot afisa date despre ce a inchiriat un client. Acesta contine un \textbf{JComboBox} pentru a alege clientul cu un eveniment de schimbare astfel incat sa se actualizeze automat datele din \textbf{JTable}-ul de mai jos. De asemenea, contine si un buton de exit.
 
+\paragraph{Raport vanzari per format} reprezinta raportul in care se afiseaza date despre vanzarile pentru formatul ales.
+
 
 \subsection[Log]{Log}
-\begin{figure}[ht]
+\begin{figure}[H]
     \centering
     \noindent\includegraphics[scale=0.6]{loggui.png}
     \caption{Log GUI}
@@ -334,6 +337,9 @@ Pentru tema am folosit \textbf{com.formdev.flatlaf} si am initializat \textbf{Fl
 
 \subsection[Raport client]{Raport client}
 \paragraph{} Acesta primeste un intreg care reprezinta ID-ul clientului si un tip de baza de date. Returneaza un \textbf{Map<String, String>} reprezentand maparea tuturor datelor obtinute. Ca mentiune separata, pentru a numara camerele distincte am optat pentru o integrare comuna intre CSV si bazele de date, asa ca am efectuat o singura interogare si le pun intr-un \textbf{HashSet<Integer>}, iar apoi extrag dimensiunea lui.
+
+\subsection[Raport vanzari per format]{Raport vanzari per format}
+\paragraph{} Acesta primeste un intreg care reprezinta ID-ul formatului si un tip de baza de date. Returneaza un \textbf{Map<String, String>} reprezentand maparea tuturor datelor obtinute. Pentru a face ordonarea preturilor foloseste un \textbf{PriorityQueue<Double>} initializat ca \textbf{new PriorityQueue<> (Collections.reverseOrder())}. Pentru clienti foloseste un \textbf{HashSet<Integer>} din aceleasi motive ca la raportul de clienti.
 
 \section[Clase ajutatoare]{Clase ajutatoare}
 \subsection[Pair<T, U>]{Pair<T, U>}

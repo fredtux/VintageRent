@@ -83,6 +83,7 @@ public class CameraAdd {
         c3.gridx = 2;
         JComboBox cmbFormat = new JComboBox();
         FormatModel formatModel = FormatModel.getInstance();
+        formatModel.setDatabaseType(caller.getDatabaseType());
         ModelList<FormatModel.InnerFormatModel> listFormats = null;
         try {
             listFormats = formatModel.getData();
@@ -103,6 +104,7 @@ public class CameraAdd {
         c3.gridx = 2;
         JComboBox cmbCameraType = new JComboBox();
         CameraTypeModel cameraTypeModel = CameraTypeModel.getInstance();
+        cameraTypeModel.setDatabaseType(caller.getDatabaseType());
         ModelList<CameraTypeModel.InnerCameraTypeModel> listCameraTypes = null;
         try {
             listCameraTypes = cameraTypeModel.getData();
@@ -123,6 +125,7 @@ public class CameraAdd {
         c3.gridx = 2;
         JComboBox cmbMontura = new JComboBox();
         MountModel monturaModel = MountModel.getInstance();
+        monturaModel.setDatabaseType(caller.getDatabaseType());
         ModelList<MountModel.InnerMountModel> listMounts = null;
         try {
             listMounts = monturaModel.getData();

@@ -123,6 +123,12 @@ public class MountModel extends Model implements LinkModelToDatabase<ModelList<M
             this.modelList.add(model);
         }
 
+        try{
+            logger.log("MountModel got data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
+
         return this.modelList;
     }
 
@@ -134,6 +140,11 @@ public class MountModel extends Model implements LinkModelToDatabase<ModelList<M
         Map<String, String> where = new HashMap<>();
         where.put("IDMONTURA", oneRow.get(0).IDMontura + "");
         db.update(this.tableName, set, where);
+        try{
+            logger.log("MountModel update data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
 //        db.update("UPDATE " + this.tableName + " SET MARCA = '" + oneRow.get(0).Marca + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRET = " + oneRow.get(0).Pret + ", PRETINCHIRIERE = " + oneRow.get(0).PretInchiriere + ", ANFABRICATIE = " + oneRow.get(0).AnFabricatie + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
     }
 
@@ -144,6 +155,11 @@ public class MountModel extends Model implements LinkModelToDatabase<ModelList<M
         Map<String, String> where = new HashMap<>();
         where.put("IDMONTURA", row.get(0).IDMontura + "");
         db.delete(this.tableName, where);
+        try{
+            logger.log("MountModel delete data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 
     @Override
@@ -181,10 +197,27 @@ public class MountModel extends Model implements LinkModelToDatabase<ModelList<M
         }
 
         csv.createAndInsert(this.tableName + ".csv", headers, data);
+        try{
+            logger.log("MountModel throw data into csv");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 
     @Override
     public void insertRow(InnerMountModel row) throws Exception {
-;
+        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
+
+        List<Pair<String, String>> values = new ArrayList<>();
+        values.add(new Pair<>("IDMONTURA", ""));
+        values.add(new Pair<>("DENUMIRE", "'" + row.Denumire + "'"));
+
+        db.insert(this.tableName, values);
+
+        try{
+            logger.log("MountModel insert data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 }

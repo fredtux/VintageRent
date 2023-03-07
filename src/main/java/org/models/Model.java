@@ -1,11 +1,13 @@
 package org.models;
 
 import org.database.DatabaseConnection;
+import org.logger.CsvLogger;
 
 public abstract class Model {
     protected static Model instance = null;
     protected DatabaseConnection.DatabaseType databaseType = null;
     String name;
+    protected CsvLogger logger = CsvLogger.getInstance();
 
     public static abstract class AbstractInnerModel {
     }

@@ -126,6 +126,12 @@ public class SalaryModel extends Model implements LinkModelToDatabase<ModelList<
             this.modelList.add(model);
         }
 
+        try{
+            logger.log("SalaryModel got data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
+
         return this.modelList;
     }
 
@@ -138,6 +144,11 @@ public class SalaryModel extends Model implements LinkModelToDatabase<ModelList<
         Map<String, String> where = new HashMap<>();
         where.put("IDSALARIU", oneRow.get(0).IDSalariu + "");
         db.update(this.tableName, set, where);
+        try{
+            logger.log("SalaryModel update data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
 //        db.update("UPDATE " + this.tableName + " SET MARCA = '" + oneRow.get(0).Marca + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRET = " + oneRow.get(0).Pret + ", PRETINCHIRIERE = " + oneRow.get(0).PretInchiriere + ", ANFABRICATIE = " + oneRow.get(0).AnFabricatie + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
     }
 
@@ -148,6 +159,11 @@ public class SalaryModel extends Model implements LinkModelToDatabase<ModelList<
         Map<String, String> where = new HashMap<>();
         where.put("IDSALARIU", row.get(0).IDSalariu + "");
         db.delete(this.tableName, where);
+        try{
+            logger.log("SalaryModel delete data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 
     @Override
@@ -185,6 +201,11 @@ public class SalaryModel extends Model implements LinkModelToDatabase<ModelList<
         }
 
         csv.createAndInsert(this.tableName + ".csv", headers, data);
+        try{
+            logger.log("SalaryModel throw data into csv");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 
     @Override
@@ -197,5 +218,11 @@ public class SalaryModel extends Model implements LinkModelToDatabase<ModelList<
         values.add(new Pair<>("BONUS", row.Bonus + ""));
 
         db.insert(this.tableName, values);
+
+        try{
+            logger.log("SalaryModel insert data");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 }
