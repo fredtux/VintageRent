@@ -102,6 +102,7 @@ ___
 - Creare utilizator
 ___
 - Raport clienti
+- Raport vanzari per format
 ___
 - Schimbare datasource: Oracle/CSV
 ___
