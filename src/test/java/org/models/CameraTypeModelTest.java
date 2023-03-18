@@ -22,6 +22,8 @@ public class CameraTypeModelTest {
             ModelInit.csvInit();
 
             this.orcl = this.getOracle();
+            if(!orcl.isInitialized())
+                orcl.init();
             this.csv = CsvConnection.getInstance(DatabaseConnection.DatabaseType.CSV);
         } catch (Exception e) {
             fail(e.getMessage());
