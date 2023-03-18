@@ -1,6 +1,7 @@
 package org.models;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.lang.Comparable;
 
@@ -122,6 +123,10 @@ public class ModelList <T extends Model.AbstractInnerModel>{
 
     public void sort() {
         list.sort(null);
+    }
+
+    public void sort(Comparator<T> c) {
+        list.sort(c);
     }
 
 

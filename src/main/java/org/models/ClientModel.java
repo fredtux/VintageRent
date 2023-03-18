@@ -167,7 +167,11 @@ public class ClientModel extends Model implements LinkModelToDatabase<ModelList<
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         Map<String, String> set = new HashMap<>();
         set.put("IDUtilizator", "'" + oneRow.get(0).IDUtilizator + "'");
-        set.put("DataNasterii", "'" + oneRow.get(0).DataNasterii + "'");
+        if(databaseType == DatabaseConnection.DatabaseType.ORACLE)
+            set.put("DataNasterii", "TO_DATE('" + oneRow.get(0).DataNasterii + "', 'YYYY-MM-DD HH24:MI:SS')");
+        else if(databaseType == DatabaseConnection.DatabaseType.CSV){
+            set.put("DataNasterii", oneRow.get(0).DataNasterii + "");
+        }
 
         Map<String, String> where = new HashMap<>();
         where.put("IDUtilizator", String.valueOf(oneRow.get(0).IDUtilizator));
@@ -240,11 +244,16 @@ public class ClientModel extends Model implements LinkModelToDatabase<ModelList<
     @Override
     public void insertRow(InnerClientModel row) throws Exception {
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         List<Pair<String, String>> values = new ArrayList<>();
         values.add(new Pair<>("IDUTILIZATOR", row.IDUtilizator + ""));
+        if(databaseType == DatabaseConnection.DatabaseType.ORACLE)
+            values.add(new Pair<String, String>("DATANASTERII", "TO_DATE('" + sdf.format(row.DataNasterii) + "', 'YYYY-MM-DD HH24:MI:SS')"));
+        else if(databaseType == DatabaseConnection.DatabaseType.CSV){
+            values.add(new Pair<String, String>("DATANASTERII", sdf.format(row.DataNasterii) + ""));
+        }
         values.add(new Pair<>("IDTIP", row.IDTip + ""));
-        values.add(new Pair<>("DATANASTERII", row.DataNasterii + ""));
 
 
         db.insert(this.tableName, values);
