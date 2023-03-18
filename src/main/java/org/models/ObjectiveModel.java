@@ -18,6 +18,7 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
         public String Denumire;
         public int DistantaFocala;
         public double DiafragmaMinima;
+        public double DiafragmaMaxima;
         public int Diametru;
         public int Pret;
         public int PretInchiriere;
@@ -57,11 +58,11 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
     }
 
     public DefaultTableModel getTableModel() {
-        String[] columns = {"IDObiectiv", "Denumire", "DistantaFocala", "DiafragmaMinima", "Diametru", "Pret", "PretInchiriere", "IDMontura", "DenumireMontura"};
+        String[] columns = {"IDObiectiv", "Denumire", "DistantaFocala", "DiafragmaMinima", "DiafragmaMaxima", "Diametru", "Pret", "PretInchiriere", "IDMontura", "DenumireMontura"};
 
         DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
         for(InnerObjectiveModel model : this.modelList.getList()){
-            Object[] obj = {model.IDObiectiv, model.Denumire, model.DistantaFocala, model.DiafragmaMinima, model.Diametru, model.Pret, model.PretInchiriere, model.IDMontura, model.DenumireMontura};
+            Object[] obj = {model.IDObiectiv, model.Denumire, model.DistantaFocala, model.DiafragmaMinima, model.DiafragmaMaxima, model.Diametru, model.Pret, model.PretInchiriere, model.IDMontura, model.DenumireMontura};
             tableModel.addRow(obj);
         }
 
@@ -104,6 +105,7 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
             model.Denumire = rs.getString("DENUMIRE");
             model.DistantaFocala = rs.getInt("DISTANTAFOCALA");
             model.DiafragmaMinima = rs.getDouble("DIAFRAGMAMINIMA");
+            model.DiafragmaMaxima = rs.getDouble("DIAFRAGMAMAXIMA");
             model.Diametru = rs.getInt("DIAMETRU");
             model.Pret = rs.getInt("PRET");
 
@@ -143,6 +145,7 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
             model.Denumire = obiective.getString("DENUMIRE");
             model.DistantaFocala = obiective.getInt("DISTANTAFOCALA");
             model.DiafragmaMinima = obiective.getDouble("DIAFRAGMAMINIMA");
+            model.DiafragmaMaxima = obiective.getDouble("DIAFRAGMAMAXIMA");
             model.Diametru = obiective.getInt("DIAMETRU");
             model.Pret = obiective.getInt("PRET");
             model.PretInchiriere = obiective.getInt("PRETINCHIRIERE");
@@ -165,9 +168,10 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
     public void updateData(ModelList<InnerObjectiveModel> oneRow) throws Exception {
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         Map<String, String> set = new HashMap<>();
-        set.put("DENUMIRE", oneRow.get(0).Denumire);
+        set.put("DENUMIRE", "'" + oneRow.get(0).Denumire + "'");
         set.put("DISTANTAFOCALA", String.valueOf(oneRow.get(0).DistantaFocala));
         set.put("DIAFRAGMAMINIMA", String.valueOf(oneRow.get(0).DiafragmaMinima));
+        set.put("DIAFRAGMAMAXIMA", String.valueOf(oneRow.get(0).DiafragmaMaxima));
         set.put("DIAMETRU", String.valueOf(oneRow.get(0).Diametru));
         set.put("PRET", String.valueOf(oneRow.get(0).Pret));
         set.put("PRETINCHIRIERE", String.valueOf(oneRow.get(0).PretInchiriere));
@@ -250,6 +254,7 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
         values.add(new Pair<>("DENUMIRE", "'" + row.Denumire + "'"));
         values.add(new Pair<>("DISTANTAFOCALA", "'"+String.valueOf(row.DistantaFocala)+"'"));
         values.add(new Pair<>("DIAFRAGMAMINIMA", "'"+String.valueOf(row.DiafragmaMinima)+"'"));
+        values.add(new Pair<>("DIAFRAGMAMAXIMA", "'"+String.valueOf(row.DiafragmaMaxima)+"'"));
         values.add(new Pair<>("DIAMETRU", "'"+String.valueOf(row.Diametru)+"'"));
         values.add(new Pair<>("PRET", "'"+String.valueOf(row.Pret)+"'"));
         values.add(new Pair<>("PRETINCHIRIERE", "'"+String.valueOf(row.PretInchiriere)+"'"));

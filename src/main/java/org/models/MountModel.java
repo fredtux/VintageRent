@@ -136,7 +136,7 @@ public class MountModel extends Model implements LinkModelToDatabase<ModelList<M
     public void updateData(ModelList<InnerMountModel> oneRow) throws Exception {
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         Map<String, String> set = new HashMap<>();
-        set.put("DENUMIRE", oneRow.get(0).Denumire);
+        set.put("DENUMIRE", "'" + oneRow.get(0).Denumire + "'");
         Map<String, String> where = new HashMap<>();
         where.put("IDMONTURA", oneRow.get(0).IDMontura + "");
         db.update(this.tableName, set, where);
