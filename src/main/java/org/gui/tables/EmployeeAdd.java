@@ -148,6 +148,7 @@ public class EmployeeAdd {
         c3.gridx = 2;
         JComboBox cmbUtilizator = new JComboBox();
         UserModel userModel = UserModel.getInstance();
+        userModel.setDatabaseType(caller.getDatabaseType());
         ModelList<UserModel.InnerUserModel> listUsers = null;
         try {
             listUsers = userModel.getData();
@@ -164,10 +165,11 @@ public class EmployeeAdd {
         JButton btnAdd = new JButton("Add");
         btnAdd.setText("Add");
         btnAdd.addActionListener(e -> {
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             EmployeeModel employeeModel = EmployeeModel.getInstance();
             EmployeeModel.InnerEmployeeModel employee = new EmployeeModel.InnerEmployeeModel();
-            employee.DataNasterii = (Date) JDatePickerImpl1.getModel().getValue();
-            employee.DataAngajarii = (Date) JDatePickerImpl2.getModel().getValue();
+            employee.DataNasterii = LocalDateTime.parse(JDatePickerImpl1.getModel().getValue().toString() + " 00:00:00", dtf);
+            employee.DataAngajarii = LocalDateTime.parse(JDatePickerImpl2.getModel().getValue().toString() + " 00:00:00", dtf);
             employee.IDManager = Integer.parseInt(((ComboItem) cmbManager.getSelectedItem()).getValue());
             employee.IDSalariu = Integer.parseInt(((ComboItem) cmbSalariu.getSelectedItem()).getValue());
             employee.IDUtilizator = Integer.parseInt(((ComboItem) cmbUtilizator.getSelectedItem()).getValue());

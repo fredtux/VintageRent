@@ -16,6 +16,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import javax.swing.event.*;
 import javax.swing.table.TableRowSorter;
 
@@ -174,18 +175,18 @@ public class MainGUI { // Singleton
                     DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
 
                     irm.IDUtilizator = Integer.parseInt(dtm.getValueAt(row, 0).toString());
-                    irm.DataNasterii = Date.valueOf(dtm.getValueAt(row, 1).toString());
-                    irm.DataAngajarii = Date.valueOf(dtm.getValueAt(row, 2).toString());
+                    irm.DataNasterii = LocalDateTime.parse(dtm.getValueAt(row, 1).toString());
+                    irm.DataAngajarii = LocalDateTime.parse(dtm.getValueAt(row, 2).toString());
                     irm.IDManager = Integer.parseInt(dtm.getValueAt(row, 3).toString());
                     irm.IDSalariu = Integer.parseInt(dtm.getValueAt(row, 4).toString());
 
 
                     switch (column) {
                         case 2:
-                            irm.DataAngajarii = Date.valueOf(value);
+                            irm.DataAngajarii = LocalDateTime.parse(value);
                             break;
                         case 1:
-                            irm.DataNasterii = Date.valueOf(value);
+                            irm.DataNasterii = LocalDateTime.parse(value);
                             break;
                         case 3:
                             irm.IDManager = Integer.parseInt(value);

@@ -119,6 +119,16 @@ public class ModelInit {
 
         DatabaseConnection csv = DatabaseConnection.getInstance(DatabaseConnection.DatabaseType.CSV);
 
+        // Make path to Log and CSV
+        String csvPath = Paths.get(System.getProperty("user.dir") + "/CSV").toString();
+
+        // Make Log and CSV directories
+        try {
+            Files.createDirectories(Paths.get(csvPath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         for(String modelName : modelNames) {
             try{
                 csv.setUrl("/CSV/" + modelName + ".csv");
