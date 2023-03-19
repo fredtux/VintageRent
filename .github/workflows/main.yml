@@ -25,7 +25,7 @@ jobs:
         run: echo "project_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
 
       - name: Step 4 - Build Maven Project
-        run: mvn -DskipTests=true package -B
+        run: mvn package -B
         
       - name: Step 5 - Upload release asset
         uses: actions/upload-artifact@v2
