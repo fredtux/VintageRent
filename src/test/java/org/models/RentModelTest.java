@@ -1,5 +1,6 @@
 package org.models;
 
+import org.actions.MainService;
 import org.database.DatabaseConnection;
 import org.database.csv.CsvConnection;
 import org.database.memory.InMemory;
@@ -9,28 +10,17 @@ import org.vintage.Main;
 
 import javax.swing.table.TableModel;
 import java.sql.Date;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
 
 public class RentModelTest {
-    DatabaseConnection orcl = null;
-    DatabaseConnection csv = null;
     DatabaseConnection inmem = null;
 
     public RentModelTest(){
         try {
-            ModelInit.logInit();
-            ModelInit.csvInit();
-
-            this.orcl = this.getOracle();
-            if(!orcl.isInitialized())
-                orcl.init();
-            this.csv = CsvConnection.getInstance(DatabaseConnection.DatabaseType.CSV);
             this.inmem = this.getInMemory();
         } catch (Exception e) {
             fail(e.getMessage());
@@ -48,43 +38,14 @@ public class RentModelTest {
         return result;
     }
 
-    private DatabaseConnection getOracle(){
-        DatabaseConnection result = null;
-        try{
-            result = new OracleConnection(Main.ORACLE_DB_ADDR, "c##tux", "fmilove", "oracle.jdbc.driver.OracleDriver", "XE", "C##TUX", "1521");
-        } catch (Exception e) {
-            result = DatabaseConnection.getInstance(DatabaseConnection.DatabaseType.ORACLE);
-        }
-
-        try{
-            result.connect();
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-
-        return result;
-    }
-
     @Test
     public void getModelList() {
         try {
-            RentModel rentModel = RentModel.getInstance();
-            rentModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            rentModel.getData();
+            RentModel mrentModel = RentModel.getInstance();
+            mrentModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(mrentModel);
 
-            ModelList<RentModel.InnerRentModel> modelList = rentModel.getModelList();
-            assertNotNull(modelList);
-
-            rentModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            rentModel.getData();
-
-            modelList = rentModel.getModelList();
-            assertNotNull(modelList);
-
-            rentModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            rentModel.getData();
-
-            modelList = rentModel.getModelList();
+            ModelList<RentModel.InnerRentModel> modelList = MainService.getModelList(mrentModel);
             assertNotNull(modelList);
         } catch (Exception e) {
             fail(e.getMessage());
@@ -94,10 +55,8 @@ public class RentModelTest {
     @Test
     public void setDatabaseType() {
         try{
-            RentModel rentModel = RentModel.getInstance();
-            rentModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            rentModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            rentModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
+            RentModel mrentModel = RentModel.getInstance();
+            MainService.setDatabaseType(mrentModel, DatabaseConnection.DatabaseType.INMEMORY);
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -106,25 +65,13 @@ public class RentModelTest {
     @Test
     public void getTableModel() {
         try {
-            RentModel rentModel = RentModel.getInstance();
-            rentModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            rentModel.getData();
+            RentModel mrentModel = RentModel.getInstance();
+            MainService.setDatabaseType(mrentModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(mrentModel);
 
-            TableModel tm = rentModel.getTableModel();
+            TableModel tm = MainService.getTableModel(mrentModel);
             assertNotNull(tm);
 
-
-            rentModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            rentModel.getData();
-
-            tm = rentModel.getTableModel();
-            assertNotNull(tm);
-
-            rentModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            rentModel.getData();
-
-            tm = rentModel.getTableModel();
-            assertNotNull(tm);
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -133,79 +80,62 @@ public class RentModelTest {
     @Test
     public void getData() {
         try {
-            RentModel rentModel = RentModel.getInstance();
-            rentModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            rentModel.getData();
-
-            rentModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            rentModel.getData();
-
-            rentModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            rentModel.getData();
+            RentModel mrentModel = RentModel.getInstance();
+            MainService.setDatabaseType(mrentModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(mrentModel);
         } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
-    @Test
-    public void updateData() {
+    private void update(List<Integer> id){
         try {
-            RentModel rentModel = RentModel.getInstance();
-            rentModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            rentModel.getData();
+            RentModel mrentModel = RentModel.getInstance();
+            MainService.setDatabaseType(mrentModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(mrentModel);
 
-            ModelList<RentModel.InnerRentModel> modelList = rentModel.getModelList();
-            rentModel.updateData(modelList);
-
-            rentModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            rentModel.getData();
-
-            modelList = rentModel.getModelList();
-            rentModel.updateData(modelList);
-
-            rentModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            rentModel.getData();
-
-            modelList = rentModel.getModelList();
-            if(modelList.getList().size() > 0)
-                rentModel.updateData(modelList);
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-    }
-
-    private List<Date> insert(){
-        try {
-            List<Date> result = new ArrayList<>();
-
-            RentModel rentModel = RentModel.getInstance();
-            rentModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            rentModel.getData();
-
-            ModelList<RentModel.InnerRentModel> modelList = rentModel.getModelList();
+            ModelList<RentModel.InnerRentModel> modelList = mrentModel.getModelList();
             modelList.sort((o1, o2) -> o2.DURATA_IN_ZILE - o1.DURATA_IN_ZILE);
             RentModel.InnerRentModel data = modelList.getList().get(0);
-            data.DATA_INCHIRIERE = Date.valueOf(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
-            result.add(data.DATA_INCHIRIERE);
+            ++data.DURATA_IN_ZILE;
 
-            rentModel.insertRow(data);
+            List<RentModel.InnerRentModel> list = new ArrayList<>();
+            list.add(data);
+            ModelList<RentModel.InnerRentModel> dataModelList = new ModelList<>(list);
 
+            MainService.update(mrentModel, dataModelList);
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+    private List<Integer> insert(){
+        try {
+            List<Integer> result = new ArrayList<>();
 
-            rentModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            rentModel.getData();
+            RentModel mrentModel = RentModel.getInstance();
+            MainService.setDatabaseType(mrentModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(mrentModel);
 
-            result.add(data.DATA_INCHIRIERE);
+            RentModel.InnerRentModel data = new RentModel.InnerRentModel();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            data.DATA_INCHIRIERE = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
+            data.DURATA_IN_ZILE = 1;
+            data.IDANGAJAT = 1;
+            data.IDCLIENT = 1;
+            data.IDOBIECTIV = 1;
+            data.ESTE_RETURNAT = false;
+            data.IDCAMERA = 1;
+            data.PENALIZARE = 0;
 
-            rentModel.insertRow(data);
+            MainService.insert(mrentModel, data);
 
-            rentModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            rentModel.getData();
+            MainService.getData(mrentModel);
+            ModelList<RentModel.InnerRentModel> modelList = MainService.getModelList(mrentModel);
+            modelList.sort((o1, o2) -> o2.DURATA_IN_ZILE - o1.DURATA_IN_ZILE);
+            data = modelList.getList().get(0);
 
-            result.add(data.DATA_INCHIRIERE);
-
-            rentModel.insertRow(data);
-
+            result.add(data.DURATA_IN_ZILE);
 
             return result;
         } catch (Exception e) {
@@ -215,63 +145,30 @@ public class RentModelTest {
         return null;
     }
 
-    public void delete(List<Date> id){
+    public void delete(List<Integer> id){
         try {
-            RentModel rentModel = RentModel.getInstance();
-            rentModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            rentModel.getData();
+            RentModel mrentModel = RentModel.getInstance();
+            MainService.setDatabaseType(mrentModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(mrentModel);
 
-            ModelList<RentModel.InnerRentModel> modelList = rentModel.getModelList();
+            ModelList<RentModel.InnerRentModel> modelList = mrentModel.getModelList();
             modelList.sort((o1, o2) -> o2.DURATA_IN_ZILE - o1.DURATA_IN_ZILE);
             RentModel.InnerRentModel data = modelList.getList().get(0);
-            data.DATA_INCHIRIERE = id.get(0);
+
             List<RentModel.InnerRentModel> list = new ArrayList<>();
             list.add(data);
             ModelList<RentModel.InnerRentModel> dataModelList = new ModelList<>(list);
 
-            rentModel.deleteRow(dataModelList);
-
-
-            rentModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            rentModel.getData();
-
-            data.DATA_INCHIRIERE = id.get(1);
-            list = new ArrayList<>();
-            list.add(data);
-            dataModelList = new ModelList<>(list);
-
-            rentModel.deleteRow(dataModelList);
-
-            rentModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            rentModel.getData();
-
-            modelList = rentModel.getModelList();
-            modelList.sort((o1, o2) -> o2.DURATA_IN_ZILE - o1.DURATA_IN_ZILE);
-            data = modelList.getList().get(0);
-
-            list = new ArrayList<>();
-            list.add(data);
-            dataModelList = new ModelList<>(list);
-
-            rentModel.deleteRow(dataModelList);
+            MainService.delete(mrentModel, dataModelList);
         } catch (Exception e) {
             fail(e.getMessage());
         }
     }
     @Test
-    public void deleteRow() {
+    public void insertUpdateDelete() {
         try {
-            List<Date> newId = this.insert();
-            this.delete(newId);
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-    }
-
-    @Test
-    public void insertRow() {
-        try {
-            List<Date> newId = this.insert();
+            List<Integer> newId = this.insert();
+            this.update(newId);
             this.delete(newId);
         } catch (Exception e) {
             fail(e.getMessage());
@@ -280,7 +177,7 @@ public class RentModelTest {
 
     @Test
     public void getInstance() {
-        RentModel rentModel = RentModel.getInstance();
-        assertNotNull(rentModel);
+        RentModel mrentModel = RentModel.getInstance();
+        assertNotNull(mrentModel);
     }
 }

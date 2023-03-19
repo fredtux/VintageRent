@@ -1,5 +1,6 @@
 package org.models;
 
+import org.actions.MainService;
 import org.database.DatabaseConnection;
 import org.database.csv.CsvConnection;
 import org.database.memory.InMemory;
@@ -14,19 +15,10 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class FormatModelTest {
-    DatabaseConnection orcl = null;
-    DatabaseConnection csv = null;
     DatabaseConnection inmem = null;
 
     public FormatModelTest(){
         try {
-            ModelInit.logInit();
-            ModelInit.csvInit();
-
-            this.orcl = this.getOracle();
-            if(!orcl.isInitialized())
-                orcl.init();
-            this.csv = CsvConnection.getInstance(DatabaseConnection.DatabaseType.CSV);
             this.inmem = this.getInMemory();
         } catch (Exception e) {
             fail(e.getMessage());
@@ -44,44 +36,14 @@ public class FormatModelTest {
         return result;
     }
 
-
-    private DatabaseConnection getOracle(){
-        DatabaseConnection result = null;
-        try{
-            result = new OracleConnection(Main.ORACLE_DB_ADDR, "c##tux", "fmilove", "oracle.jdbc.driver.OracleDriver", "XE", "C##TUX", "1521");
-        } catch (Exception e) {
-            result = DatabaseConnection.getInstance(DatabaseConnection.DatabaseType.ORACLE);
-        }
-
-        try{
-            result.connect();
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-
-        return result;
-    }
-
     @Test
     public void getModelList() {
         try {
             FormatModel formatModel = FormatModel.getInstance();
-            formatModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            formatModel.getData();
-
-            ModelList<FormatModel.InnerFormatModel> modelList = formatModel.getModelList();
-            assertNotNull(modelList);
-
-            formatModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            formatModel.getData();
-
-            modelList = formatModel.getModelList();
-            assertNotNull(modelList);
-
             formatModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            formatModel.getData();
+            MainService.getData(formatModel);
 
-            modelList = formatModel.getModelList();
+            ModelList<FormatModel.InnerFormatModel> modelList = MainService.getModelList(formatModel);
             assertNotNull(modelList);
         } catch (Exception e) {
             fail(e.getMessage());
@@ -92,9 +54,7 @@ public class FormatModelTest {
     public void setDatabaseType() {
         try{
             FormatModel formatModel = FormatModel.getInstance();
-            formatModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            formatModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            formatModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.setDatabaseType(formatModel, DatabaseConnection.DatabaseType.INMEMORY);
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -104,23 +64,10 @@ public class FormatModelTest {
     public void getTableModel() {
         try {
             FormatModel formatModel = FormatModel.getInstance();
-            formatModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            formatModel.getData();
+            MainService.setDatabaseType(formatModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(formatModel);
 
-            TableModel tm = formatModel.getTableModel();
-            assertNotNull(tm);
-
-
-            formatModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            formatModel.getData();
-
-            tm = formatModel.getTableModel();
-            assertNotNull(tm);
-
-            formatModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            formatModel.getData();
-
-            tm = formatModel.getTableModel();
+            TableModel tm = MainService.getTableModel(formatModel);
             assertNotNull(tm);
 
         } catch (Exception e) {
@@ -132,90 +79,55 @@ public class FormatModelTest {
     public void getData() {
         try {
             FormatModel formatModel = FormatModel.getInstance();
-            formatModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            formatModel.getData();
-
-            formatModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            formatModel.getData();
-
-            formatModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            formatModel.getData();
+            MainService.setDatabaseType(formatModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(formatModel);
         } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
-    @Test
-    public void updateData() {
+    private void update(List<Integer> id){
         try {
             FormatModel formatModel = FormatModel.getInstance();
-            formatModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            formatModel.getData();
+            MainService.setDatabaseType(formatModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(formatModel);
 
             ModelList<FormatModel.InnerFormatModel> modelList = formatModel.getModelList();
-            formatModel.updateData(modelList);
+            modelList.sort((o1, o2) -> o2.IDFormat - o1.IDFormat);
+            FormatModel.InnerFormatModel data = modelList.getList().get(0);
 
-            formatModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            formatModel.getData();
+            data.Denumire = "Test2";
 
-            modelList = formatModel.getModelList();
-            formatModel.updateData(modelList);
+            List<FormatModel.InnerFormatModel> list = new ArrayList<>();
+            list.add(data);
+            ModelList<FormatModel.InnerFormatModel> dataModelList = new ModelList<>(list);
 
-            formatModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            formatModel.getData();
-
-            modelList = formatModel.getModelList();
-            if(modelList.getList().size() > 0)
-                formatModel.updateData(modelList);
+            MainService.update(formatModel, dataModelList);
         } catch (Exception e) {
             fail(e.getMessage());
         }
     }
-
     private List<Integer> insert(){
         try {
             List<Integer> result = new ArrayList<>();
 
             FormatModel formatModel = FormatModel.getInstance();
-            formatModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            formatModel.getData();
+            MainService.setDatabaseType(formatModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(formatModel);
 
-            ModelList<FormatModel.InnerFormatModel> modelList = formatModel.getModelList();
-            modelList.sort((o1, o2) -> o2.IDFormat - o1.IDFormat);
-            FormatModel.InnerFormatModel data = modelList.getList().get(0);
-            ++data.IDFormat;
+            FormatModel.InnerFormatModel data = new FormatModel.InnerFormatModel();
+            data.IDFormat = 0;
+            data.Denumire = "Test";
+            data.LatimeFilm = "Test";
 
-            result.add(data.IDFormat);
+            MainService.insert(formatModel, data);
 
-            formatModel.insertRow(data);
-
-
-            formatModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            formatModel.getData();
-
-            modelList = formatModel.getModelList();
+            MainService.getData(formatModel);
+            ModelList<FormatModel.InnerFormatModel> modelList = MainService.getModelList(formatModel);
             modelList.sort((o1, o2) -> o2.IDFormat - o1.IDFormat);
             data = modelList.getList().get(0);
-            ++data.IDFormat;
 
             result.add(data.IDFormat);
-
-            formatModel.insertRow(data);
-
-            formatModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            formatModel.getData();
-
-            try {
-                data = modelList.getList().get(0);
-                ++data.IDFormat;
-            } catch (Exception e){
-
-            }
-
-            result.add(data.IDFormat);
-
-            formatModel.insertRow(data);
-
 
             return result;
         } catch (Exception e) {
@@ -228,60 +140,27 @@ public class FormatModelTest {
     public void delete(List<Integer> id){
         try {
             FormatModel formatModel = FormatModel.getInstance();
-            formatModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            formatModel.getData();
+            MainService.setDatabaseType(formatModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(formatModel);
 
             ModelList<FormatModel.InnerFormatModel> modelList = formatModel.getModelList();
             modelList.sort((o1, o2) -> o2.IDFormat - o1.IDFormat);
             FormatModel.InnerFormatModel data = modelList.getList().get(0);
-            data.IDFormat = id.get(0);
+
             List<FormatModel.InnerFormatModel> list = new ArrayList<>();
             list.add(data);
             ModelList<FormatModel.InnerFormatModel> dataModelList = new ModelList<>(list);
 
-            formatModel.deleteRow(dataModelList);
-
-
-            formatModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            formatModel.getData();
-
-            data.IDFormat = id.get(1);
-            list = new ArrayList<>();
-            list.add(data);
-            dataModelList = new ModelList<>(list);
-
-            formatModel.deleteRow(dataModelList);
-
-            formatModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            formatModel.getData();
-
-            modelList = formatModel.getModelList();
-            modelList.sort((o1, o2) -> o2.IDFormat - o1.IDFormat);
-            data = modelList.getList().get(0);
-
-            list = new ArrayList<>();
-            list.add(data);
-            dataModelList = new ModelList<>(list);
-
-            formatModel.deleteRow(dataModelList);
+            MainService.delete(formatModel, dataModelList);
         } catch (Exception e) {
             fail(e.getMessage());
         }
     }
     @Test
-    public void deleteRow() {
+    public void insertUpdateDelete() {
         try {
             List<Integer> newId = this.insert();
-            this.delete(newId);
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-    }
-
-    @Test
-    public void insertRow() {
-        try {
-            List<Integer> newId = this.insert();
+            this.update(newId);
             this.delete(newId);
         } catch (Exception e) {
             fail(e.getMessage());

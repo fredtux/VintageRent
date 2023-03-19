@@ -1,5 +1,6 @@
 package org.models;
 
+import org.actions.MainService;
 import org.database.DatabaseConnection;
 import org.database.csv.CsvConnection;
 import org.database.memory.InMemory;
@@ -14,19 +15,10 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class ObjectiveModelTest {
-    DatabaseConnection orcl = null;
-    DatabaseConnection csv = null;
     DatabaseConnection inmem = null;
 
     public ObjectiveModelTest(){
         try {
-            ModelInit.logInit();
-            ModelInit.csvInit();
-
-            this.orcl = this.getOracle();
-            if(!orcl.isInitialized())
-                orcl.init();
-            this.csv = CsvConnection.getInstance(DatabaseConnection.DatabaseType.CSV);
             this.inmem = this.getInMemory();
         } catch (Exception e) {
             fail(e.getMessage());
@@ -44,43 +36,14 @@ public class ObjectiveModelTest {
         return result;
     }
 
-    private DatabaseConnection getOracle(){
-        DatabaseConnection result = null;
-        try{
-            result = new OracleConnection(Main.ORACLE_DB_ADDR, "c##tux", "fmilove", "oracle.jdbc.driver.OracleDriver", "XE", "C##TUX", "1521");
-        } catch (Exception e) {
-            result = DatabaseConnection.getInstance(DatabaseConnection.DatabaseType.ORACLE);
-        }
-
-        try{
-            result.connect();
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-
-        return result;
-    }
-
     @Test
     public void getModelList() {
         try {
-            ObjectiveModel objectiveModel = ObjectiveModel.getInstance();
-            objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            objectiveModel.getData();
+            ObjectiveModel mobjectiveModel = ObjectiveModel.getInstance();
+            mobjectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(mobjectiveModel);
 
-            ModelList<ObjectiveModel.InnerObjectiveModel> modelList = objectiveModel.getModelList();
-            assertNotNull(modelList);
-
-            objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            objectiveModel.getData();
-
-            modelList = objectiveModel.getModelList();
-            assertNotNull(modelList);
-
-            objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            objectiveModel.getData();
-
-            modelList = objectiveModel.getModelList();
+            ModelList<ObjectiveModel.InnerObjectiveModel> modelList = MainService.getModelList(mobjectiveModel);
             assertNotNull(modelList);
         } catch (Exception e) {
             fail(e.getMessage());
@@ -90,10 +53,8 @@ public class ObjectiveModelTest {
     @Test
     public void setDatabaseType() {
         try{
-            ObjectiveModel objectiveModel = ObjectiveModel.getInstance();
-            objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
+            ObjectiveModel mobjectiveModel = ObjectiveModel.getInstance();
+            MainService.setDatabaseType(mobjectiveModel, DatabaseConnection.DatabaseType.INMEMORY);
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -102,24 +63,11 @@ public class ObjectiveModelTest {
     @Test
     public void getTableModel() {
         try {
-            ObjectiveModel objectiveModel = ObjectiveModel.getInstance();
-            objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            objectiveModel.getData();
+            ObjectiveModel mobjectiveModel = ObjectiveModel.getInstance();
+            MainService.setDatabaseType(mobjectiveModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(mobjectiveModel);
 
-            TableModel tm = objectiveModel.getTableModel();
-            assertNotNull(tm);
-
-
-            objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            objectiveModel.getData();
-
-            tm = objectiveModel.getTableModel();
-            assertNotNull(tm);
-
-            objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            objectiveModel.getData();
-
-            tm = objectiveModel.getTableModel();
+            TableModel tm = MainService.getTableModel(mobjectiveModel);
             assertNotNull(tm);
 
         } catch (Exception e) {
@@ -130,91 +78,62 @@ public class ObjectiveModelTest {
     @Test
     public void getData() {
         try {
-            ObjectiveModel objectiveModel = ObjectiveModel.getInstance();
-            objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            objectiveModel.getData();
-
-            objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            objectiveModel.getData();
-
-            objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            objectiveModel.getData();
+            ObjectiveModel mobjectiveModel = ObjectiveModel.getInstance();
+            MainService.setDatabaseType(mobjectiveModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(mobjectiveModel);
         } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
-    @Test
-    public void updateData() {
+    private void update(List<Integer> id){
         try {
-            ObjectiveModel objectiveModel = ObjectiveModel.getInstance();
-            objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            objectiveModel.getData();
+            ObjectiveModel mobjectiveModel = ObjectiveModel.getInstance();
+            MainService.setDatabaseType(mobjectiveModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(mobjectiveModel);
 
-            ModelList<ObjectiveModel.InnerObjectiveModel> modelList = objectiveModel.getModelList();
-            objectiveModel.updateData(modelList);
+            ModelList<ObjectiveModel.InnerObjectiveModel> modelList = mobjectiveModel.getModelList();
+            modelList.sort((o1, o2) -> o2.IDObiectiv - o1.IDObiectiv);
+            ObjectiveModel.InnerObjectiveModel data = modelList.getList().get(0);
 
-            objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            objectiveModel.getData();
+            ++data.PretInchiriere;
 
-            modelList = objectiveModel.getModelList();
-            objectiveModel.updateData(modelList);
+            List<ObjectiveModel.InnerObjectiveModel> list = new ArrayList<>();
+            list.add(data);
+            ModelList<ObjectiveModel.InnerObjectiveModel> dataModelList = new ModelList<>(list);
 
-            objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            objectiveModel.getData();
-
-            modelList = objectiveModel.getModelList();
-            if(modelList.getList().size() > 0)
-                objectiveModel.updateData(modelList);
+            MainService.update(mobjectiveModel, dataModelList);
         } catch (Exception e) {
             fail(e.getMessage());
         }
     }
-
     private List<Integer> insert(){
         try {
             List<Integer> result = new ArrayList<>();
 
-            ObjectiveModel objectiveModel = ObjectiveModel.getInstance();
-            objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            objectiveModel.getData();
+            ObjectiveModel mobjectiveModel = ObjectiveModel.getInstance();
+            MainService.setDatabaseType(mobjectiveModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(mobjectiveModel);
 
-            ModelList<ObjectiveModel.InnerObjectiveModel> modelList = objectiveModel.getModelList();
-            modelList.sort((o1, o2) -> o2.IDObiectiv - o1.IDObiectiv);
-            ObjectiveModel.InnerObjectiveModel data = modelList.getList().get(0);
-            ++data.IDObiectiv;
+            ObjectiveModel.InnerObjectiveModel data = new ObjectiveModel.InnerObjectiveModel();
+            data.IDObiectiv = 0;
+            data.PretInchiriere = 100;
+            data.Pret = 100;
+            data.IDObiectiv = 1;
+            data.Denumire = "Test";
+            data.DiafragmaMaxima = 0.0;
+            data.DiafragmaMinima = 0.0;
+            data.DistantaFocala = 100;
+            data.Diametru = 100;
 
-            result.add(data.IDObiectiv);
+            MainService.insert(mobjectiveModel, data);
 
-            objectiveModel.insertRow(data);
-
-
-            objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            objectiveModel.getData();
-
-            modelList = objectiveModel.getModelList();
+            MainService.getData(mobjectiveModel);
+            ModelList<ObjectiveModel.InnerObjectiveModel> modelList = MainService.getModelList(mobjectiveModel);
             modelList.sort((o1, o2) -> o2.IDObiectiv - o1.IDObiectiv);
             data = modelList.getList().get(0);
-            ++data.IDObiectiv;
 
             result.add(data.IDObiectiv);
-
-            objectiveModel.insertRow(data);
-
-            objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            objectiveModel.getData();
-
-            try {
-                data = modelList.getList().get(0);
-                ++data.IDObiectiv;
-            } catch (Exception e){
-
-            }
-
-            result.add(data.IDObiectiv);
-
-            objectiveModel.insertRow(data);
-
 
             return result;
         } catch (Exception e) {
@@ -226,61 +145,28 @@ public class ObjectiveModelTest {
 
     public void delete(List<Integer> id){
         try {
-            ObjectiveModel objectiveModel = ObjectiveModel.getInstance();
-            objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            objectiveModel.getData();
+            ObjectiveModel mobjectiveModel = ObjectiveModel.getInstance();
+            MainService.setDatabaseType(mobjectiveModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(mobjectiveModel);
 
-            ModelList<ObjectiveModel.InnerObjectiveModel> modelList = objectiveModel.getModelList();
+            ModelList<ObjectiveModel.InnerObjectiveModel> modelList = mobjectiveModel.getModelList();
             modelList.sort((o1, o2) -> o2.IDObiectiv - o1.IDObiectiv);
             ObjectiveModel.InnerObjectiveModel data = modelList.getList().get(0);
-            data.IDObiectiv = id.get(0);
+
             List<ObjectiveModel.InnerObjectiveModel> list = new ArrayList<>();
             list.add(data);
             ModelList<ObjectiveModel.InnerObjectiveModel> dataModelList = new ModelList<>(list);
 
-            objectiveModel.deleteRow(dataModelList);
-
-
-            objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            objectiveModel.getData();
-
-            data.IDObiectiv = id.get(1);
-            list = new ArrayList<>();
-            list.add(data);
-            dataModelList = new ModelList<>(list);
-
-            objectiveModel.deleteRow(dataModelList);
-
-            objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            objectiveModel.getData();
-
-            modelList = objectiveModel.getModelList();
-            modelList.sort((o1, o2) -> o2.IDObiectiv - o1.IDObiectiv);
-            data = modelList.getList().get(0);
-
-            list = new ArrayList<>();
-            list.add(data);
-            dataModelList = new ModelList<>(list);
-
-            objectiveModel.deleteRow(dataModelList);
+            MainService.delete(mobjectiveModel, dataModelList);
         } catch (Exception e) {
             fail(e.getMessage());
         }
     }
     @Test
-    public void deleteRow() {
+    public void insertUpdateDelete() {
         try {
             List<Integer> newId = this.insert();
-            this.delete(newId);
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-    }
-
-    @Test
-    public void insertRow() {
-        try {
-            List<Integer> newId = this.insert();
+            this.update(newId);
             this.delete(newId);
         } catch (Exception e) {
             fail(e.getMessage());
@@ -289,7 +175,7 @@ public class ObjectiveModelTest {
 
     @Test
     public void getInstance() {
-        ObjectiveModel objectiveModel = ObjectiveModel.getInstance();
-        assertNotNull(objectiveModel);
+        ObjectiveModel mobjectiveModel = ObjectiveModel.getInstance();
+        assertNotNull(mobjectiveModel);
     }
 }
