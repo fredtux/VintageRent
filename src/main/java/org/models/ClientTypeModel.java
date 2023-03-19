@@ -4,35 +4,38 @@ import org.database.DatabaseConnection;
 import org.database.csv.CsvConnection;
 
 import javax.swing.table.DefaultTableModel;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CameraTypeModel extends Model implements LinkModelToDatabase<ModelList<CameraTypeModel.InnerCameraTypeModel>, CameraTypeModel.InnerCameraTypeModel> {
-    public static class InnerCameraTypeModel extends AbstractInnerModel implements Comparable<InnerCameraTypeModel> {
-        public int IDTip;
+public class ClientTypeModel extends Model implements LinkModelToDatabase<ModelList<ClientTypeModel.InnerClientTypeModel>, ClientTypeModel.InnerClientTypeModel> {
+    public static class InnerClientTypeModel extends AbstractInnerModel implements Comparable<InnerClientTypeModel> {
+        public int IDTip;;
         public String Denumire;
+        public double Discount;
 
         @Override
-        public int compareTo(InnerCameraTypeModel o) {
+        public int compareTo(InnerClientTypeModel o) {
             return this.IDTip - o.IDTip;
         }
     }
-    private String tableName = "TIPCAMERA";
+    private String tableName = "TIPCLIENT";
 
-    private static CameraTypeModel instance = null;
-    private ModelList<InnerCameraTypeModel> modelList = null;
+    private static ClientTypeModel instance = null;
+    private ModelList<InnerClientTypeModel> modelList = null;
 
-    public ModelList<InnerCameraTypeModel> getModelList() {
+    public ModelList<InnerClientTypeModel> getModelList() {
         return modelList;
     }
 
-    public static CameraTypeModel getInstance() {
+    public static ClientTypeModel getInstance() {
         if (instance == null)
-            instance = new CameraTypeModel();
+            instance = new ClientTypeModel();
 
         return instance;
     }
@@ -41,20 +44,20 @@ public class CameraTypeModel extends Model implements LinkModelToDatabase<ModelL
         this.databaseType = databaseType;
 
         if(databaseType == DatabaseConnection.DatabaseType.CSV){
-            this.tableName = "TipCamera.csv";
+            this.tableName = "TipClient.csv";
         } else if (databaseType == DatabaseConnection.DatabaseType.ORACLE){
-            this.tableName = "TIPCAMERA";
+            this.tableName = "TIPCLIENT";
         } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
-            this.tableName = "camera_type";
+            this.tableName = "client_type";
         }
     }
 
     public DefaultTableModel getTableModel() {
-        String[] columns = {"IDTip", "Denumire"};
+        String[] columns = {"IDTip", "Denumire", "Discount"};
 
         DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
-        for(InnerCameraTypeModel model : this.modelList.getList()){
-            Object[] obj = {model.IDTip, model.Denumire};
+        for(InnerClientTypeModel model : this.modelList.getList()){
+            Object[] obj = {model.IDTip, model.Denumire, model.IDTip, model.Discount};
             tableModel.addRow(obj);
         }
 
@@ -62,76 +65,78 @@ public class CameraTypeModel extends Model implements LinkModelToDatabase<ModelL
         return tableModel;
     }
 
-    public CameraTypeModel() {
+    public ClientTypeModel() {
         // Singleton
         if(instance != null)
-            throw new RuntimeException("CameraTypeModel is a singleton class. Use getInstance() instead.");
+            throw new RuntimeException("ClientTypeModel is a singleton class. Use getInstance() instead.");
         else
             instance = this;
 
-        this.name = "TipCamera";
+        this.name = "TipClient";
         this.databaseType = DatabaseConnection.DatabaseType.ORACLE;
     }
 
-    public CameraTypeModel(DatabaseConnection.DatabaseType t) {
+    public ClientTypeModel(DatabaseConnection.DatabaseType t) {
         // Singleton
         if(instance != null)
-            throw new RuntimeException("CameraTypeModel is a singleton class. Use getInstance() instead.");
+            throw new RuntimeException("ClientTypeModel is a singleton class. Use getInstance() instead.");
         else
             instance = this;
 
-        this.name = "TipCamera";
+        this.name = "TipClienti";
         this.databaseType = t;
         if(t == DatabaseConnection.DatabaseType.CSV)
-            this.tableName = "TipCamera.csv";
+            this.tableName = "TipClient.csv";
         else if(t == DatabaseConnection.DatabaseType.ORACLE)
-            this.tableName = "TIPCAMERA";
+            this.tableName = "CLIENTI";
         else if(t == DatabaseConnection.DatabaseType.INMEMORY)
-            this.tableName = "camera_type";
+            this.tableName = "client_type";
     }
 
     private void transferToModelList(ResultSet rs) throws Exception{
         this.modelList = new ModelList<>(true);
 
         while(rs.next()){
-            InnerCameraTypeModel model = new InnerCameraTypeModel();
-            model.IDTip = rs.getInt("IDTIP");
-            model.Denumire = rs.getString("DENUMIRE");
+            InnerClientTypeModel model = new InnerClientTypeModel();
+            model.IDTip = rs.getInt("IDTip");
+            model.Denumire = rs.getString("Denumire");
+            model.Discount = rs.getDouble("Discount");
 
             this.modelList.add(model);
         }
     }
 
     @Override
-    public ModelList<InnerCameraTypeModel> getData() throws Exception{
+    public ModelList<InnerClientTypeModel> getData() throws Exception{
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         Map<String, String> tables = null;
         if(databaseType == DatabaseConnection.DatabaseType.CSV) {
             tables = new HashMap<>();
-            tables.put("TIPCAMERA", "TipCamera.csv");
+            tables.put("TIPCLIENT", "TipClient.csv");
         } else if(databaseType == DatabaseConnection.DatabaseType.ORACLE) {
             tables = new HashMap<>();
-            tables.put("TIPCAMERA", "TIPCAMERA");
-        } else {
+            tables.put("TIPCLIENT", "TIPCLIENT");
+        } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
             tables = new HashMap<>();
-            tables.put("TIPCAMERA", "camera_type");
+            tables.put("TIPCLIENT", "client_type");
         }
 
 
-        ResultSet formats = db.getAllTableData(tables.get("TIPCAMERA"));
+        ResultSet tipClienti = db.getAllTableData(tables.get("TIPCLIENT"));
 
         // Add fields to cameras
         this.modelList = new ModelList<>(true);
-        while(formats.next()) {
-            InnerCameraTypeModel model = new InnerCameraTypeModel();
-            model.IDTip = formats.getInt("IDTIP");
-            model.Denumire = formats.getString("DENUMIRE");
+        while(tipClienti.next()) {
+            InnerClientTypeModel model = new InnerClientTypeModel();
+            model.IDTip = tipClienti.getInt("IDTip");
+            model.Denumire = tipClienti.getString("Denumire");
+            model.Discount = tipClienti.getDouble("Discount");
 
             this.modelList.add(model);
         }
 
         try{
-            logger.log("CameraTypeModel got data");
+            logger.log("ClientTypeModel got data");
         } catch (Exception ex) {
             System.out.println("Error logging to CSV: " + ex.getMessage());
         }
@@ -140,15 +145,18 @@ public class CameraTypeModel extends Model implements LinkModelToDatabase<ModelL
     }
 
     @Override
-    public void updateData(ModelList<InnerCameraTypeModel> oneRow) throws Exception {
+    public void updateData(ModelList<InnerClientTypeModel> oneRow) throws Exception {
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         Map<String, String> set = new HashMap<>();
-        set.put("DENUMIRE", "'" + oneRow.get(0).Denumire + "'");
+        set.put("Denumire", "'" + oneRow.get(0).Denumire + "'");
+        set.put("Discount", String.valueOf(oneRow.get(0).Discount));
+
         Map<String, String> where = new HashMap<>();
-        where.put("IDTIP", oneRow.get(0).IDTip + "");
+        where.put("IDTip", String.valueOf(oneRow.get(0).IDTip));
+
         db.update(this.tableName, set, where);
         try{
-            logger.log("CameraTypeModel update data");
+            logger.log("ClientTypeModel update data");
         } catch (Exception ex) {
             System.out.println("Error logging to CSV: " + ex.getMessage());
         }
@@ -156,14 +164,14 @@ public class CameraTypeModel extends Model implements LinkModelToDatabase<ModelL
     }
 
     @Override
-    public void deleteRow(ModelList<InnerCameraTypeModel> row) throws Exception {
+    public void deleteRow(ModelList<InnerClientTypeModel> row) throws Exception {
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
 
         Map<String, String> where = new HashMap<>();
-        where.put("IDTIP", row.get(0).IDTip + "");
+        where.put("IDTip", row.get(0).IDTip + "");
         db.delete(this.tableName, where);
         try{
-            logger.log("CameraTypeModel delete data");
+            logger.log("ClientTypeModel delete data");
         } catch (Exception ex) {
             System.out.println("Error logging to CSV: " + ex.getMessage());
         }
@@ -205,23 +213,27 @@ public class CameraTypeModel extends Model implements LinkModelToDatabase<ModelL
 
         csv.createAndInsert(this.tableName + ".csv", headers, data);
         try{
-            logger.log("CameraTypeModel throw data into csv");
+            logger.log("ClientTypeModel throw data into csv");
         } catch (Exception ex) {
             System.out.println("Error logging to CSV: " + ex.getMessage());
         }
     }
 
     @Override
-    public void insertRow(InnerCameraTypeModel row) throws Exception {
+    public void insertRow(InnerClientTypeModel row) throws Exception {
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         List<Pair<String, String>> values = new ArrayList<>();
-        values.add(new Pair<>("IDTIP", ""));
-        values.add(new Pair<>("DENUMIRE", "'" + row.Denumire + "'"));
+        values.add(new Pair<>("IDTIP", row.IDTip + ""));
+        values.add(new Pair<>("DENUMIRE", row.Denumire));
+        values.add(new Pair<>("DISCOUNT", row.Discount + ""));
+
 
         db.insert(this.tableName, values);
+
         try{
-            logger.log("CameraTypeModel insert data");
+            logger.log("ClientTypeModel insert data");
         } catch (Exception ex) {
             System.out.println("Error logging to CSV: " + ex.getMessage());
         }

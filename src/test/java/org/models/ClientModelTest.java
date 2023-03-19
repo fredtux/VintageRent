@@ -2,6 +2,7 @@ package org.models;
 
 import org.database.DatabaseConnection;
 import org.database.csv.CsvConnection;
+import org.database.memory.InMemory;
 import org.database.oracle.OracleConnection;
 import org.junit.Test;
 import org.vintage.Main;
@@ -15,6 +16,7 @@ import static org.junit.Assert.*;
 public class ClientModelTest {
     DatabaseConnection orcl = null;
     DatabaseConnection csv = null;
+    DatabaseConnection inmem = null;
 
     public ClientModelTest(){
         try {
@@ -25,9 +27,21 @@ public class ClientModelTest {
             if(!orcl.isInitialized())
                 orcl.init();
             this.csv = CsvConnection.getInstance(DatabaseConnection.DatabaseType.CSV);
+            this.inmem = this.getInMemory();
         } catch (Exception e) {
             fail(e.getMessage());
         }
+    }
+
+    private DatabaseConnection getInMemory(){
+        DatabaseConnection result = null;
+        try{
+            result = new InMemory(Main.ORACLE_DB_ADDR, "c##tux", "fmilove", "oracle.jdbc.driver.OracleDriver", "XE", "C##TUX", "1521");
+        } catch (Exception e) {
+            result = DatabaseConnection.getInstance(DatabaseConnection.DatabaseType.INMEMORY);
+        }
+
+        return result;
     }
 
 
@@ -63,6 +77,12 @@ public class ClientModelTest {
 
             modelList = clientModel.getModelList();
             assertNotNull(modelList);
+
+            clientModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
+            clientModel.getData();
+
+            modelList = clientModel.getModelList();
+            assertNotNull(modelList);
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -74,6 +94,7 @@ public class ClientModelTest {
             ClientModel clientModel = ClientModel.getInstance();
             clientModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
             clientModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
+            clientModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -96,6 +117,12 @@ public class ClientModelTest {
             tm = clientModel.getTableModel();
             assertNotNull(tm);
 
+            clientModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
+            clientModel.getData();
+
+            tm = clientModel.getTableModel();
+            assertNotNull(tm);
+
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -109,6 +136,9 @@ public class ClientModelTest {
             clientModel.getData();
 
             clientModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
+            clientModel.getData();
+
+            clientModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
             clientModel.getData();
         } catch (Exception e) {
             fail(e.getMessage());
@@ -130,13 +160,22 @@ public class ClientModelTest {
 
             modelList = clientModel.getModelList();
             clientModel.updateData(modelList);
+
+            clientModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
+            clientModel.getData();
+
+            modelList = clientModel.getModelList();
+            if(modelList.getList().size() > 0)
+                clientModel.updateData(modelList);
         } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
-    private int insert(){
+    private List<Integer> insert(){
         try {
+            List<Integer> result = new ArrayList<>();
+
             ClientModel clientModel = ClientModel.getInstance();
             clientModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
             clientModel.getData();
@@ -144,9 +183,9 @@ public class ClientModelTest {
             ModelList<ClientModel.InnerClientModel> modelList = clientModel.getModelList();
             modelList.sort((o1, o2) -> o2.IDUtilizator - o1.IDUtilizator);
             ClientModel.InnerClientModel data = modelList.getList().get(0);
-            data.IDUtilizator = 2;
+            data.IDUtilizator = 1;
 
-            int result = data.IDUtilizator;
+            result.add(data.IDUtilizator);
 
             clientModel.insertRow(data);
 
@@ -154,17 +193,32 @@ public class ClientModelTest {
             clientModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
             clientModel.getData();
 
+            modelList = clientModel.getModelList();
+            modelList.sort((o1, o2) -> o2.IDUtilizator - o1.IDUtilizator);
+            data = modelList.getList().get(0);
+            data.IDUtilizator = 1;
+
+            result.add(data.IDUtilizator);
+
             clientModel.insertRow(data);
+
+            clientModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
+            clientModel.getData();
+
+            result.add(data.IDUtilizator);
+
+            clientModel.insertRow(data);
+
 
             return result;
         } catch (Exception e) {
             fail(e.getMessage());
         }
 
-        return -1;
+        return null;
     }
 
-    public void delete(int id){
+    public void delete(List<Integer> id){
         try {
             ClientModel clientModel = ClientModel.getInstance();
             clientModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
@@ -173,7 +227,7 @@ public class ClientModelTest {
             ModelList<ClientModel.InnerClientModel> modelList = clientModel.getModelList();
             modelList.sort((o1, o2) -> o2.IDUtilizator - o1.IDUtilizator);
             ClientModel.InnerClientModel data = modelList.getList().get(0);
-            data.IDUtilizator = id;
+            data.IDUtilizator = id.get(0);
             List<ClientModel.InnerClientModel> list = new ArrayList<>();
             list.add(data);
             ModelList<ClientModel.InnerClientModel> dataModelList = new ModelList<>(list);
@@ -184,6 +238,24 @@ public class ClientModelTest {
             clientModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
             clientModel.getData();
 
+            data.IDUtilizator = id.get(1);
+            list = new ArrayList<>();
+            list.add(data);
+            dataModelList = new ModelList<>(list);
+
+            clientModel.deleteRow(dataModelList);
+
+            clientModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
+            clientModel.getData();
+
+            modelList = clientModel.getModelList();
+            modelList.sort((o1, o2) -> o2.IDUtilizator - o1.IDUtilizator);
+            data = modelList.getList().get(0);
+
+            list = new ArrayList<>();
+            list.add(data);
+            dataModelList = new ModelList<>(list);
+
             clientModel.deleteRow(dataModelList);
         } catch (Exception e) {
             fail(e.getMessage());
@@ -192,7 +264,7 @@ public class ClientModelTest {
     @Test
     public void deleteRow() {
         try {
-            int newId = this.insert();
+            List<Integer> newId = this.insert();
             this.delete(newId);
         } catch (Exception e) {
             fail(e.getMessage());
@@ -202,7 +274,7 @@ public class ClientModelTest {
     @Test
     public void insertRow() {
         try {
-            int newId = this.insert();
+            List<Integer> newId = this.insert();
             this.delete(newId);
         } catch (Exception e) {
             fail(e.getMessage());

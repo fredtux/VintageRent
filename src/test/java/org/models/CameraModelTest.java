@@ -2,6 +2,7 @@ package org.models;
 
 import org.database.DatabaseConnection;
 import org.database.csv.CsvConnection;
+import org.database.memory.InMemory;
 import org.database.oracle.OracleConnection;
 import org.junit.Test;
 import org.vintage.Main;
@@ -15,6 +16,7 @@ import static org.junit.Assert.*;
 public class CameraModelTest {
     DatabaseConnection orcl = null;
     DatabaseConnection csv = null;
+    DatabaseConnection inmem = null;
 
     public CameraModelTest(){
         try {
@@ -25,9 +27,21 @@ public class CameraModelTest {
             if(!orcl.isInitialized())
                 orcl.init();
             this.csv = CsvConnection.getInstance(DatabaseConnection.DatabaseType.CSV);
+            this.inmem = this.getInMemory();
         } catch (Exception e) {
             fail(e.getMessage());
         }
+    }
+
+    private DatabaseConnection getInMemory(){
+        DatabaseConnection result = null;
+        try{
+            result = new InMemory(Main.ORACLE_DB_ADDR, "c##tux", "fmilove", "oracle.jdbc.driver.OracleDriver", "XE", "C##TUX", "1521");
+        } catch (Exception e) {
+            result = DatabaseConnection.getInstance(DatabaseConnection.DatabaseType.INMEMORY);
+        }
+
+        return result;
     }
 
 
@@ -63,6 +77,12 @@ public class CameraModelTest {
 
             modelList = cameraModel.getModelList();
             assertNotNull(modelList);
+
+            cameraModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
+            cameraModel.getData();
+
+            modelList = cameraModel.getModelList();
+            assertNotNull(modelList);
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -74,6 +94,7 @@ public class CameraModelTest {
             CameraModel cameraModel = CameraModel.getInstance();
             cameraModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
             cameraModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
+            cameraModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -96,6 +117,12 @@ public class CameraModelTest {
             tm = cameraModel.getTableModel();
             assertNotNull(tm);
 
+            cameraModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
+            cameraModel.getData();
+
+            tm = cameraModel.getTableModel();
+            assertNotNull(tm);
+
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -109,6 +136,9 @@ public class CameraModelTest {
             cameraModel.getData();
 
             cameraModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
+            cameraModel.getData();
+
+            cameraModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
             cameraModel.getData();
         } catch (Exception e) {
             fail(e.getMessage());
@@ -130,13 +160,23 @@ public class CameraModelTest {
 
             modelList = cameraModel.getModelList();
             cameraModel.updateData(modelList);
+
+            cameraModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
+            cameraModel.getData();
+
+            modelList = cameraModel.getModelList();
+            assertNotNull(modelList);
+            if(modelList.size() > 0)
+                cameraModel.updateData(modelList);
         } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
-    private int insert(){
+    private List<Integer> insert(){
         try {
+            List<Integer> result = new ArrayList<>();
+
             CameraModel cameraModel = CameraModel.getInstance();
             cameraModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
             cameraModel.getData();
@@ -146,7 +186,7 @@ public class CameraModelTest {
             CameraModel.InnerCameraModel data = modelList.getList().get(0);
             ++data.IDCamera;
 
-            int result = data.IDCamera;
+            result.add(data.IDCamera);
 
             cameraModel.insertRow(data);
 
@@ -154,17 +194,41 @@ public class CameraModelTest {
             cameraModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
             cameraModel.getData();
 
+            modelList = cameraModel.getModelList();
+            modelList.sort((o1, o2) -> o2.IDCamera - o1.IDCamera);
+            data = modelList.getList().get(0);
+            ++data.IDCamera;
+
+            result.add(data.IDCamera);
+
             cameraModel.insertRow(data);
+
+            cameraModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
+            cameraModel.getData();
+
+            modelList = cameraModel.getModelList();
+            modelList.sort((o1, o2) -> o2.IDCamera - o1.IDCamera);
+            try {
+                data = modelList.getList().get(0);
+                ++data.IDCamera;
+            } catch (Exception e){
+
+            }
+
+            result.add(data.IDCamera);
+
+            cameraModel.insertRow(data);
+
 
             return result;
         } catch (Exception e) {
             fail(e.getMessage());
         }
 
-        return -1;
+        return null;
     }
 
-    public void delete(int id){
+    public void delete(List<Integer> id){
         try {
             CameraModel cameraModel = CameraModel.getInstance();
             cameraModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
@@ -173,7 +237,7 @@ public class CameraModelTest {
             ModelList<CameraModel.InnerCameraModel> modelList = cameraModel.getModelList();
             modelList.sort((o1, o2) -> o2.IDCamera - o1.IDCamera);
             CameraModel.InnerCameraModel data = modelList.getList().get(0);
-            data.IDCamera = id;
+            data.IDCamera = id.get(0);
             List<CameraModel.InnerCameraModel> list = new ArrayList<>();
             list.add(data);
             ModelList<CameraModel.InnerCameraModel> dataModelList = new ModelList<>(list);
@@ -184,6 +248,24 @@ public class CameraModelTest {
             cameraModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
             cameraModel.getData();
 
+            data.IDCamera = id.get(1);
+            list = new ArrayList<>();
+            list.add(data);
+            dataModelList = new ModelList<>(list);
+
+            cameraModel.deleteRow(dataModelList);
+
+            cameraModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
+            cameraModel.getData();
+
+            modelList = cameraModel.getModelList();
+            modelList.sort((o1, o2) -> o2.IDCamera - o1.IDCamera);
+            data = modelList.getList().get(0);
+
+            list = new ArrayList<>();
+            list.add(data);
+            dataModelList = new ModelList<>(list);
+
             cameraModel.deleteRow(dataModelList);
         } catch (Exception e) {
             fail(e.getMessage());
@@ -192,7 +274,7 @@ public class CameraModelTest {
     @Test
     public void deleteRow() {
         try {
-            int newId = this.insert();
+            List<Integer> newId = this.insert();
             this.delete(newId);
         } catch (Exception e) {
             fail(e.getMessage());
@@ -202,7 +284,7 @@ public class CameraModelTest {
     @Test
     public void insertRow() {
         try {
-            int newId = this.insert();
+            List<Integer> newId = this.insert();
             this.delete(newId);
         } catch (Exception e) {
             fail(e.getMessage());
