@@ -28,6 +28,7 @@ public class InMemory extends DatabaseConnection {
     private ModelList<EmployeeModel.InnerEmployeeModel> employees = null;
     private ModelList<SalaryModel.InnerSalaryModel> salaries = null;
     private ModelList<ObjectiveModel.InnerObjectiveModel> objectives = null;
+    private ModelList<RentModel.InnerRentModel> rents = null;
 
     public InMemory(String url, String username, String password, String driver, String database, String schema, String port) {
         if (instance != null)
@@ -47,6 +48,7 @@ public class InMemory extends DatabaseConnection {
         employees = new ModelList<>();
         salaries = new ModelList<>();
         objectives = new ModelList<>();
+        rents = new ModelList<>();
     }
 
     public static DatabaseConnection getInstance(DatabaseType t) throws RuntimeException {
@@ -127,7 +129,7 @@ public class InMemory extends DatabaseConnection {
     private List<String> getAttributes(Class<?> c) throws Exception {
         List<String> attributes = new ArrayList<>();
         for (Field f : c.getDeclaredFields()) {
-            attributes.add(f.getName());
+            attributes.add(f.getName().replace("_", ""));
         }
         return attributes;
     }
@@ -179,6 +181,9 @@ public class InMemory extends DatabaseConnection {
         } else if (tableName == "objective") {
             headers = this.getAttributes(ObjectiveModel.InnerObjectiveModel.class);
             data = this.getObjectsFromModelList(this.objectives);
+        } else if (tableName == "rent") {
+            headers = this.getAttributes(RentModel.InnerRentModel.class);
+            data = this.getObjectsFromModelList(this.rents);
         }
 
         return this.getResultSet(headers, data);
@@ -616,6 +621,52 @@ public class InMemory extends DatabaseConnection {
 
             this.objectives.getList().add(model);
 
+        } else if (tableName.equals("rent")) {
+            for (Pair<String, String> p : values) {
+                if (p.first.toLowerCase().equals("datainchiriere")) {
+                    p.second = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                    break;
+                }
+            }
+
+
+            RentModel.InnerRentModel model = new RentModel.InnerRentModel();
+            for (Pair<String, String> p : values) {
+                for (Field f : model.getClass().getDeclaredFields()) {
+                    if (f.getName().toLowerCase().equals(p.first.toLowerCase())) {
+                        f.setAccessible(true);
+                        // Cast p.second to f.getType()
+                        if (f.getType() == String.class) {
+                            f.set(model, p.second);
+                            break;
+                        } else if (f.getType() == int.class) {
+                            f.set(model, Integer.parseInt(p.second));
+                            break;
+                        } else if (f.getType() == double.class) {
+                            f.set(model, Double.parseDouble(p.second));
+                            break;
+                        } else if (f.getType() == boolean.class) {
+                            f.set(model, Boolean.parseBoolean(p.second));
+                            break;
+                        } else if (f.getType() == Date.class) {
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                            try {
+                                f.set(model, sdf.parse(p.second));
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            break;
+                        } else if (f.getType() == LocalDateTime.class) {
+                            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                            f.set(model, LocalDateTime.parse(p.second, dtf));
+                            break;
+                        }
+                    }
+                }
+            }
+
+            this.rents.getList().add(model);
+
         }
 
 
@@ -662,8 +713,10 @@ public class InMemory extends DatabaseConnection {
             this.deleteFromModelList(this.employees, where);
         } else if (tableName == "salary") {
             this.deleteFromModelList(this.salaries, where);
-        }else if (tableName == "objective") {
+        } else if (tableName == "objective") {
             this.deleteFromModelList(this.objectives, where);
+        } else if (tableName == "rent") {
+            this.deleteFromModelList(this.rents, where);
         }
     }
 
