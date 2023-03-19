@@ -2,6 +2,7 @@ package org.models;
 
 import org.database.DatabaseConnection;
 import org.database.csv.CsvConnection;
+import org.database.memory.InMemory;
 import org.database.oracle.OracleConnection;
 import org.junit.Test;
 import org.vintage.Main;
@@ -15,6 +16,7 @@ import static org.junit.Assert.*;
 public class UserModelTest {
     DatabaseConnection orcl = null;
     DatabaseConnection csv = null;
+    DatabaseConnection inmem = null;
 
     public UserModelTest(){
         try {
@@ -25,9 +27,21 @@ public class UserModelTest {
             if(!orcl.isInitialized())
                 orcl.init();
             this.csv = CsvConnection.getInstance(DatabaseConnection.DatabaseType.CSV);
+            this.inmem = this.getInMemory();
         } catch (Exception e) {
             fail(e.getMessage());
         }
+    }
+
+    private DatabaseConnection getInMemory(){
+        DatabaseConnection result = null;
+        try{
+            result = new InMemory(Main.ORACLE_DB_ADDR, "c##tux", "fmilove", "oracle.jdbc.driver.OracleDriver", "XE", "C##TUX", "1521");
+        } catch (Exception e) {
+            result = DatabaseConnection.getInstance(DatabaseConnection.DatabaseType.INMEMORY);
+        }
+
+        return result;
     }
 
 
@@ -63,6 +77,12 @@ public class UserModelTest {
 
             modelList = userModel.getModelList();
             assertNotNull(modelList);
+
+            userModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
+            userModel.getData();
+
+            modelList = userModel.getModelList();
+            assertNotNull(modelList);
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -74,6 +94,7 @@ public class UserModelTest {
             UserModel userModel = UserModel.getInstance();
             userModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
             userModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
+            userModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -96,6 +117,12 @@ public class UserModelTest {
             tm = userModel.getTableModel();
             assertNotNull(tm);
 
+            userModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
+            userModel.getData();
+
+            tm = userModel.getTableModel();
+            assertNotNull(tm);
+
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -109,6 +136,9 @@ public class UserModelTest {
             userModel.getData();
 
             userModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
+            userModel.getData();
+
+            userModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
             userModel.getData();
         } catch (Exception e) {
             fail(e.getMessage());
@@ -130,13 +160,22 @@ public class UserModelTest {
 
             modelList = userModel.getModelList();
             userModel.updateData(modelList);
+
+            userModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
+            userModel.getData();
+
+            modelList = userModel.getModelList();
+            if(modelList.getList().size() > 0)
+                userModel.updateData(modelList);
         } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
-    private int insert(){
+    private List<Integer> insert(){
         try {
+            List<Integer> result = new ArrayList<>();
+
             UserModel userModel = UserModel.getInstance();
             userModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
             userModel.getData();
@@ -147,7 +186,7 @@ public class UserModelTest {
             ++data.IDUtilizator;
             data.NumeUtilizator = "Unit Test";
 
-            int result = data.IDUtilizator;
+            result.add(data.IDUtilizator);
 
             userModel.insertRow(data);
 
@@ -155,17 +194,43 @@ public class UserModelTest {
             userModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
             userModel.getData();
 
+            modelList = userModel.getModelList();
+            modelList.sort((o1, o2) -> o2.IDUtilizator - o1.IDUtilizator);
+            data = modelList.getList().get(0);
+            ++data.IDUtilizator;
+            data.NumeUtilizator = "Unit Test";
+
+            result.add(data.IDUtilizator);
+
             userModel.insertRow(data);
+
+            userModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
+            userModel.getData();
+
+            try {
+                data = modelList.getList().get(0);
+                ++data.IDUtilizator;
+            } catch (Exception e){
+
+            }
+
+            data.NumeUtilizator = "Unit Test";
+            data.Parola = "unitpassowrd";
+
+            result.add(data.IDUtilizator);
+
+            userModel.insertRow(data);
+
 
             return result;
         } catch (Exception e) {
             fail(e.getMessage());
         }
 
-        return -1;
+        return null;
     }
 
-    public void delete(int id){
+    public void delete(List<Integer> id){
         try {
             UserModel userModel = UserModel.getInstance();
             userModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
@@ -174,7 +239,7 @@ public class UserModelTest {
             ModelList<UserModel.InnerUserModel> modelList = userModel.getModelList();
             modelList.sort((o1, o2) -> o2.IDUtilizator - o1.IDUtilizator);
             UserModel.InnerUserModel data = modelList.getList().get(0);
-            data.IDUtilizator = id;
+            data.IDUtilizator = id.get(0);
             List<UserModel.InnerUserModel> list = new ArrayList<>();
             list.add(data);
             ModelList<UserModel.InnerUserModel> dataModelList = new ModelList<>(list);
@@ -185,6 +250,24 @@ public class UserModelTest {
             userModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
             userModel.getData();
 
+            data.IDUtilizator = id.get(1);
+            list = new ArrayList<>();
+            list.add(data);
+            dataModelList = new ModelList<>(list);
+
+            userModel.deleteRow(dataModelList);
+
+            userModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
+            userModel.getData();
+
+            modelList = userModel.getModelList();
+            modelList.sort((o1, o2) -> o2.IDUtilizator - o1.IDUtilizator);
+            data = modelList.getList().get(0);
+
+            list = new ArrayList<>();
+            list.add(data);
+            dataModelList = new ModelList<>(list);
+
             userModel.deleteRow(dataModelList);
         } catch (Exception e) {
             fail(e.getMessage());
@@ -193,7 +276,7 @@ public class UserModelTest {
     @Test
     public void deleteRow() {
         try {
-            int newId = this.insert();
+            List<Integer> newId = this.insert();
             this.delete(newId);
         } catch (Exception e) {
             fail(e.getMessage());
@@ -203,7 +286,7 @@ public class UserModelTest {
     @Test
     public void insertRow() {
         try {
-            int newId = this.insert();
+            List<Integer> newId = this.insert();
             this.delete(newId);
         } catch (Exception e) {
             fail(e.getMessage());
