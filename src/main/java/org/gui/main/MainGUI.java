@@ -792,7 +792,7 @@ public class MainGUI { // Singleton
         class AboutMenuListener implements MenuListener {
             @Override
             public void menuSelected(MenuEvent e) {
-                JOptionPane.showMessageDialog(null, "Vintage Rent v1.0.0\nDeveloped by Dinu Florin-Silviu\nFor the PAO class of 2023");
+                JOptionPane.showMessageDialog(null, "Vintage Rent\nDeveloped by Dinu Florin-Silviu\nFor the PAO class of 2023");
             }
 
             @Override
