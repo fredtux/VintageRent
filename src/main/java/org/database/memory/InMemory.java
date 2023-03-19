@@ -168,10 +168,10 @@ public class InMemory extends DatabaseConnection {
             data = this.getObjectsFromModelList(this.clients);
         } else if (tableName == "client_type") {
             headers = this.getAttributes(ClientTypeModel.InnerClientTypeModel.class);
-            data = this.getObjectsFromModelList(this.clients);
+            data = this.getObjectsFromModelList(this.clientTypes);
         } else if (tableName == "user") {
             headers = this.getAttributes(UserModel.InnerUserModel.class);
-            data = this.getObjectsFromModelList(this.clients);
+            data = this.getObjectsFromModelList(this.users);
         } else if (tableName == "employee") {
             headers = this.getAttributes(EmployeeModel.InnerEmployeeModel.class);
             data = this.getObjectsFromModelList(this.employees);
@@ -229,6 +229,8 @@ public class InMemory extends DatabaseConnection {
             for (Pair<String, String> p : values) {
                 if (p.first.toLowerCase().equals("idtip")) {
                     p.second = String.valueOf(idTip + 1);
+
+                    break;
                 }
             }
 
@@ -241,12 +243,16 @@ public class InMemory extends DatabaseConnection {
                         // Cast p.second to f.getType()
                         if (f.getType() == String.class) {
                             f.set(model, p.second);
+                            break;
                         } else if (f.getType() == int.class) {
                             f.set(model, Integer.parseInt(p.second));
+                            break;
                         } else if (f.getType() == double.class) {
                             f.set(model, Double.parseDouble(p.second));
+                            break;
                         } else if (f.getType() == boolean.class) {
                             f.set(model, Boolean.parseBoolean(p.second));
+                            break;
                         }
                     }
                 }
@@ -263,6 +269,7 @@ public class InMemory extends DatabaseConnection {
             for (Pair<String, String> p : values) {
                 if (p.first.toLowerCase().equals("idcamera")) {
                     p.second = String.valueOf(id + 1);
+                    break;
                 }
             }
 
@@ -275,12 +282,16 @@ public class InMemory extends DatabaseConnection {
                         // Cast p.second to f.getType()
                         if (f.getType() == String.class) {
                             f.set(model, p.second);
+                            break;
                         } else if (f.getType() == int.class) {
                             f.set(model, Integer.parseInt(p.second));
+                            break;
                         } else if (f.getType() == double.class) {
                             f.set(model, Double.parseDouble(p.second));
+                            break;
                         } else if (f.getType() == boolean.class) {
                             f.set(model, Boolean.parseBoolean(p.second));
+                            break;
                         }
                     }
                 }
@@ -297,6 +308,7 @@ public class InMemory extends DatabaseConnection {
             for (Pair<String, String> p : values) {
                 if (p.first.toLowerCase().equals("idformat")) {
                     p.second = String.valueOf(id + 1);
+                    break;
                 }
             }
 
@@ -309,12 +321,16 @@ public class InMemory extends DatabaseConnection {
                         // Cast p.second to f.getType()
                         if (f.getType() == String.class) {
                             f.set(model, p.second);
+                            break;
                         } else if (f.getType() == int.class) {
                             f.set(model, Integer.parseInt(p.second));
+                            break;
                         } else if (f.getType() == double.class) {
                             f.set(model, Double.parseDouble(p.second));
+                            break;
                         } else if (f.getType() == boolean.class) {
                             f.set(model, Boolean.parseBoolean(p.second));
+                            break;
                         }
                     }
                 }
@@ -331,6 +347,7 @@ public class InMemory extends DatabaseConnection {
             for (Pair<String, String> p : values) {
                 if (p.first.toLowerCase().equals("idutilizator")) {
                     p.second = String.valueOf(id + 1);
+                    break;
                 }
             }
 
@@ -343,12 +360,16 @@ public class InMemory extends DatabaseConnection {
                         // Cast p.second to f.getType()
                         if (f.getType() == String.class) {
                             f.set(model, p.second);
+                            break;
                         } else if (f.getType() == int.class) {
                             f.set(model, Integer.parseInt(p.second));
+                            break;
                         } else if (f.getType() == double.class) {
                             f.set(model, Double.parseDouble(p.second));
+                            break;
                         } else if (f.getType() == boolean.class) {
                             f.set(model, Boolean.parseBoolean(p.second));
+                            break;
                         } else if (f.getType() == Date.class) {
                             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                             try {
@@ -356,9 +377,11 @@ public class InMemory extends DatabaseConnection {
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
+                            break;
                         } else if (f.getType() == LocalDateTime.class) {
                             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                             f.set(model, LocalDateTime.parse(p.second, dtf));
+                            break;
                         }
                     }
                 }
@@ -376,6 +399,7 @@ public class InMemory extends DatabaseConnection {
             for (Pair<String, String> p : values) {
                 if (p.first.toLowerCase().equals("idmontura")) {
                     p.second = String.valueOf(id + 1);
+                    break;
                 }
             }
 
@@ -388,12 +412,16 @@ public class InMemory extends DatabaseConnection {
                         // Cast p.second to f.getType()
                         if (f.getType() == String.class) {
                             f.set(model, p.second);
+                            break;
                         } else if (f.getType() == int.class) {
                             f.set(model, Integer.parseInt(p.second));
+                            break;
                         } else if (f.getType() == double.class) {
                             f.set(model, Double.parseDouble(p.second));
+                            break;
                         } else if (f.getType() == boolean.class) {
                             f.set(model, Boolean.parseBoolean(p.second));
+                            break;
                         }
                     }
                 }
@@ -410,6 +438,7 @@ public class InMemory extends DatabaseConnection {
             for (Pair<String, String> p : values) {
                 if (p.first.toLowerCase().equals("idtip")) {
                     p.second = String.valueOf(id + 1);
+                    break;
                 }
             }
 
@@ -422,12 +451,16 @@ public class InMemory extends DatabaseConnection {
                         // Cast p.second to f.getType()
                         if (f.getType() == String.class) {
                             f.set(model, p.second);
+                            break;
                         } else if (f.getType() == int.class) {
                             f.set(model, Integer.parseInt(p.second));
+                            break;
                         } else if (f.getType() == double.class) {
                             f.set(model, Double.parseDouble(p.second));
+                            break;
                         } else if (f.getType() == boolean.class) {
                             f.set(model, Boolean.parseBoolean(p.second));
+                            break;
                         }
                     }
                 }
@@ -444,6 +477,7 @@ public class InMemory extends DatabaseConnection {
             for (Pair<String, String> p : values) {
                 if (p.first.toLowerCase().equals("idutilizator")) {
                     p.second = String.valueOf(id + 1);
+                    break;
                 }
             }
 
@@ -456,12 +490,16 @@ public class InMemory extends DatabaseConnection {
                         // Cast p.second to f.getType()
                         if (f.getType() == String.class) {
                             f.set(model, p.second);
+                            break;
                         } else if (f.getType() == int.class) {
                             f.set(model, Integer.parseInt(p.second));
+                            break;
                         } else if (f.getType() == double.class) {
                             f.set(model, Double.parseDouble(p.second));
+                            break;
                         } else if (f.getType() == boolean.class) {
                             f.set(model, Boolean.parseBoolean(p.second));
+                            break;
                         } else if (f.getType() == Date.class) {
                             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                             try {
@@ -469,9 +507,11 @@ public class InMemory extends DatabaseConnection {
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
+                            break;
                         } else if (f.getType() == LocalDateTime.class) {
                             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                             f.set(model, LocalDateTime.parse(p.second, dtf));
+                            break;
                         }
                     }
                 }
@@ -489,6 +529,7 @@ public class InMemory extends DatabaseConnection {
             for (Pair<String, String> p : values) {
                 if (p.first.toLowerCase().equals("idutilizator")) {
                     p.second = String.valueOf(id + 1);
+                    break;
                 }
             }
 
@@ -501,12 +542,16 @@ public class InMemory extends DatabaseConnection {
                         // Cast p.second to f.getType()
                         if (f.getType() == String.class) {
                             f.set(model, p.second);
+                            break;
                         } else if (f.getType() == int.class) {
                             f.set(model, Integer.parseInt(p.second));
+                            break;
                         } else if (f.getType() == double.class) {
                             f.set(model, Double.parseDouble(p.second));
+                            break;
                         } else if (f.getType() == boolean.class) {
                             f.set(model, Boolean.parseBoolean(p.second));
+                            break;
                         } else if (f.getType() == Date.class) {
                             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                             try {
@@ -514,9 +559,11 @@ public class InMemory extends DatabaseConnection {
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
+                            break;
                         } else if (f.getType() == LocalDateTime.class) {
                             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                             f.set(model, LocalDateTime.parse(p.second, dtf));
+                            break;
                         }
                     }
                 }
@@ -534,6 +581,7 @@ public class InMemory extends DatabaseConnection {
             for (Pair<String, String> p : values) {
                 if (p.first.toLowerCase().equals("idsalariu")) {
                     p.second = String.valueOf(id + 1);
+                    break;
                 }
             }
 
@@ -546,12 +594,16 @@ public class InMemory extends DatabaseConnection {
                         // Cast p.second to f.getType()
                         if (f.getType() == String.class) {
                             f.set(model, p.second);
+                            break;
                         } else if (f.getType() == int.class) {
                             f.set(model, Integer.parseInt(p.second));
+                            break;
                         } else if (f.getType() == double.class) {
                             f.set(model, Double.parseDouble(p.second));
+                            break;
                         } else if (f.getType() == boolean.class) {
                             f.set(model, Boolean.parseBoolean(p.second));
+                            break;
                         } else if (f.getType() == Date.class) {
                             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                             try {
@@ -559,9 +611,11 @@ public class InMemory extends DatabaseConnection {
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
+                            break;
                         } else if (f.getType() == LocalDateTime.class) {
                             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                             f.set(model, LocalDateTime.parse(p.second, dtf));
+                            break;
                         }
                     }
                 }
