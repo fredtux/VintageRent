@@ -1,5 +1,6 @@
 package org.models;
 
+import org.actions.MainService;
 import org.database.DatabaseConnection;
 import org.database.csv.CsvConnection;
 import org.database.memory.InMemory;
@@ -14,19 +15,10 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class MountModelTest {
-    DatabaseConnection orcl = null;
-    DatabaseConnection csv = null;
     DatabaseConnection inmem = null;
 
     public MountModelTest(){
         try {
-            ModelInit.logInit();
-            ModelInit.csvInit();
-
-            this.orcl = this.getOracle();
-            if(!orcl.isInitialized())
-                orcl.init();
-            this.csv = CsvConnection.getInstance(DatabaseConnection.DatabaseType.CSV);
             this.inmem = this.getInMemory();
         } catch (Exception e) {
             fail(e.getMessage());
@@ -44,43 +36,14 @@ public class MountModelTest {
         return result;
     }
 
-    private DatabaseConnection getOracle(){
-        DatabaseConnection result = null;
-        try{
-            result = new OracleConnection(Main.ORACLE_DB_ADDR, "c##tux", "fmilove", "oracle.jdbc.driver.OracleDriver", "XE", "C##TUX", "1521");
-        } catch (Exception e) {
-            result = DatabaseConnection.getInstance(DatabaseConnection.DatabaseType.ORACLE);
-        }
-
-        try{
-            result.connect();
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-
-        return result;
-    }
-
     @Test
     public void getModelList() {
         try {
             MountModel mountModel = MountModel.getInstance();
-            mountModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            mountModel.getData();
-
-            ModelList<MountModel.InnerMountModel> modelList = mountModel.getModelList();
-            assertNotNull(modelList);
-
-            mountModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            mountModel.getData();
-
-            modelList = mountModel.getModelList();
-            assertNotNull(modelList);
-
             mountModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            mountModel.getData();
+            MainService.getData(mountModel);
 
-            modelList = mountModel.getModelList();
+            ModelList<MountModel.InnerMountModel> modelList = MainService.getModelList(mountModel);
             assertNotNull(modelList);
         } catch (Exception e) {
             fail(e.getMessage());
@@ -91,9 +54,7 @@ public class MountModelTest {
     public void setDatabaseType() {
         try{
             MountModel mountModel = MountModel.getInstance();
-            mountModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            mountModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            mountModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.setDatabaseType(mountModel, DatabaseConnection.DatabaseType.INMEMORY);
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -103,23 +64,10 @@ public class MountModelTest {
     public void getTableModel() {
         try {
             MountModel mountModel = MountModel.getInstance();
-            mountModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            mountModel.getData();
+            MainService.setDatabaseType(mountModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(mountModel);
 
-            TableModel tm = mountModel.getTableModel();
-            assertNotNull(tm);
-
-
-            mountModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            mountModel.getData();
-
-            tm = mountModel.getTableModel();
-            assertNotNull(tm);
-
-            mountModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            mountModel.getData();
-
-            tm = mountModel.getTableModel();
+            TableModel tm = MainService.getTableModel(mountModel);
             assertNotNull(tm);
 
         } catch (Exception e) {
@@ -131,90 +79,54 @@ public class MountModelTest {
     public void getData() {
         try {
             MountModel mountModel = MountModel.getInstance();
-            mountModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            mountModel.getData();
-
-            mountModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            mountModel.getData();
-
-            mountModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            mountModel.getData();
+            MainService.setDatabaseType(mountModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(mountModel);
         } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
-    @Test
-    public void updateData() {
+    private void update(List<Integer> id){
         try {
             MountModel mountModel = MountModel.getInstance();
-            mountModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            mountModel.getData();
+            MainService.setDatabaseType(mountModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(mountModel);
 
             ModelList<MountModel.InnerMountModel> modelList = mountModel.getModelList();
-            mountModel.updateData(modelList);
+            modelList.sort((o1, o2) -> o2.IDMontura - o1.IDMontura);
+            MountModel.InnerMountModel data = modelList.getList().get(0);
 
-            mountModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            mountModel.getData();
+            data.Denumire = "Test2";
 
-            modelList = mountModel.getModelList();
-            mountModel.updateData(modelList);
+            List<MountModel.InnerMountModel> list = new ArrayList<>();
+            list.add(data);
+            ModelList<MountModel.InnerMountModel> dataModelList = new ModelList<>(list);
 
-            mountModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            mountModel.getData();
-
-            modelList = mountModel.getModelList();
-            if(modelList.getList().size() > 0)
-                mountModel.updateData(modelList);
+            MainService.update(mountModel, dataModelList);
         } catch (Exception e) {
             fail(e.getMessage());
         }
     }
-
     private List<Integer> insert(){
         try {
             List<Integer> result = new ArrayList<>();
 
             MountModel mountModel = MountModel.getInstance();
-            mountModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            mountModel.getData();
+            MainService.setDatabaseType(mountModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(mountModel);
 
-            ModelList<MountModel.InnerMountModel> modelList = mountModel.getModelList();
-            modelList.sort((o1, o2) -> o2.IDMontura - o1.IDMontura);
-            MountModel.InnerMountModel data = modelList.getList().get(0);
-            ++data.IDMontura;
+            MountModel.InnerMountModel data = new MountModel.InnerMountModel();
+            data.IDMontura = 0;
+            data.Denumire = "Test";
 
-            result.add(data.IDMontura);
+            MainService.insert(mountModel, data);
 
-            mountModel.insertRow(data);
-
-
-            mountModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            mountModel.getData();
-
-            modelList = mountModel.getModelList();
+            MainService.getData(mountModel);
+            ModelList<MountModel.InnerMountModel> modelList = MainService.getModelList(mountModel);
             modelList.sort((o1, o2) -> o2.IDMontura - o1.IDMontura);
             data = modelList.getList().get(0);
-            ++data.IDMontura;
 
             result.add(data.IDMontura);
-
-            mountModel.insertRow(data);
-
-            mountModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            mountModel.getData();
-
-            try {
-                data = modelList.getList().get(0);
-                ++data.IDMontura;
-            } catch (Exception e){
-
-            }
-
-            result.add(data.IDMontura);
-
-            mountModel.insertRow(data);
-
 
             return result;
         } catch (Exception e) {
@@ -227,65 +139,33 @@ public class MountModelTest {
     public void delete(List<Integer> id){
         try {
             MountModel mountModel = MountModel.getInstance();
-            mountModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            mountModel.getData();
+            MainService.setDatabaseType(mountModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(mountModel);
 
             ModelList<MountModel.InnerMountModel> modelList = mountModel.getModelList();
             modelList.sort((o1, o2) -> o2.IDMontura - o1.IDMontura);
             MountModel.InnerMountModel data = modelList.getList().get(0);
-            data.IDMontura = id.get(0);
+
             List<MountModel.InnerMountModel> list = new ArrayList<>();
             list.add(data);
             ModelList<MountModel.InnerMountModel> dataModelList = new ModelList<>(list);
 
-            mountModel.deleteRow(dataModelList);
-
-
-            mountModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            mountModel.getData();
-
-            data.IDMontura = id.get(1);
-            list = new ArrayList<>();
-            list.add(data);
-            dataModelList = new ModelList<>(list);
-
-            mountModel.deleteRow(dataModelList);
-
-            mountModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            mountModel.getData();
-
-            modelList = mountModel.getModelList();
-            modelList.sort((o1, o2) -> o2.IDMontura - o1.IDMontura);
-            data = modelList.getList().get(0);
-
-            list = new ArrayList<>();
-            list.add(data);
-            dataModelList = new ModelList<>(list);
-
-            mountModel.deleteRow(dataModelList);
+            MainService.delete(mountModel, dataModelList);
         } catch (Exception e) {
             fail(e.getMessage());
         }
     }
     @Test
-    public void deleteRow() {
+    public void insertUpdateDelete() {
         try {
             List<Integer> newId = this.insert();
+            this.update(newId);
             this.delete(newId);
         } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
-    @Test
-    public void insertRow() {
-        try {
-            List<Integer> newId = this.insert();
-            this.delete(newId);
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-    }
     @Test
     public void getInstance() {
         MountModel mountModel = MountModel.getInstance();

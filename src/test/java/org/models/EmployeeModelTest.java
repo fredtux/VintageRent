@@ -1,5 +1,6 @@
 package org.models;
 
+import org.actions.MainService;
 import org.database.DatabaseConnection;
 import org.database.csv.CsvConnection;
 import org.database.memory.InMemory;
@@ -8,25 +9,20 @@ import org.junit.Test;
 import org.vintage.Main;
 
 import javax.swing.table.TableModel;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
 
 public class EmployeeModelTest {
-    DatabaseConnection orcl = null;
-    DatabaseConnection csv = null;
     DatabaseConnection inmem = null;
 
     public EmployeeModelTest(){
         try {
-            ModelInit.logInit();
-            ModelInit.csvInit();
-
-            this.orcl = this.getOracle();
-            if(!orcl.isInitialized())
-                orcl.init();
-            this.csv = CsvConnection.getInstance(DatabaseConnection.DatabaseType.CSV);
             this.inmem = this.getInMemory();
         } catch (Exception e) {
             fail(e.getMessage());
@@ -44,37 +40,14 @@ public class EmployeeModelTest {
         return result;
     }
 
-    private DatabaseConnection getOracle(){
-        DatabaseConnection result = null;
-        try{
-            result = new OracleConnection(Main.ORACLE_DB_ADDR, "c##tux", "fmilove", "oracle.jdbc.driver.OracleDriver", "XE", "C##TUX", "1521");
-        } catch (Exception e) {
-            result = DatabaseConnection.getInstance(DatabaseConnection.DatabaseType.ORACLE);
-        }
-
-        try{
-            result.connect();
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-
-        return result;
-    }
-
     @Test
     public void getModelList() {
         try {
             EmployeeModel employeeModel = EmployeeModel.getInstance();
-            employeeModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            employeeModel.getData();
+            employeeModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(employeeModel);
 
-            ModelList<EmployeeModel.InnerEmployeeModel> modelList = employeeModel.getModelList();
-            assertNotNull(modelList);
-
-            employeeModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            employeeModel.getData();
-
-            modelList = employeeModel.getModelList();
+            ModelList<EmployeeModel.InnerEmployeeModel> modelList = MainService.getModelList(employeeModel);
             assertNotNull(modelList);
         } catch (Exception e) {
             fail(e.getMessage());
@@ -85,9 +58,7 @@ public class EmployeeModelTest {
     public void setDatabaseType() {
         try{
             EmployeeModel employeeModel = EmployeeModel.getInstance();
-            employeeModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            employeeModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            employeeModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.setDatabaseType(employeeModel, DatabaseConnection.DatabaseType.INMEMORY);
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -97,23 +68,10 @@ public class EmployeeModelTest {
     public void getTableModel() {
         try {
             EmployeeModel employeeModel = EmployeeModel.getInstance();
-            employeeModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            employeeModel.getData();
+            MainService.setDatabaseType(employeeModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(employeeModel);
 
-            TableModel tm = employeeModel.getTableModel();
-            assertNotNull(tm);
-
-
-            employeeModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            employeeModel.getData();
-
-            tm = employeeModel.getTableModel();
-            assertNotNull(tm);
-
-            employeeModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            employeeModel.getData();
-
-            tm = employeeModel.getTableModel();
+            TableModel tm = MainService.getTableModel(employeeModel);
             assertNotNull(tm);
 
         } catch (Exception e) {
@@ -125,83 +83,59 @@ public class EmployeeModelTest {
     public void getData() {
         try {
             EmployeeModel employeeModel = EmployeeModel.getInstance();
-            employeeModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            employeeModel.getData();
-
-            employeeModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            employeeModel.getData();
-
-            employeeModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            employeeModel.getData();
+            MainService.setDatabaseType(employeeModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(employeeModel);
         } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
-    @Test
-    public void updateData() {
+    private void update(List<Integer> id){
         try {
             EmployeeModel employeeModel = EmployeeModel.getInstance();
-            employeeModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            employeeModel.getData();
+            MainService.setDatabaseType(employeeModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(employeeModel);
 
             ModelList<EmployeeModel.InnerEmployeeModel> modelList = employeeModel.getModelList();
-            employeeModel.updateData(modelList);
+            modelList.sort((o1, o2) -> o2.IDUtilizator - o1.IDUtilizator);
+            EmployeeModel.InnerEmployeeModel data = modelList.getList().get(0);
 
-            employeeModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            employeeModel.getData();
+            data.NumeAngajat = "New Test";
 
-            modelList = employeeModel.getModelList();
-            employeeModel.updateData(modelList);
+            List<EmployeeModel.InnerEmployeeModel> list = new ArrayList<>();
+            list.add(data);
+            ModelList<EmployeeModel.InnerEmployeeModel> dataModelList = new ModelList<>(list);
 
-            employeeModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            employeeModel.getData();
-
-            modelList = employeeModel.getModelList();
-            if(modelList.getList().size() > 0)
-                employeeModel.updateData(modelList);
+            MainService.update(employeeModel, dataModelList);
         } catch (Exception e) {
             fail(e.getMessage());
         }
     }
-
     private List<Integer> insert(){
         try {
             List<Integer> result = new ArrayList<>();
 
             EmployeeModel employeeModel = EmployeeModel.getInstance();
-            employeeModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            employeeModel.getData();
+            MainService.setDatabaseType(employeeModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(employeeModel);
 
-            ModelList<EmployeeModel.InnerEmployeeModel> modelList = employeeModel.getModelList();
-            modelList.sort((o1, o2) -> o2.IDUtilizator - o1.IDUtilizator);
-            EmployeeModel.InnerEmployeeModel data = modelList.getList().get(0);
+            EmployeeModel.InnerEmployeeModel data = new EmployeeModel.InnerEmployeeModel();
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             data.IDUtilizator = 1;
+            data.DataNasterii = LocalDateTime.parse("2000-01-01 00:00:00", dtf);
+            data.DataAngajarii = LocalDateTime.parse("2020-01-01 00:00:00", dtf);
+            data.IDSalariu = 1;
+            data.IDManager = 1;
+            data.NumeAngajat = "Test";
 
-            result.add(data.IDUtilizator);
+            MainService.insert(employeeModel, data);
 
-            employeeModel.insertRow(data);
-
-
-            employeeModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            employeeModel.getData();
-
-            modelList = employeeModel.getModelList();
+            MainService.getData(employeeModel);
+            ModelList<EmployeeModel.InnerEmployeeModel> modelList = MainService.getModelList(employeeModel);
             modelList.sort((o1, o2) -> o2.IDUtilizator - o1.IDUtilizator);
             data = modelList.getList().get(0);
-            data.IDUtilizator = 1;
 
             result.add(data.IDUtilizator);
-
-            employeeModel.insertRow(data);
-
-            employeeModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            employeeModel.getData();
-
-            result.add(data.IDUtilizator);
-
-            employeeModel.insertRow(data);
-
 
             return result;
         } catch (Exception e) {
@@ -214,60 +148,27 @@ public class EmployeeModelTest {
     public void delete(List<Integer> id){
         try {
             EmployeeModel employeeModel = EmployeeModel.getInstance();
-            employeeModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            employeeModel.getData();
+            MainService.setDatabaseType(employeeModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(employeeModel);
 
             ModelList<EmployeeModel.InnerEmployeeModel> modelList = employeeModel.getModelList();
             modelList.sort((o1, o2) -> o2.IDUtilizator - o1.IDUtilizator);
             EmployeeModel.InnerEmployeeModel data = modelList.getList().get(0);
-            data.IDUtilizator = id.get(0);
+
             List<EmployeeModel.InnerEmployeeModel> list = new ArrayList<>();
             list.add(data);
             ModelList<EmployeeModel.InnerEmployeeModel> dataModelList = new ModelList<>(list);
 
-            employeeModel.deleteRow(dataModelList);
-
-
-            employeeModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            employeeModel.getData();
-
-            data.IDUtilizator = id.get(1);
-            list = new ArrayList<>();
-            list.add(data);
-            dataModelList = new ModelList<>(list);
-
-            employeeModel.deleteRow(dataModelList);
-
-            employeeModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            employeeModel.getData();
-
-            modelList = employeeModel.getModelList();
-            modelList.sort((o1, o2) -> o2.IDUtilizator - o1.IDUtilizator);
-            data = modelList.getList().get(0);
-
-            list = new ArrayList<>();
-            list.add(data);
-            dataModelList = new ModelList<>(list);
-
-            employeeModel.deleteRow(dataModelList);
+            MainService.delete(employeeModel, dataModelList);
         } catch (Exception e) {
             fail(e.getMessage());
         }
     }
     @Test
-    public void deleteRow() {
+    public void insertUpdateDelete() {
         try {
             List<Integer> newId = this.insert();
-            this.delete(newId);
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-    }
-
-    @Test
-    public void insertRow() {
-        try {
-            List<Integer> newId = this.insert();
+            this.update(newId);
             this.delete(newId);
         } catch (Exception e) {
             fail(e.getMessage());

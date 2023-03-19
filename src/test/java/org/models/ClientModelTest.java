@@ -1,5 +1,6 @@
 package org.models;
 
+import org.actions.MainService;
 import org.database.DatabaseConnection;
 import org.database.csv.CsvConnection;
 import org.database.memory.InMemory;
@@ -8,25 +9,18 @@ import org.junit.Test;
 import org.vintage.Main;
 
 import javax.swing.table.TableModel;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
 
 public class ClientModelTest {
-    DatabaseConnection orcl = null;
-    DatabaseConnection csv = null;
     DatabaseConnection inmem = null;
 
     public ClientModelTest(){
         try {
-            ModelInit.logInit();
-            ModelInit.csvInit();
-
-            this.orcl = this.getOracle();
-            if(!orcl.isInitialized())
-                orcl.init();
-            this.csv = CsvConnection.getInstance(DatabaseConnection.DatabaseType.CSV);
             this.inmem = this.getInMemory();
         } catch (Exception e) {
             fail(e.getMessage());
@@ -44,44 +38,14 @@ public class ClientModelTest {
         return result;
     }
 
-
-    private DatabaseConnection getOracle(){
-        DatabaseConnection result = null;
-        try{
-            result = new OracleConnection(Main.ORACLE_DB_ADDR, "c##tux", "fmilove", "oracle.jdbc.driver.OracleDriver", "XE", "C##TUX", "1521");
-        } catch (Exception e) {
-            result = DatabaseConnection.getInstance(DatabaseConnection.DatabaseType.ORACLE);
-        }
-
-        try{
-            result.connect();
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-
-        return result;
-    }
-
     @Test
     public void getModelList() {
         try {
             ClientModel clientModel = ClientModel.getInstance();
-            clientModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            clientModel.getData();
-
-            ModelList<ClientModel.InnerClientModel> modelList = clientModel.getModelList();
-            assertNotNull(modelList);
-
-            clientModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            clientModel.getData();
-
-            modelList = clientModel.getModelList();
-            assertNotNull(modelList);
-
             clientModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            clientModel.getData();
+            MainService.getData(clientModel);
 
-            modelList = clientModel.getModelList();
+            ModelList<ClientModel.InnerClientModel> modelList = MainService.getModelList(clientModel);
             assertNotNull(modelList);
         } catch (Exception e) {
             fail(e.getMessage());
@@ -92,9 +56,7 @@ public class ClientModelTest {
     public void setDatabaseType() {
         try{
             ClientModel clientModel = ClientModel.getInstance();
-            clientModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            clientModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            clientModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.setDatabaseType(clientModel, DatabaseConnection.DatabaseType.INMEMORY);
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -104,23 +66,10 @@ public class ClientModelTest {
     public void getTableModel() {
         try {
             ClientModel clientModel = ClientModel.getInstance();
-            clientModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            clientModel.getData();
+            MainService.setDatabaseType(clientModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(clientModel);
 
-            TableModel tm = clientModel.getTableModel();
-            assertNotNull(tm);
-
-
-            clientModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            clientModel.getData();
-
-            tm = clientModel.getTableModel();
-            assertNotNull(tm);
-
-            clientModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            clientModel.getData();
-
-            tm = clientModel.getTableModel();
+            TableModel tm = MainService.getTableModel(clientModel);
             assertNotNull(tm);
 
         } catch (Exception e) {
@@ -132,83 +81,56 @@ public class ClientModelTest {
     public void getData() {
         try {
             ClientModel clientModel = ClientModel.getInstance();
-            clientModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            clientModel.getData();
-
-            clientModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            clientModel.getData();
-
-            clientModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            clientModel.getData();
+            MainService.setDatabaseType(clientModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(clientModel);
         } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
-    @Test
-    public void updateData() {
+    private void update(List<Integer> id){
         try {
             ClientModel clientModel = ClientModel.getInstance();
-            clientModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            clientModel.getData();
+            MainService.setDatabaseType(clientModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(clientModel);
 
             ModelList<ClientModel.InnerClientModel> modelList = clientModel.getModelList();
-            clientModel.updateData(modelList);
+            modelList.sort((o1, o2) -> o2.IDUtilizator - o1.IDUtilizator);
+            ClientModel.InnerClientModel data = modelList.getList().get(0);
 
-            clientModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            clientModel.getData();
+            data.NumeClient = "New Test";
 
-            modelList = clientModel.getModelList();
-            clientModel.updateData(modelList);
+            List<ClientModel.InnerClientModel> list = new ArrayList<>();
+            list.add(data);
+            ModelList<ClientModel.InnerClientModel> dataModelList = new ModelList<>(list);
 
-            clientModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            clientModel.getData();
-
-            modelList = clientModel.getModelList();
-            if(modelList.getList().size() > 0)
-                clientModel.updateData(modelList);
+            MainService.update(clientModel, dataModelList);
         } catch (Exception e) {
             fail(e.getMessage());
         }
     }
-
     private List<Integer> insert(){
         try {
             List<Integer> result = new ArrayList<>();
 
             ClientModel clientModel = ClientModel.getInstance();
-            clientModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            clientModel.getData();
+            MainService.setDatabaseType(clientModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(clientModel);
 
-            ModelList<ClientModel.InnerClientModel> modelList = clientModel.getModelList();
-            modelList.sort((o1, o2) -> o2.IDUtilizator - o1.IDUtilizator);
-            ClientModel.InnerClientModel data = modelList.getList().get(0);
+            ClientModel.InnerClientModel data = new ClientModel.InnerClientModel();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             data.IDUtilizator = 1;
+            data.NumeClient = "Test";
+            data.DataNasterii = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
 
-            result.add(data.IDUtilizator);
+            MainService.insert(clientModel, data);
 
-            clientModel.insertRow(data);
-
-
-            clientModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            clientModel.getData();
-
-            modelList = clientModel.getModelList();
+            MainService.getData(clientModel);
+            ModelList<ClientModel.InnerClientModel> modelList = MainService.getModelList(clientModel);
             modelList.sort((o1, o2) -> o2.IDUtilizator - o1.IDUtilizator);
             data = modelList.getList().get(0);
-            data.IDUtilizator = 1;
 
             result.add(data.IDUtilizator);
-
-            clientModel.insertRow(data);
-
-            clientModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            clientModel.getData();
-
-            result.add(data.IDUtilizator);
-
-            clientModel.insertRow(data);
-
 
             return result;
         } catch (Exception e) {
@@ -221,60 +143,27 @@ public class ClientModelTest {
     public void delete(List<Integer> id){
         try {
             ClientModel clientModel = ClientModel.getInstance();
-            clientModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
-            clientModel.getData();
+            MainService.setDatabaseType(clientModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(clientModel);
 
             ModelList<ClientModel.InnerClientModel> modelList = clientModel.getModelList();
             modelList.sort((o1, o2) -> o2.IDUtilizator - o1.IDUtilizator);
             ClientModel.InnerClientModel data = modelList.getList().get(0);
-            data.IDUtilizator = id.get(0);
+
             List<ClientModel.InnerClientModel> list = new ArrayList<>();
             list.add(data);
             ModelList<ClientModel.InnerClientModel> dataModelList = new ModelList<>(list);
 
-            clientModel.deleteRow(dataModelList);
-
-
-            clientModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
-            clientModel.getData();
-
-            data.IDUtilizator = id.get(1);
-            list = new ArrayList<>();
-            list.add(data);
-            dataModelList = new ModelList<>(list);
-
-            clientModel.deleteRow(dataModelList);
-
-            clientModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
-            clientModel.getData();
-
-            modelList = clientModel.getModelList();
-            modelList.sort((o1, o2) -> o2.IDUtilizator - o1.IDUtilizator);
-            data = modelList.getList().get(0);
-
-            list = new ArrayList<>();
-            list.add(data);
-            dataModelList = new ModelList<>(list);
-
-            clientModel.deleteRow(dataModelList);
+            MainService.delete(clientModel, dataModelList);
         } catch (Exception e) {
             fail(e.getMessage());
         }
     }
     @Test
-    public void deleteRow() {
+    public void insertUpdateDelete() {
         try {
             List<Integer> newId = this.insert();
-            this.delete(newId);
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-    }
-
-    @Test
-    public void insertRow() {
-        try {
-            List<Integer> newId = this.insert();
+            this.update(newId);
             this.delete(newId);
         } catch (Exception e) {
             fail(e.getMessage());
