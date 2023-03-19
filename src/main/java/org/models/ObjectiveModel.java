@@ -54,6 +54,8 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
             this.tableName = "Obiective.csv";
         } else if (databaseType == DatabaseConnection.DatabaseType.ORACLE){
             this.tableName = "OBIECTIVE";
+        } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
+            this.tableName = "objective";
         }
     }
 
@@ -92,8 +94,10 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
         this.databaseType = t;
         if(t == DatabaseConnection.DatabaseType.CSV)
             this.tableName = "Obiective.csv";
-        else
+        else if(t == DatabaseConnection.DatabaseType.ORACLE)
             this.tableName = "OBIECTIVE";
+        else if(t == DatabaseConnection.DatabaseType.INMEMORY)
+            this.tableName = "objective";
     }
 
     private void transferToModelList(ResultSet rs) throws Exception{
@@ -122,10 +126,14 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
             tables = new HashMap<>();
             tables.put("OBIECTIVE", "Obiective.csv");
             tables.put("MONTURA", "Montura.csv");
-        } else {
+        } else if(databaseType == DatabaseConnection.DatabaseType.ORACLE){
             tables = new HashMap<>();
             tables.put("OBIECTIVE", "OBIECTIVE");
             tables.put("MONTURA", "MONTURA");
+        } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
+            tables = new HashMap<>();
+            tables.put("OBIECTIVE", "objective");
+            tables.put("MONTURA", "mount");
         }
 
 
@@ -144,13 +152,25 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
             model.IDObiectiv = obiective.getInt("IDOBIECTIV");
             model.Denumire = obiective.getString("DENUMIRE");
             model.DistantaFocala = obiective.getInt("DISTANTAFOCALA");
-            model.DiafragmaMinima = obiective.getDouble("DIAFRAGMAMINIMA");
-            model.DiafragmaMaxima = obiective.getDouble("DIAFRAGMAMAXIMA");
+            try {
+                model.DiafragmaMinima = obiective.getDouble("DIAFRAGMAMINIMA");
+            } catch (Exception ex){
+                model.DiafragmaMinima = 0.0;
+            }
+            try {
+                model.DiafragmaMaxima = obiective.getDouble("DIAFRAGMAMAXIMA");
+            } catch (Exception ex){
+                model.DiafragmaMaxima = 0.0;
+            }
             model.Diametru = obiective.getInt("DIAMETRU");
             model.Pret = obiective.getInt("PRET");
             model.PretInchiriere = obiective.getInt("PRETINCHIRIERE");
             model.IDMontura = obiective.getInt("IDMONTURA");
-            model.DenumireMontura = monturaMap.get(model.IDMontura);
+            try {
+                model.DenumireMontura = monturaMap.get(model.IDMontura);
+            } catch (Exception ex){
+                model.DenumireMontura = "";
+            }
 
             this.modelList.add(model);
         }
@@ -252,13 +272,13 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
         List<Pair<String, String>> values = new ArrayList<>();
         values.add(new Pair<>("IDOBIECTIV", ""));
         values.add(new Pair<>("DENUMIRE", "'" + row.Denumire + "'"));
-        values.add(new Pair<>("DISTANTAFOCALA", "'"+String.valueOf(row.DistantaFocala)+"'"));
-        values.add(new Pair<>("DIAFRAGMAMINIMA", "'"+String.valueOf(row.DiafragmaMinima)+"'"));
-        values.add(new Pair<>("DIAFRAGMAMAXIMA", "'"+String.valueOf(row.DiafragmaMaxima)+"'"));
-        values.add(new Pair<>("DIAMETRU", "'"+String.valueOf(row.Diametru)+"'"));
-        values.add(new Pair<>("PRET", "'"+String.valueOf(row.Pret)+"'"));
-        values.add(new Pair<>("PRETINCHIRIERE", "'"+String.valueOf(row.PretInchiriere)+"'"));
-        values.add(new Pair<>("IDMONTURA", "'"+String.valueOf(row.IDMontura)+"'"));
+        values.add(new Pair<>("DISTANTAFOCALA", String.valueOf(row.DistantaFocala)));
+        values.add(new Pair<>("DIAFRAGMAMINIMA", String.valueOf(row.DiafragmaMinima)));
+        values.add(new Pair<>("DIAFRAGMAMAXIMA", String.valueOf(row.DiafragmaMaxima)));
+        values.add(new Pair<>("DIAMETRU", String.valueOf(row.Diametru)));
+        values.add(new Pair<>("PRET", String.valueOf(row.Pret)));
+        values.add(new Pair<>("PRETINCHIRIERE", String.valueOf(row.PretInchiriere)));
+        values.add(new Pair<>("IDMONTURA", String.valueOf(row.IDMontura)));
 
 
         db.insert(this.tableName, values);

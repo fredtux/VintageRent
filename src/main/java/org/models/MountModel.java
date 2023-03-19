@@ -44,6 +44,8 @@ public class MountModel extends Model implements LinkModelToDatabase<ModelList<M
             this.tableName = "Montura.csv";
         } else if (databaseType == DatabaseConnection.DatabaseType.ORACLE){
             this.tableName = "MONTURA";
+        } else if (databaseType == DatabaseConnection.DatabaseType.INMEMORY){
+            this.tableName = "mount";
         }
     }
 
@@ -82,8 +84,10 @@ public class MountModel extends Model implements LinkModelToDatabase<ModelList<M
         this.databaseType = t;
         if(t == DatabaseConnection.DatabaseType.CSV)
             this.tableName = "Montura.csv";
-        else
+        else if(t == DatabaseConnection.DatabaseType.ORACLE)
             this.tableName = "MONTURA";
+        else if(t == DatabaseConnection.DatabaseType.INMEMORY)
+            this.tableName = "mount";
     }
 
     private void transferToModelList(ResultSet rs) throws Exception{
@@ -105,9 +109,12 @@ public class MountModel extends Model implements LinkModelToDatabase<ModelList<M
         if(databaseType == DatabaseConnection.DatabaseType.CSV) {
             tables = new HashMap<>();
             tables.put("MONTURA", "Montura.csv");
-        } else {
+        } else if(databaseType == DatabaseConnection.DatabaseType.ORACLE){
             tables = new HashMap<>();
             tables.put("MONTURA", "MONTURA");
+        } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
+            tables = new HashMap<>();
+            tables.put("MONTURA", "mount");
         }
 
 

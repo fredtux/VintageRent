@@ -2,6 +2,7 @@ package org.models;
 
 import org.database.DatabaseConnection;
 import org.database.csv.CsvConnection;
+import org.database.memory.InMemory;
 import org.database.oracle.OracleConnection;
 import org.junit.Test;
 import org.vintage.Main;
@@ -15,6 +16,7 @@ import static org.junit.Assert.*;
 public class ObjectiveModelTest {
     DatabaseConnection orcl = null;
     DatabaseConnection csv = null;
+    DatabaseConnection inmem = null;
 
     public ObjectiveModelTest(){
         try {
@@ -25,11 +27,22 @@ public class ObjectiveModelTest {
             if(!orcl.isInitialized())
                 orcl.init();
             this.csv = CsvConnection.getInstance(DatabaseConnection.DatabaseType.CSV);
+            this.inmem = this.getInMemory();
         } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
+    private DatabaseConnection getInMemory(){
+        DatabaseConnection result = null;
+        try{
+            result = new InMemory(Main.ORACLE_DB_ADDR, "c##tux", "fmilove", "oracle.jdbc.driver.OracleDriver", "XE", "C##TUX", "1521");
+        } catch (Exception e) {
+            result = DatabaseConnection.getInstance(DatabaseConnection.DatabaseType.INMEMORY);
+        }
+
+        return result;
+    }
 
     private DatabaseConnection getOracle(){
         DatabaseConnection result = null;
@@ -63,6 +76,12 @@ public class ObjectiveModelTest {
 
             modelList = objectiveModel.getModelList();
             assertNotNull(modelList);
+
+            objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
+            objectiveModel.getData();
+
+            modelList = objectiveModel.getModelList();
+            assertNotNull(modelList);
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -74,6 +93,7 @@ public class ObjectiveModelTest {
             ObjectiveModel objectiveModel = ObjectiveModel.getInstance();
             objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
             objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
+            objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -96,6 +116,12 @@ public class ObjectiveModelTest {
             tm = objectiveModel.getTableModel();
             assertNotNull(tm);
 
+            objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
+            objectiveModel.getData();
+
+            tm = objectiveModel.getTableModel();
+            assertNotNull(tm);
+
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -109,6 +135,9 @@ public class ObjectiveModelTest {
             objectiveModel.getData();
 
             objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
+            objectiveModel.getData();
+
+            objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
             objectiveModel.getData();
         } catch (Exception e) {
             fail(e.getMessage());
@@ -130,13 +159,22 @@ public class ObjectiveModelTest {
 
             modelList = objectiveModel.getModelList();
             objectiveModel.updateData(modelList);
+
+            objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
+            objectiveModel.getData();
+
+            modelList = objectiveModel.getModelList();
+            if(modelList.getList().size() > 0)
+                objectiveModel.updateData(modelList);
         } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
-    private int insert(){
+    private List<Integer> insert(){
         try {
+            List<Integer> result = new ArrayList<>();
+
             ObjectiveModel objectiveModel = ObjectiveModel.getInstance();
             objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
             objectiveModel.getData();
@@ -146,7 +184,7 @@ public class ObjectiveModelTest {
             ObjectiveModel.InnerObjectiveModel data = modelList.getList().get(0);
             ++data.IDObiectiv;
 
-            int result = data.IDObiectiv;
+            result.add(data.IDObiectiv);
 
             objectiveModel.insertRow(data);
 
@@ -154,17 +192,39 @@ public class ObjectiveModelTest {
             objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
             objectiveModel.getData();
 
+            modelList = objectiveModel.getModelList();
+            modelList.sort((o1, o2) -> o2.IDObiectiv - o1.IDObiectiv);
+            data = modelList.getList().get(0);
+            ++data.IDObiectiv;
+
+            result.add(data.IDObiectiv);
+
             objectiveModel.insertRow(data);
+
+            objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
+            objectiveModel.getData();
+
+            try {
+                data = modelList.getList().get(0);
+                ++data.IDObiectiv;
+            } catch (Exception e){
+
+            }
+
+            result.add(data.IDObiectiv);
+
+            objectiveModel.insertRow(data);
+
 
             return result;
         } catch (Exception e) {
             fail(e.getMessage());
         }
 
-        return -1;
+        return null;
     }
 
-    public void delete(int id){
+    public void delete(List<Integer> id){
         try {
             ObjectiveModel objectiveModel = ObjectiveModel.getInstance();
             objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.ORACLE);
@@ -173,7 +233,7 @@ public class ObjectiveModelTest {
             ModelList<ObjectiveModel.InnerObjectiveModel> modelList = objectiveModel.getModelList();
             modelList.sort((o1, o2) -> o2.IDObiectiv - o1.IDObiectiv);
             ObjectiveModel.InnerObjectiveModel data = modelList.getList().get(0);
-            data.IDObiectiv = id;
+            data.IDObiectiv = id.get(0);
             List<ObjectiveModel.InnerObjectiveModel> list = new ArrayList<>();
             list.add(data);
             ModelList<ObjectiveModel.InnerObjectiveModel> dataModelList = new ModelList<>(list);
@@ -184,6 +244,24 @@ public class ObjectiveModelTest {
             objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.CSV);
             objectiveModel.getData();
 
+            data.IDObiectiv = id.get(1);
+            list = new ArrayList<>();
+            list.add(data);
+            dataModelList = new ModelList<>(list);
+
+            objectiveModel.deleteRow(dataModelList);
+
+            objectiveModel.setDatabaseType(DatabaseConnection.DatabaseType.INMEMORY);
+            objectiveModel.getData();
+
+            modelList = objectiveModel.getModelList();
+            modelList.sort((o1, o2) -> o2.IDObiectiv - o1.IDObiectiv);
+            data = modelList.getList().get(0);
+
+            list = new ArrayList<>();
+            list.add(data);
+            dataModelList = new ModelList<>(list);
+
             objectiveModel.deleteRow(dataModelList);
         } catch (Exception e) {
             fail(e.getMessage());
@@ -192,7 +270,7 @@ public class ObjectiveModelTest {
     @Test
     public void deleteRow() {
         try {
-            int newId = this.insert();
+            List<Integer> newId = this.insert();
             this.delete(newId);
         } catch (Exception e) {
             fail(e.getMessage());
@@ -202,7 +280,7 @@ public class ObjectiveModelTest {
     @Test
     public void insertRow() {
         try {
-            int newId = this.insert();
+            List<Integer> newId = this.insert();
             this.delete(newId);
         } catch (Exception e) {
             fail(e.getMessage());

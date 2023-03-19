@@ -25,6 +25,9 @@ public class InMemory extends DatabaseConnection {
     private ModelList<ClientModel.InnerClientModel> clients = null;
     private ModelList<ClientTypeModel.InnerClientTypeModel> clientTypes = null;
     private ModelList<UserModel.InnerUserModel> users = null;
+    private ModelList<EmployeeModel.InnerEmployeeModel> employees = null;
+    private ModelList<SalaryModel.InnerSalaryModel> salaries = null;
+    private ModelList<ObjectiveModel.InnerObjectiveModel> objectives = null;
 
     public InMemory(String url, String username, String password, String driver, String database, String schema, String port) {
         if (instance != null)
@@ -41,6 +44,9 @@ public class InMemory extends DatabaseConnection {
         clients = new ModelList<>();
         clientTypes = new ModelList<>();
         users = new ModelList<>();
+        employees = new ModelList<>();
+        salaries = new ModelList<>();
+        objectives = new ModelList<>();
     }
 
     public static DatabaseConnection getInstance(DatabaseType t) throws RuntimeException {
@@ -164,6 +170,15 @@ public class InMemory extends DatabaseConnection {
         } else if (tableName == "user") {
             headers = this.getAttributes(UserModel.InnerUserModel.class);
             data = this.getObjectsFromModelList(this.clients);
+        } else if (tableName == "employee") {
+            headers = this.getAttributes(EmployeeModel.InnerEmployeeModel.class);
+            data = this.getObjectsFromModelList(this.employees);
+        } else if (tableName == "salary") {
+            headers = this.getAttributes(SalaryModel.InnerSalaryModel.class);
+            data = this.getObjectsFromModelList(this.salaries);
+        } else if (tableName == "objective") {
+            headers = this.getAttributes(ObjectiveModel.InnerObjectiveModel.class);
+            data = this.getObjectsFromModelList(this.objectives);
         }
 
         return this.getResultSet(headers, data);
@@ -459,6 +474,148 @@ public class InMemory extends DatabaseConnection {
 
             this.users.getList().add(model);
 
+        } else if (tableName.equals("employee")) {
+            int id = 0;
+            for (EmployeeModel.InnerEmployeeModel c : this.employees.getList()) {
+                if (c.IDUtilizator > id)
+                    id = c.IDUtilizator;
+            }
+
+            for (Pair<String, String> p : values) {
+                if (p.first.toLowerCase().equals("idutilizator")) {
+                    p.second = String.valueOf(id + 1);
+                }
+            }
+
+
+            EmployeeModel.InnerEmployeeModel model = new EmployeeModel.InnerEmployeeModel();
+            for (Pair<String, String> p : values) {
+                for (Field f : model.getClass().getDeclaredFields()) {
+                    if (f.getName().toLowerCase().equals(p.first.toLowerCase())) {
+                        f.setAccessible(true);
+                        // Cast p.second to f.getType()
+                        if (f.getType() == String.class) {
+                            f.set(model, p.second);
+                        } else if (f.getType() == int.class) {
+                            f.set(model, Integer.parseInt(p.second));
+                        } else if (f.getType() == double.class) {
+                            f.set(model, Double.parseDouble(p.second));
+                        } else if (f.getType() == boolean.class) {
+                            f.set(model, Boolean.parseBoolean(p.second));
+                        } else if (f.getType() == Date.class) {
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                            try {
+                                f.set(model, sdf.parse(p.second));
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        } else if (f.getType() == LocalDateTime.class) {
+                            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                            f.set(model, LocalDateTime.parse(p.second, dtf));
+                        }
+                    }
+                }
+            }
+
+            this.employees.getList().add(model);
+
+        } else if (tableName.equals("salary")) {
+            int id = 0;
+            for (SalaryModel.InnerSalaryModel c : this.salaries.getList()) {
+                if (c.IDSalariu > id)
+                    id = c.IDSalariu;
+            }
+
+            for (Pair<String, String> p : values) {
+                if (p.first.toLowerCase().equals("idsalariu")) {
+                    p.second = String.valueOf(id + 1);
+                }
+            }
+
+
+            SalaryModel.InnerSalaryModel model = new SalaryModel.InnerSalaryModel();
+            for (Pair<String, String> p : values) {
+                for (Field f : model.getClass().getDeclaredFields()) {
+                    if (f.getName().toLowerCase().equals(p.first.toLowerCase())) {
+                        f.setAccessible(true);
+                        // Cast p.second to f.getType()
+                        if (f.getType() == String.class) {
+                            f.set(model, p.second);
+                        } else if (f.getType() == int.class) {
+                            f.set(model, Integer.parseInt(p.second));
+                        } else if (f.getType() == double.class) {
+                            f.set(model, Double.parseDouble(p.second));
+                        } else if (f.getType() == boolean.class) {
+                            f.set(model, Boolean.parseBoolean(p.second));
+                        } else if (f.getType() == Date.class) {
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                            try {
+                                f.set(model, sdf.parse(p.second));
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        } else if (f.getType() == LocalDateTime.class) {
+                            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                            f.set(model, LocalDateTime.parse(p.second, dtf));
+                        }
+                    }
+                }
+            }
+
+            this.salaries.getList().add(model);
+
+        } else if (tableName.equals("objective")) {
+            int id = 0;
+            for (ObjectiveModel.InnerObjectiveModel c : this.objectives.getList()) {
+                if (c.IDObiectiv > id)
+                    id = c.IDObiectiv;
+            }
+
+            for (Pair<String, String> p : values) {
+                if (p.first.toLowerCase().equals("idobiectiv")) {
+                    p.second = String.valueOf(id + 1);
+                    break;
+                }
+            }
+
+
+            ObjectiveModel.InnerObjectiveModel model = new ObjectiveModel.InnerObjectiveModel();
+            for (Pair<String, String> p : values) {
+                for (Field f : model.getClass().getDeclaredFields()) {
+                    if (f.getName().toLowerCase().equals(p.first.toLowerCase())) {
+                        f.setAccessible(true);
+                        // Cast p.second to f.getType()
+                        if (f.getType() == String.class) {
+                            f.set(model, p.second);
+                            break;
+                        } else if (f.getType() == int.class) {
+                            f.set(model, Integer.parseInt(p.second));
+                            break;
+                        } else if (f.getType() == double.class) {
+                            f.set(model, Double.parseDouble(p.second));
+                            break;
+                        } else if (f.getType() == boolean.class) {
+                            f.set(model, Boolean.parseBoolean(p.second));
+                            break;
+                        } else if (f.getType() == Date.class) {
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                            try {
+                                f.set(model, sdf.parse(p.second));
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            break;
+                        } else if (f.getType() == LocalDateTime.class) {
+                            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                            f.set(model, LocalDateTime.parse(p.second, dtf));
+                            break;
+                        }
+                    }
+                }
+            }
+
+            this.objectives.getList().add(model);
+
         }
 
 
@@ -501,6 +658,12 @@ public class InMemory extends DatabaseConnection {
             this.deleteFromModelList(this.clientTypes, where);
         } else if (tableName == "user") {
             this.deleteFromModelList(this.users, where);
+        } else if (tableName == "employee") {
+            this.deleteFromModelList(this.employees, where);
+        } else if (tableName == "salary") {
+            this.deleteFromModelList(this.salaries, where);
+        }else if (tableName == "objective") {
+            this.deleteFromModelList(this.objectives, where);
         }
     }
 
@@ -521,29 +684,11 @@ public class InMemory extends DatabaseConnection {
 
     @Override
     public int getNewId(String tableName, String column) throws Exception {
-        Statement stmt = null;
-        try {
-            String query = "SELECT MAX(" + column + ") AS MAX_ID FROM " + tableName;
-
-            stmt = this.conn.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
-            int maxId = 0;
-            while (rs.next()) {
-                maxId = rs.getInt("MAX_ID");
-            }
-
-            return maxId + 1;
-        } catch (SQLException ex) {
-            System.out.println("Error executing query: " + ex.getMessage());
-            throw new SQLException("Error executing query: " + ex.getMessage());
-        }
+        return -1;
     }
 
     private Reader readFile(String resourcePath) throws IOException {
-        InputStream in = getClass().getResourceAsStream(resourcePath);
-        InputStreamReader isr = new InputStreamReader(in);
-        return new BufferedReader(isr);
-//        return new BufferedReader(new FileReader(classLoader.getResource(resourcePath).getFile()));
+        return null;
     }
 
 

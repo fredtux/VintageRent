@@ -54,6 +54,8 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
             this.tableName = "Angajati.csv";
         } else if (databaseType == DatabaseConnection.DatabaseType.ORACLE){
             this.tableName = "ANGAJATI";
+        } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
+            this.tableName = "employee";
         }
     }
 
@@ -92,8 +94,10 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
         this.databaseType = t;
         if(t == DatabaseConnection.DatabaseType.CSV)
             this.tableName = "Angajati.csv";
-        else
+        else if(t == DatabaseConnection.DatabaseType.ORACLE)
             this.tableName = "ANGAJATI";
+        else if(t == DatabaseConnection.DatabaseType.INMEMORY)
+            this.tableName = "employee";
     }
 
     private void transferToModelList(ResultSet rs) throws Exception{
@@ -124,11 +128,16 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
             tables.put("ANGAJATI", "Angajati.csv");
             tables.put("SALARIU", "Salariu.csv");
             tables.put("UTILIZATORI", "Utilizatori.csv");
-        } else {
+        } else if(databaseType == DatabaseConnection.DatabaseType.ORACLE){
             tables = new HashMap<>();
             tables.put("ANGAJATI", "ANGAJATI");
             tables.put("SALARIU", "SALARIU");
             tables.put("UTILIZATORI", "UTILIZATORI");
+        } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
+            tables = new HashMap<>();
+            tables.put("ANGAJATI", "employee");
+            tables.put("SALARIU", "salary");
+            tables.put("UTILIZATORI", "user");
         }
 
 
@@ -152,8 +161,16 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
         while(angajati.next()) {
             InnerEmployeeModel model = new InnerEmployeeModel();
             model.IDUtilizator = angajati.getInt("IDUTILIZATOR");
-            model.DataNasterii = LocalDateTime.parse(angajati.getString("DATANASTERII"), formatter);
-            model.DataAngajarii = LocalDateTime.parse(angajati.getString("DATAANGAJARII"), formatter);
+            try {
+                model.DataNasterii = LocalDateTime.parse(angajati.getString("DATANASTERII"), formatter);
+            } catch (Exception ex){
+                model.DataNasterii = null;
+            }
+            try {
+                model.DataAngajarii = LocalDateTime.parse(angajati.getString("DATAANGAJARII"), formatter);
+            } catch (Exception ex){
+                model.DataAngajarii = null;
+            }
             String manager = angajati.getString("IDMANAGER");
             if(manager == null || manager == ""){
                 model.IDManager = 0;
@@ -161,9 +178,21 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
                 model.IDManager = Integer.parseInt(manager);
             }
             model.IDSalariu = angajati.getInt("IDSALARIU");
-            model.Salariu = salariuMap.get(model.IDSalariu);
-            model.NumeAngajat = userMap.get(model.IDUtilizator);
+            try {
+                model.Salariu = salariuMap.get(model.IDSalariu);
+            } catch (Exception ex){
+                model.Salariu = 0;
+            }
+            try {
+                model.NumeAngajat = userMap.get(model.IDUtilizator);
+            } catch (Exception ex){
+                model.NumeAngajat = "";
+            }
+            try{
             model.NumeManager = userMap.get(model.IDManager);
+            } catch (Exception ex){
+                model.NumeManager = "";
+            }
 
             this.modelList.add(model);
         }
