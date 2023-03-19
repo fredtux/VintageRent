@@ -1,6 +1,7 @@
 package org.database;
 
 import org.database.csv.CsvConnection;
+import org.database.memory.InMemory;
 import org.database.oracle.OracleConnection;
 import org.logger.CsvLogger;
 import org.models.Pair;
@@ -16,7 +17,8 @@ public abstract class DatabaseConnection {
 
     public enum DatabaseType {
         ORACLE,
-        CSV
+        CSV,
+        INMEMORY
     }
     protected Connection conn;
     protected String url;
@@ -38,6 +40,8 @@ public abstract class DatabaseConnection {
             if(db instanceof OracleConnection && t == DatabaseType.ORACLE)
                 return db;
             else if(db instanceof CsvConnection && t == DatabaseType.CSV)
+                return db;
+            else if(db instanceof InMemory && t == DatabaseType.INMEMORY)
                 return db;
         }
 
