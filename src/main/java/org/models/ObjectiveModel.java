@@ -18,6 +18,7 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
         public String Denumire;
         public int DistantaFocala;
         public double DiafragmaMinima;
+        public double DiafragmaMaxima;
         public int Diametru;
         public int Pret;
         public int PretInchiriere;
@@ -53,15 +54,17 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
             this.tableName = "Obiective.csv";
         } else if (databaseType == DatabaseConnection.DatabaseType.ORACLE){
             this.tableName = "OBIECTIVE";
+        } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
+            this.tableName = "objective";
         }
     }
 
     public DefaultTableModel getTableModel() {
-        String[] columns = {"IDObiectiv", "Denumire", "DistantaFocala", "DiafragmaMinima", "Diametru", "Pret", "PretInchiriere", "IDMontura", "DenumireMontura"};
+        String[] columns = {"IDObiectiv", "Denumire", "DistantaFocala", "DiafragmaMinima", "DiafragmaMaxima", "Diametru", "Pret", "PretInchiriere", "IDMontura", "DenumireMontura"};
 
         DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
         for(InnerObjectiveModel model : this.modelList.getList()){
-            Object[] obj = {model.IDObiectiv, model.Denumire, model.DistantaFocala, model.DiafragmaMinima, model.Diametru, model.Pret, model.PretInchiriere, model.IDMontura, model.DenumireMontura};
+            Object[] obj = {model.IDObiectiv, model.Denumire, model.DistantaFocala, model.DiafragmaMinima, model.DiafragmaMaxima, model.Diametru, model.Pret, model.PretInchiriere, model.IDMontura, model.DenumireMontura};
             tableModel.addRow(obj);
         }
 
@@ -91,8 +94,10 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
         this.databaseType = t;
         if(t == DatabaseConnection.DatabaseType.CSV)
             this.tableName = "Obiective.csv";
-        else
+        else if(t == DatabaseConnection.DatabaseType.ORACLE)
             this.tableName = "OBIECTIVE";
+        else if(t == DatabaseConnection.DatabaseType.INMEMORY)
+            this.tableName = "objective";
     }
 
     private void transferToModelList(ResultSet rs) throws Exception{
@@ -104,6 +109,7 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
             model.Denumire = rs.getString("DENUMIRE");
             model.DistantaFocala = rs.getInt("DISTANTAFOCALA");
             model.DiafragmaMinima = rs.getDouble("DIAFRAGMAMINIMA");
+            model.DiafragmaMaxima = rs.getDouble("DIAFRAGMAMAXIMA");
             model.Diametru = rs.getInt("DIAMETRU");
             model.Pret = rs.getInt("PRET");
 
@@ -120,10 +126,14 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
             tables = new HashMap<>();
             tables.put("OBIECTIVE", "Obiective.csv");
             tables.put("MONTURA", "Montura.csv");
-        } else {
+        } else if(databaseType == DatabaseConnection.DatabaseType.ORACLE){
             tables = new HashMap<>();
             tables.put("OBIECTIVE", "OBIECTIVE");
             tables.put("MONTURA", "MONTURA");
+        } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
+            tables = new HashMap<>();
+            tables.put("OBIECTIVE", "objective");
+            tables.put("MONTURA", "mount");
         }
 
 
@@ -142,12 +152,25 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
             model.IDObiectiv = obiective.getInt("IDOBIECTIV");
             model.Denumire = obiective.getString("DENUMIRE");
             model.DistantaFocala = obiective.getInt("DISTANTAFOCALA");
-            model.DiafragmaMinima = obiective.getDouble("DIAFRAGMAMINIMA");
+            try {
+                model.DiafragmaMinima = obiective.getDouble("DIAFRAGMAMINIMA");
+            } catch (Exception ex){
+                model.DiafragmaMinima = 0.0;
+            }
+            try {
+                model.DiafragmaMaxima = obiective.getDouble("DIAFRAGMAMAXIMA");
+            } catch (Exception ex){
+                model.DiafragmaMaxima = 0.0;
+            }
             model.Diametru = obiective.getInt("DIAMETRU");
             model.Pret = obiective.getInt("PRET");
             model.PretInchiriere = obiective.getInt("PRETINCHIRIERE");
             model.IDMontura = obiective.getInt("IDMONTURA");
-            model.DenumireMontura = monturaMap.get(model.IDMontura);
+            try {
+                model.DenumireMontura = monturaMap.get(model.IDMontura);
+            } catch (Exception ex){
+                model.DenumireMontura = "";
+            }
 
             this.modelList.add(model);
         }
@@ -165,9 +188,10 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
     public void updateData(ModelList<InnerObjectiveModel> oneRow) throws Exception {
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         Map<String, String> set = new HashMap<>();
-        set.put("DENUMIRE", oneRow.get(0).Denumire);
+        set.put("DENUMIRE", "'" + oneRow.get(0).Denumire + "'");
         set.put("DISTANTAFOCALA", String.valueOf(oneRow.get(0).DistantaFocala));
         set.put("DIAFRAGMAMINIMA", String.valueOf(oneRow.get(0).DiafragmaMinima));
+        set.put("DIAFRAGMAMAXIMA", String.valueOf(oneRow.get(0).DiafragmaMaxima));
         set.put("DIAMETRU", String.valueOf(oneRow.get(0).Diametru));
         set.put("PRET", String.valueOf(oneRow.get(0).Pret));
         set.put("PRETINCHIRIERE", String.valueOf(oneRow.get(0).PretInchiriere));
@@ -248,12 +272,13 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
         List<Pair<String, String>> values = new ArrayList<>();
         values.add(new Pair<>("IDOBIECTIV", ""));
         values.add(new Pair<>("DENUMIRE", "'" + row.Denumire + "'"));
-        values.add(new Pair<>("DISTANTAFOCALA", "'"+String.valueOf(row.DistantaFocala)+"'"));
-        values.add(new Pair<>("DIAFRAGMAMINIMA", "'"+String.valueOf(row.DiafragmaMinima)+"'"));
-        values.add(new Pair<>("DIAMETRU", "'"+String.valueOf(row.Diametru)+"'"));
-        values.add(new Pair<>("PRET", "'"+String.valueOf(row.Pret)+"'"));
-        values.add(new Pair<>("PRETINCHIRIERE", "'"+String.valueOf(row.PretInchiriere)+"'"));
-        values.add(new Pair<>("IDMONTURA", "'"+String.valueOf(row.IDMontura)+"'"));
+        values.add(new Pair<>("DISTANTAFOCALA", String.valueOf(row.DistantaFocala)));
+        values.add(new Pair<>("DIAFRAGMAMINIMA", String.valueOf(row.DiafragmaMinima)));
+        values.add(new Pair<>("DIAFRAGMAMAXIMA", String.valueOf(row.DiafragmaMaxima)));
+        values.add(new Pair<>("DIAMETRU", String.valueOf(row.Diametru)));
+        values.add(new Pair<>("PRET", String.valueOf(row.Pret)));
+        values.add(new Pair<>("PRETINCHIRIERE", String.valueOf(row.PretInchiriere)));
+        values.add(new Pair<>("IDMONTURA", String.valueOf(row.IDMontura)));
 
 
         db.insert(this.tableName, values);

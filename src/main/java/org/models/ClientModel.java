@@ -50,6 +50,8 @@ public class ClientModel extends Model implements LinkModelToDatabase<ModelList<
             this.tableName = "Clienti.csv";
         } else if (databaseType == DatabaseConnection.DatabaseType.ORACLE){
             this.tableName = "CLIENTI";
+        } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
+            this.tableName = "client";
         }
     }
 
@@ -88,8 +90,10 @@ public class ClientModel extends Model implements LinkModelToDatabase<ModelList<
         this.databaseType = t;
         if(t == DatabaseConnection.DatabaseType.CSV)
             this.tableName = "Clienti.csv";
-        else
+        else if(t == DatabaseConnection.DatabaseType.ORACLE)
             this.tableName = "CLIENTI";
+        else if(t == DatabaseConnection.DatabaseType.INMEMORY)
+            this.tableName = "client";
     }
 
     private void transferToModelList(ResultSet rs) throws Exception{
@@ -115,11 +119,16 @@ public class ClientModel extends Model implements LinkModelToDatabase<ModelList<
             tables.put("CLIENTI", "Clienti.csv");
             tables.put("TIPCLIENTI", "TipClient.csv");
             tables.put("UTILIZATORI", "Utilizatori.csv");
-        } else {
+        } else if(databaseType == DatabaseConnection.DatabaseType.ORACLE) {
             tables = new HashMap<>();
             tables.put("CLIENTI", "CLIENTI");
             tables.put("TIPCLIENTI", "TIPCLIENT");
             tables.put("UTILIZATORI", "UTILIZATORI");
+        } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
+            tables = new HashMap<>();
+            tables.put("CLIENTI", "client");
+            tables.put("TIPCLIENTI", "client_type");
+            tables.put("UTILIZATORI", "user");
         }
 
 
@@ -144,10 +153,18 @@ public class ClientModel extends Model implements LinkModelToDatabase<ModelList<
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             InnerClientModel model = new InnerClientModel();
             model.IDUtilizator = clienti.getInt("IDUtilizator");
-            model.DataNasterii = new Date(sdf.parse(clienti.getString("DataNasterii")).getTime());
+            try {
+                model.DataNasterii = new Date(sdf.parse(clienti.getString("DataNasterii")).getTime());
+            } catch (Exception ex) {
+                model.DataNasterii = null;
+            }
             model.IDTip = clienti.getInt("IDTip");
             model.DenumireTip = typeMap.get(clienti.getInt("IDTip"));
-            model.DiscountTip = discountMap.get(clienti.getInt("IDTip"));
+            try {
+                model.DiscountTip = discountMap.get(clienti.getInt("IDTip"));
+            } catch (Exception ex) {
+                model.DiscountTip = 0.0;
+            }
             model.NumeClient = userMap.get(clienti.getInt("IDUtilizator"));
 
             this.modelList.add(model);
@@ -167,7 +184,11 @@ public class ClientModel extends Model implements LinkModelToDatabase<ModelList<
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         Map<String, String> set = new HashMap<>();
         set.put("IDUtilizator", "'" + oneRow.get(0).IDUtilizator + "'");
-        set.put("DataNasterii", "'" + oneRow.get(0).DataNasterii + "'");
+        if(databaseType == DatabaseConnection.DatabaseType.ORACLE)
+            set.put("DataNasterii", "TO_DATE('" + oneRow.get(0).DataNasterii + "', 'YYYY-MM-DD HH24:MI:SS')");
+        else if(databaseType == DatabaseConnection.DatabaseType.CSV){
+            set.put("DataNasterii", oneRow.get(0).DataNasterii + "");
+        }
 
         Map<String, String> where = new HashMap<>();
         where.put("IDUtilizator", String.valueOf(oneRow.get(0).IDUtilizator));
@@ -240,11 +261,16 @@ public class ClientModel extends Model implements LinkModelToDatabase<ModelList<
     @Override
     public void insertRow(InnerClientModel row) throws Exception {
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         List<Pair<String, String>> values = new ArrayList<>();
         values.add(new Pair<>("IDUTILIZATOR", row.IDUtilizator + ""));
+        if(databaseType == DatabaseConnection.DatabaseType.ORACLE)
+            values.add(new Pair<String, String>("DATANASTERII", "TO_DATE('" + sdf.format(row.DataNasterii) + "', 'YYYY-MM-DD HH24:MI:SS')"));
+        else if(databaseType == DatabaseConnection.DatabaseType.CSV){
+            values.add(new Pair<String, String>("DATANASTERII", sdf.format(row.DataNasterii) + ""));
+        }
         values.add(new Pair<>("IDTIP", row.IDTip + ""));
-        values.add(new Pair<>("DATANASTERII", row.DataNasterii + ""));
 
 
         db.insert(this.tableName, values);

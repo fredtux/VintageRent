@@ -45,6 +45,8 @@ public class SalaryModel extends Model implements LinkModelToDatabase<ModelList<
             this.tableName = "Salariu.csv";
         } else if (databaseType == DatabaseConnection.DatabaseType.ORACLE){
             this.tableName = "SALARIU";
+        } else if (databaseType == DatabaseConnection.DatabaseType.INMEMORY){
+            this.tableName = "salary";
         }
     }
 
@@ -83,8 +85,10 @@ public class SalaryModel extends Model implements LinkModelToDatabase<ModelList<
         this.databaseType = t;
         if(t == DatabaseConnection.DatabaseType.CSV)
             this.tableName = "Salariu.csv";
-        else
+        else if(t == DatabaseConnection.DatabaseType.ORACLE)
             this.tableName = "SALARIU";
+        else if(t == DatabaseConnection.DatabaseType.INMEMORY)
+            this.tableName = "salary";
     }
 
     private void transferToModelList(ResultSet rs) throws Exception{
@@ -107,9 +111,12 @@ public class SalaryModel extends Model implements LinkModelToDatabase<ModelList<
         if(databaseType == DatabaseConnection.DatabaseType.CSV) {
             tables = new HashMap<>();
             tables.put("SALARIU", "Salariu.csv");
-        } else {
+        } else if(databaseType == DatabaseConnection.DatabaseType.ORACLE){
             tables = new HashMap<>();
             tables.put("SALARIU", "SALARIU");
+        } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
+            tables = new HashMap<>();
+            tables.put("SALARIU", "salary");
         }
 
 

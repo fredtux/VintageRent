@@ -8,6 +8,8 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,8 +18,8 @@ import java.util.Map;
 public class EmployeeModel extends Model implements LinkModelToDatabase<ModelList<EmployeeModel.InnerEmployeeModel>, EmployeeModel.InnerEmployeeModel> {
     public static class InnerEmployeeModel extends AbstractInnerModel implements Comparable<InnerEmployeeModel> {
         public int IDUtilizator;
-        public Date DataNasterii;
-        public Date DataAngajarii;
+        public LocalDateTime DataNasterii;
+        public LocalDateTime DataAngajarii;
         public int IDManager;
         public int IDSalariu;
         public int Salariu;
@@ -52,6 +54,8 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
             this.tableName = "Angajati.csv";
         } else if (databaseType == DatabaseConnection.DatabaseType.ORACLE){
             this.tableName = "ANGAJATI";
+        } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
+            this.tableName = "employee";
         }
     }
 
@@ -90,18 +94,21 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
         this.databaseType = t;
         if(t == DatabaseConnection.DatabaseType.CSV)
             this.tableName = "Angajati.csv";
-        else
+        else if(t == DatabaseConnection.DatabaseType.ORACLE)
             this.tableName = "ANGAJATI";
+        else if(t == DatabaseConnection.DatabaseType.INMEMORY)
+            this.tableName = "employee";
     }
 
     private void transferToModelList(ResultSet rs) throws Exception{
         this.modelList = new ModelList<>(true);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         while(rs.next()){
             InnerEmployeeModel model = new InnerEmployeeModel();
             model.IDUtilizator = rs.getInt("IDUTILIZATOR");
-            model.DataNasterii = rs.getDate("DATANASTERII");
-            model.DataAngajarii = rs.getDate("DATAANGAJARII");
+            model.DataNasterii = LocalDateTime.parse(rs.getString("DATANASTERII"));
+            model.DataAngajarii = LocalDateTime.parse(rs.getString("DATAANGAJARII"));
             model.IDManager = rs.getInt("IDMANAGER");
             model.IDSalariu = rs.getInt("IDSALARIU");
             model.Salariu = rs.getInt("SALARIU");
@@ -121,11 +128,16 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
             tables.put("ANGAJATI", "Angajati.csv");
             tables.put("SALARIU", "Salariu.csv");
             tables.put("UTILIZATORI", "Utilizatori.csv");
-        } else {
+        } else if(databaseType == DatabaseConnection.DatabaseType.ORACLE){
             tables = new HashMap<>();
             tables.put("ANGAJATI", "ANGAJATI");
             tables.put("SALARIU", "SALARIU");
             tables.put("UTILIZATORI", "UTILIZATORI");
+        } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
+            tables = new HashMap<>();
+            tables.put("ANGAJATI", "employee");
+            tables.put("SALARIU", "salary");
+            tables.put("UTILIZATORI", "user");
         }
 
 
@@ -144,13 +156,21 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
         }
 
         // Add fields to cameras
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         this.modelList = new ModelList<>(true);
         while(angajati.next()) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             InnerEmployeeModel model = new InnerEmployeeModel();
             model.IDUtilizator = angajati.getInt("IDUTILIZATOR");
-            model.DataNasterii = new Date(sdf.parse(angajati.getString("DATANASTERII")).getTime());
-            model.DataAngajarii = new Date(sdf.parse(angajati.getString("DATAANGAJARII")).getTime());
+            try {
+                model.DataNasterii = LocalDateTime.parse(angajati.getString("DATANASTERII"), formatter);
+            } catch (Exception ex){
+                model.DataNasterii = null;
+            }
+            try {
+                model.DataAngajarii = LocalDateTime.parse(angajati.getString("DATAANGAJARII"), formatter);
+            } catch (Exception ex){
+                model.DataAngajarii = null;
+            }
             String manager = angajati.getString("IDMANAGER");
             if(manager == null || manager == ""){
                 model.IDManager = 0;
@@ -158,9 +178,21 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
                 model.IDManager = Integer.parseInt(manager);
             }
             model.IDSalariu = angajati.getInt("IDSALARIU");
-            model.Salariu = salariuMap.get(model.IDSalariu);
-            model.NumeAngajat = userMap.get(model.IDUtilizator);
+            try {
+                model.Salariu = salariuMap.get(model.IDSalariu);
+            } catch (Exception ex){
+                model.Salariu = 0;
+            }
+            try {
+                model.NumeAngajat = userMap.get(model.IDUtilizator);
+            } catch (Exception ex){
+                model.NumeAngajat = "";
+            }
+            try{
             model.NumeManager = userMap.get(model.IDManager);
+            } catch (Exception ex){
+                model.NumeManager = "";
+            }
 
             this.modelList.add(model);
         }
@@ -177,18 +209,19 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
     @Override
     public void updateData(ModelList<InnerEmployeeModel> oneRow) throws Exception {
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         Map<String, String> set = new HashMap<>();
         set.put("IDUTILIZATOR", "'" + oneRow.get(0).IDUtilizator + "'");
         if(databaseType == DatabaseConnection.DatabaseType.ORACLE)
-            set.put("DATANASTERII", "TO_DATE('" + oneRow.get(0).DataNasterii + "', 'YYYY-MM-DD HH24:MI:SS')");
+            set.put("DATANASTERII", "TO_DATE('" + oneRow.get(0).DataNasterii.format(dtf) + "', 'YYYY-MM-DD HH24:MI:SS')");
         else if(databaseType == DatabaseConnection.DatabaseType.CSV){
-            set.put("DATANASTERII", oneRow.get(0).DataNasterii + "");
+            set.put("DATANASTERII", oneRow.get(0).DataNasterii.format(dtf) + "");
         }
 
         if(databaseType == DatabaseConnection.DatabaseType.ORACLE)
-            set.put("DATAANGAJARII", "TO_DATE('" + oneRow.get(0).DataAngajarii + "', 'YYYY-MM-DD HH24:MI:SS')");
+            set.put("DATAANGAJARII", "TO_DATE('" + oneRow.get(0).DataAngajarii.format(dtf) + "', 'YYYY-MM-DD HH24:MI:SS')");
         else if(databaseType == DatabaseConnection.DatabaseType.CSV){
-            set.put("DATAANGAJARII", oneRow.get(0).DataAngajarii + "");
+            set.put("DATAANGAJARII", oneRow.get(0).DataAngajarii.format(dtf) + "");
         }
 
 
@@ -263,20 +296,21 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
     @Override
     public void insertRow(InnerEmployeeModel row) throws Exception {
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         List<Pair<String, String>> values = new ArrayList<>();
         values.add(new Pair<String, String>("IDUTILIZATOR", row.IDUtilizator + ""));
         if(databaseType == DatabaseConnection.DatabaseType.ORACLE)
-            values.add(new Pair<String, String>("DATANASTERII", "TO_DATE('" + sdf.format(row.DataNasterii) + "', 'YYYY-MM-DD HH24:MI:SS')"));
+            values.add(new Pair<String, String>("DATANASTERII", "TO_DATE('" + row.DataNasterii.format(dtf) + "', 'YYYY-MM-DD HH24:MI:SS')"));
         else if(databaseType == DatabaseConnection.DatabaseType.CSV){
-            values.add(new Pair<String, String>("DATANASTERII", sdf.format(row.DataNasterii) + ""));
+            values.add(new Pair<String, String>("DATANASTERII", row.DataNasterii.format(dtf) + ""));
         }
 
         if(databaseType == DatabaseConnection.DatabaseType.ORACLE)
-            values.add(new Pair<String, String>("DATAANGAJARII", "TO_DATE('" + sdf.format(row.DataAngajarii) + "', 'YYYY-MM-DD HH24:MI:SS')"));
+            values.add(new Pair<String, String>("DATAANGAJARII", "TO_DATE('" + row.DataAngajarii.format(dtf) + "', 'YYYY-MM-DD HH24:MI:SS')"));
         else if(databaseType == DatabaseConnection.DatabaseType.CSV){
-            values.add(new Pair<String, String>("DATAANGAJARII", sdf.format(row.DataAngajarii) + ""));
+            values.add(new Pair<String, String>("DATAANGAJARII", row.DataAngajarii.format(dtf) + ""));
         }
 
         values.add(new Pair<>("IDMANAGER", row.IDManager + ""));

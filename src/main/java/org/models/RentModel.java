@@ -53,6 +53,8 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
             this.tableName = "Inchiriere.csv";
         } else if (databaseType == DatabaseConnection.DatabaseType.ORACLE){
             this.tableName = "INCHIRIERE";
+        } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
+            this.tableName = "rent";
         }
     }
 
@@ -92,6 +94,8 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
             this.tableName = "Inchiriere.csv";
         else if(t == DatabaseConnection.DatabaseType.ORACLE)
             this.tableName = "INCHIRIERE";
+        else if(t == DatabaseConnection.DatabaseType.INMEMORY)
+            this.tableName = "rent";
     }
 
     private void transferToModelList(ResultSet rs) throws Exception{
@@ -127,13 +131,20 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
             tables.put("CLIENTI", "Clienti.csv");
             tables.put("ANGAJATI", "Angajati.csv");
             tables.put("OBIECTIVE", "Obiective.csv");
-        } else {
+        } else if(databaseType == DatabaseConnection.DatabaseType.ORACLE){
             tables = new HashMap<>();
             tables.put("INCHIRIERE", "INCHIRIERE");
             tables.put("CAMERE", "CAMERE");
             tables.put("CLIENTI", "CLIENTI");
             tables.put("ANGAJATI", "ANGAJATI");
             tables.put("OBIECTIVE", "OBIECTIVE");
+        } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
+            tables = new HashMap<>();
+            tables.put("INCHIRIERE", "rent");
+            tables.put("CAMERE", "camera");
+            tables.put("CLIENTI", "client");
+            tables.put("ANGAJATI", "employee");
+            tables.put("OBIECTIVE", "objective");
         }
 
 
@@ -165,16 +176,28 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
             try {
                 model.DATA_INCHIRIERE = inchiriere.getDate("DATAINCHIRIERE");
             } catch (Exception e) {
-                LocalDateTime localDateTime = LocalDateTime.parse(inchiriere.getString("DATAINCHIRIERE"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-                model.DATA_INCHIRIERE = Date.valueOf(localDateTime.toLocalDate());
+                try {
+                    LocalDateTime localDateTime = LocalDateTime.parse(inchiriere.getString("DATAINCHIRIERE"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                    model.DATA_INCHIRIERE = Date.valueOf(localDateTime.toLocalDate());
+                } catch (Exception ex) {
+                    model.DATA_INCHIRIERE = null;
+                }
             }
             model.DURATA_IN_ZILE = inchiriere.getInt("DURATAINZILE");
             model.IDCAMERA = inchiriere.getInt("IDCAMERA");
             model.IDCLIENT = inchiriere.getInt("IDCLIENT");
             model.IDANGAJAT = inchiriere.getInt("IDANGAJAT");
             model.IDOBIECTIV = inchiriere.getInt("IDOBIECTIV");
-            model.ESTE_RETURNAT = inchiriere.getBoolean("ESTERETURNAT");
-            model.PENALIZARE = inchiriere.getDouble("PENALIZARE");
+            try {
+                model.ESTE_RETURNAT = inchiriere.getBoolean("ESTERETURNAT");
+            } catch (Exception e) {
+                model.ESTE_RETURNAT = false;
+            }
+            try {
+                model.PENALIZARE = inchiriere.getDouble("PENALIZARE");
+            } catch (Exception e) {
+                model.PENALIZARE = 0;
+            }
             this.modelList.add(model);
         }
 
@@ -218,8 +241,14 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
     @Override
     public void deleteRow(ModelList<InnerRentModel> row) throws Exception {
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         Map<String, String> where = new HashMap<>();
+        if(databaseType == DatabaseConnection.DatabaseType.ORACLE)
+            where.put("DATAINCHIRIERE", "TO_DATE('" + sdf.format(row.get(0).DATA_INCHIRIERE) + "', 'YYYY-MM-DD HH24:MI:SS')");
+        else if(databaseType == DatabaseConnection.DatabaseType.CSV){
+            where.put("DATAINCHIRIERE", sdf.format(row.get(0).DATA_INCHIRIERE) + " 00:00:00");
+        }
         where.put("IDANGAJAT", row.get(0).IDANGAJAT + "");
         where.put("IDCAMERA", row.get(0).IDCAMERA + "");
         where.put("IDCLIENT", row.get(0).IDCLIENT + "");

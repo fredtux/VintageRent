@@ -234,7 +234,7 @@ public class CsvConnection extends DatabaseConnection {
         int counter = 0;
         for (Map.Entry<String, String> entry : where.entrySet()) {
             for (int i = 0; i < headers.size(); i++) {
-                if(headers.get(i).equals(entry.getKey()) && row.get(i).equals(entry.getValue())){
+                if(headers.get(i).toLowerCase().equals(entry.getKey().toLowerCase()) && row.get(i).equals(entry.getValue())){
                     ++counter;
                     break;
                 }

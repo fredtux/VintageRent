@@ -44,6 +44,8 @@ public class CameraTypeModel extends Model implements LinkModelToDatabase<ModelL
             this.tableName = "TipCamera.csv";
         } else if (databaseType == DatabaseConnection.DatabaseType.ORACLE){
             this.tableName = "TIPCAMERA";
+        } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
+            this.tableName = "camera_type";
         }
     }
 
@@ -82,8 +84,10 @@ public class CameraTypeModel extends Model implements LinkModelToDatabase<ModelL
         this.databaseType = t;
         if(t == DatabaseConnection.DatabaseType.CSV)
             this.tableName = "TipCamera.csv";
-        else
+        else if(t == DatabaseConnection.DatabaseType.ORACLE)
             this.tableName = "TIPCAMERA";
+        else if(t == DatabaseConnection.DatabaseType.INMEMORY)
+            this.tableName = "camera_type";
     }
 
     private void transferToModelList(ResultSet rs) throws Exception{
@@ -105,9 +109,12 @@ public class CameraTypeModel extends Model implements LinkModelToDatabase<ModelL
         if(databaseType == DatabaseConnection.DatabaseType.CSV) {
             tables = new HashMap<>();
             tables.put("TIPCAMERA", "TipCamera.csv");
-        } else {
+        } else if(databaseType == DatabaseConnection.DatabaseType.ORACLE) {
             tables = new HashMap<>();
             tables.put("TIPCAMERA", "TIPCAMERA");
+        } else {
+            tables = new HashMap<>();
+            tables.put("TIPCAMERA", "camera_type");
         }
 
 

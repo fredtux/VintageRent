@@ -4,13 +4,14 @@ import org.database.DatabaseConnection;
 import org.logger.CsvLogger;
 import org.models.*;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.sql.Date;
 
 public class MainService {
     private static CsvLogger logger = CsvLogger.getInstance();
 
-    public static Map<String, String> formatSales(int formatID, DatabaseConnection.DatabaseType databaseType) throws Exception{
+    public static Map<String, String> formatSales(int formatID, DatabaseConnection.DatabaseType databaseType) throws Exception {
         Map<String, String> result = new HashMap<>();
 
 //        FormatModel format = FormatModel.getInstance();
@@ -55,9 +56,9 @@ public class MainService {
         }
 
         numDistinctClients = clientset.size();
-        maxRentPrice = rentPriceQueue.peek() == null? 0 : rentPriceQueue.poll();
-        secondMaxRentPrice =  rentPriceQueue.peek() == null? 0 : rentPriceQueue.poll();
-        thirdMaxRentPrice = rentPriceQueue.peek() == null? 0 : rentPriceQueue.poll();
+        maxRentPrice = rentPriceQueue.peek() == null ? 0 : rentPriceQueue.poll();
+        secondMaxRentPrice = rentPriceQueue.peek() == null ? 0 : rentPriceQueue.poll();
+        thirdMaxRentPrice = rentPriceQueue.peek() == null ? 0 : rentPriceQueue.poll();
 
         result.put("No. Rents", String.valueOf(totalRents));
         result.put("1st price", String.valueOf(maxRentPrice));
@@ -65,7 +66,7 @@ public class MainService {
         result.put("3rd price", String.valueOf(thirdMaxRentPrice));
         result.put("Distinct Clients", String.valueOf(numDistinctClients));
 
-        try{
+        try {
             logger.log("Format Sales report generated");
         } catch (Exception ex) {
             System.out.println("Error logging to CSV: " + ex.getMessage());
@@ -123,7 +124,7 @@ public class MainService {
         result.put("Total Penalty", String.valueOf(totalPenalty));
         result.put("Avg. Camera Price", String.valueOf(totalPrice / cameraset.size()));
 
-        try{
+        try {
             logger.log("Client Rents report generated");
         } catch (Exception ex) {
             System.out.println("Error logging to CSV: " + ex.getMessage());
@@ -421,7 +422,7 @@ public class MainService {
     }
 
     // Employee
-    public static void CreateEmployee(int employeeID, Date birthdate, Date hiredate, int managerID, int salaryID, String address, String phone, String email, DatabaseConnection.DatabaseType databaseType) throws Exception {
+    public static void CreateEmployee(int employeeID, LocalDateTime birthdate, LocalDateTime hiredate, int managerID, int salaryID, String address, String phone, String email, DatabaseConnection.DatabaseType databaseType) throws Exception {
         EmployeeModel employee = EmployeeModel.getInstance();
         employee.setDatabaseType(databaseType);
 
@@ -435,7 +436,7 @@ public class MainService {
         employee.insertRow(newEmployee);
     }
 
-    public static void UpdateEmployee(int employeeID, Date birthdate, Date hiredate, int managerID, int salaryID, String address, String phone, String email, DatabaseConnection.DatabaseType databaseType) throws Exception {
+    public static void UpdateEmployee(int employeeID, LocalDateTime birthdate, LocalDateTime hiredate, int managerID, int salaryID, String address, String phone, String email, DatabaseConnection.DatabaseType databaseType) throws Exception {
         EmployeeModel employee = EmployeeModel.getInstance();
         employee.setDatabaseType(databaseType);
         employee.getData();

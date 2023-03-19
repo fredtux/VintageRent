@@ -53,6 +53,8 @@ public class UserModel extends Model implements LinkModelToDatabase<ModelList<Us
             this.tableName = "Utilizatori.csv";
         } else if (databaseType == DatabaseConnection.DatabaseType.ORACLE){
             this.tableName = "UTILIZATORI";
+        } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
+            this.tableName = "user";
         }
     }
 
@@ -91,8 +93,10 @@ public class UserModel extends Model implements LinkModelToDatabase<ModelList<Us
         this.databaseType = t;
         if(t == DatabaseConnection.DatabaseType.CSV)
             this.tableName = "Utilizatori.csv";
-        else
+        else if(t == DatabaseConnection.DatabaseType.ORACLE)
             this.tableName = "UTILIZATORI";
+        else if(t == DatabaseConnection.DatabaseType.INMEMORY)
+            this.tableName = "user";
     }
 
     private void transferToModelList(ResultSet rs) throws Exception{
@@ -119,9 +123,12 @@ public class UserModel extends Model implements LinkModelToDatabase<ModelList<Us
         if(databaseType == DatabaseConnection.DatabaseType.CSV) {
             tables = new HashMap<>();
             tables.put("UTILIZATORI", "Utilizatori.csv");
-        } else {
+        } else if(databaseType == DatabaseConnection.DatabaseType.ORACLE){
             tables = new HashMap<>();
             tables.put("UTILIZATORI", "UTILIZATORI");
+        } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
+            tables = new HashMap<>();
+            tables.put("UTILIZATORI", "user");
         }
 
 
