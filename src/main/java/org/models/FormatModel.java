@@ -45,6 +45,8 @@ public class FormatModel extends Model implements LinkModelToDatabase<ModelList<
             this.tableName = "Format.csv";
         } else if (databaseType == DatabaseConnection.DatabaseType.ORACLE){
             this.tableName = "FORMAT";
+        } else if (databaseType == DatabaseConnection.DatabaseType.INMEMORY){
+            this.tableName = "format";
         }
     }
 
@@ -83,8 +85,10 @@ public class FormatModel extends Model implements LinkModelToDatabase<ModelList<
         this.databaseType = t;
         if(t == DatabaseConnection.DatabaseType.CSV)
             this.tableName = "Format.csv";
-        else
+        else if(t == DatabaseConnection.DatabaseType.ORACLE)
             this.tableName = "FORMAT";
+        else if(t == DatabaseConnection.DatabaseType.INMEMORY)
+            this.tableName = "format";
     }
 
     private void transferToModelList(ResultSet rs) throws Exception{
@@ -107,9 +111,12 @@ public class FormatModel extends Model implements LinkModelToDatabase<ModelList<
         if(databaseType == DatabaseConnection.DatabaseType.CSV) {
             tables = new HashMap<>();
             tables.put("FORMAT", "Format.csv");
-        } else {
+        } else if(databaseType == DatabaseConnection.DatabaseType.ORACLE){
             tables = new HashMap<>();
             tables.put("FORMAT", "FORMAT");
+        } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
+            tables = new HashMap<>();
+            tables.put("FORMAT", "format");
         }
 
 

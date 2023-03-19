@@ -111,9 +111,12 @@ public class SalaryModel extends Model implements LinkModelToDatabase<ModelList<
         if(databaseType == DatabaseConnection.DatabaseType.CSV) {
             tables = new HashMap<>();
             tables.put("SALARIU", "Salariu.csv");
-        } else {
+        } else if(databaseType == DatabaseConnection.DatabaseType.ORACLE){
             tables = new HashMap<>();
             tables.put("SALARIU", "SALARIU");
+        } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
+            tables = new HashMap<>();
+            tables.put("SALARIU", "salary");
         }
 
 

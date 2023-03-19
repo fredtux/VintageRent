@@ -226,7 +226,7 @@ public class ClientTypeModel extends Model implements LinkModelToDatabase<ModelL
 
         List<Pair<String, String>> values = new ArrayList<>();
         values.add(new Pair<>("IDTIP", row.IDTip + ""));
-        values.add(new Pair<>("DENUMIRE", row.Denumire));
+        values.add(new Pair<>("DENUMIRE", "'" + row.Denumire + "'"));
         values.add(new Pair<>("DISCOUNT", row.Discount + ""));
 
 
