@@ -14,7 +14,7 @@ public class CameraTypeAdd {
     private MainGUI caller = null;
     private JFrame parentFrame = null;
     private static CameraTypeAdd instance = null;
-    private JLabel lblDataInchiriere;
+    private JLabel lblRentDate;
     private JDatePanelImpl JDatePanelImpl1;
     private JDatePickerImpl JDatePickerImpl1;
     private JPanel pnlMain;
@@ -51,21 +51,21 @@ public class CameraTypeAdd {
         c3.gridy = 1;
         c3.gridx = 1;
         c3.anchor = GridBagConstraints.WEST;
-        JLabel lblDenumire = new JLabel("Denumire");
-        lblDenumire.setText("Denumire");
-        pnlMain.add(lblDenumire, c3);
+        JLabel lblName = new JLabel("Name");
+        lblName.setText("Name");
+        pnlMain.add(lblName, c3);
 
         c3.gridx = 2;
-        JTextField txtDenumire = new JTextField();
-        txtDenumire.setText("N/A");
-        pnlMain.add(txtDenumire, c3);
+        JTextField txtName = new JTextField();
+        txtName.setText("N/A");
+        pnlMain.add(txtName, c3);
 
         JButton btnAdd = new JButton("Add");
         btnAdd.setText("Add");
         btnAdd.addActionListener(e -> {
             CameraTypeModel cameraTypeModel = CameraTypeModel.getInstance();
             CameraTypeModel.InnerCameraTypeModel camera = new CameraTypeModel.InnerCameraTypeModel();
-            camera.Denumire = txtDenumire.getText();
+            camera.Name = txtName.getText();
             try {
                 cameraTypeModel.insertRow(camera);
             } catch (Exception e1) {

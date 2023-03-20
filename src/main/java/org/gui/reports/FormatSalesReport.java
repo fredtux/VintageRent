@@ -66,7 +66,7 @@ public class FormatSalesReport {
         formatModel.setDatabaseType(caller.getDatabaseType());
         formatModel.getData();
         for (FormatModel.InnerFormatModel format : formatModel.getModelList().getList()) {
-            cmbFormat.addItem(new ComboItem(format.Denumire, format.IDFormat + ""));
+            cmbFormat.addItem(new ComboItem(format.Name, format.FormatID + ""));
         }
         pnlMain.add(cmbFormat, c3);
 

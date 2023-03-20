@@ -93,11 +93,11 @@ public class MainGUI { // Singleton
                     UserModel.InnerUserModel irm = new UserModel.InnerUserModel();
                     DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
 
-                    irm.IDUtilizator = Integer.parseInt(dtm.getValueAt(row, 0).toString());
-                    irm.NumeUtilizator = dtm.getValueAt(row, 1).toString();
-                    irm.Parola = dtm.getValueAt(row, 2).toString();
-                    irm.Nume = dtm.getValueAt(row, 3).toString();
-                    irm.Prenume = dtm.getValueAt(row, 4).toString();
+                    irm.UserID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+                    irm.UserName = dtm.getValueAt(row, 1).toString();
+                    irm.Password = dtm.getValueAt(row, 2).toString();
+                    irm.Surname = dtm.getValueAt(row, 3).toString();
+                    irm.Firstname = dtm.getValueAt(row, 4).toString();
                     Object cnp = dtm.getValueAt(row, 5);
                     irm.CNP = cnp == null ? "" : cnp.toString();
                     irm.Email = dtm.getValueAt(row, 6).toString();
@@ -105,16 +105,16 @@ public class MainGUI { // Singleton
 
                     switch (column) {
                         case 1:
-                            irm.NumeUtilizator = value;
+                            irm.UserName = value;
                             break;
                         case 2:
-                            irm.Parola = value;
+                            irm.Password = value;
                             break;
                         case 3:
-                            irm.Nume = value;
+                            irm.Surname = value;
                             break;
                         case 4:
-                            irm.Prenume = value;
+                            irm.Firstname = value;
                             break;
                         case 5:
                             irm.CNP = value;
@@ -174,25 +174,25 @@ public class MainGUI { // Singleton
                     EmployeeModel.InnerEmployeeModel irm = new EmployeeModel.InnerEmployeeModel();
                     DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
 
-                    irm.IDUtilizator = Integer.parseInt(dtm.getValueAt(row, 0).toString());
-                    irm.DataNasterii = LocalDateTime.parse(dtm.getValueAt(row, 1).toString());
-                    irm.DataAngajarii = LocalDateTime.parse(dtm.getValueAt(row, 2).toString());
+                    irm.UserID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+                    irm.BirthDate = LocalDateTime.parse(dtm.getValueAt(row, 1).toString());
+                    irm.HireDate = LocalDateTime.parse(dtm.getValueAt(row, 2).toString());
                     irm.IDManager = Integer.parseInt(dtm.getValueAt(row, 3).toString());
-                    irm.IDSalariu = Integer.parseInt(dtm.getValueAt(row, 4).toString());
+                    irm.SalaryID = Integer.parseInt(dtm.getValueAt(row, 4).toString());
 
 
                     switch (column) {
                         case 2:
-                            irm.DataAngajarii = LocalDateTime.parse(value);
+                            irm.HireDate = LocalDateTime.parse(value);
                             break;
                         case 1:
-                            irm.DataNasterii = LocalDateTime.parse(value);
+                            irm.BirthDate = LocalDateTime.parse(value);
                             break;
                         case 3:
                             irm.IDManager = Integer.parseInt(value);
                             break;
                         case 4:
-                            irm.IDSalariu = Integer.parseInt(value);
+                            irm.SalaryID = Integer.parseInt(value);
                             break;
                         default:
                             throw new Exception("Invalid column index");
@@ -245,16 +245,16 @@ public class MainGUI { // Singleton
                     FormatModel.InnerFormatModel irm = new FormatModel.InnerFormatModel();
                     DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
 
-                    irm.IDFormat = Integer.parseInt(dtm.getValueAt(row, 0).toString());
-                    irm.Denumire = dtm.getValueAt(row, 1).toString();
-                    irm.LatimeFilm = dtm.getValueAt(row, 2).toString();
+                    irm.FormatID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+                    irm.Name = dtm.getValueAt(row, 1).toString();
+                    irm.FilmWidth = dtm.getValueAt(row, 2).toString();
 
                     switch (column) {
                         case 1:
-                            irm.Denumire = value;
+                            irm.Name = value;
                             break;
                         case 2:
-                            irm.LatimeFilm = value;
+                            irm.FilmWidth = value;
                             break;
                         default:
                             throw new Exception("Invalid column index");
@@ -309,46 +309,46 @@ public class MainGUI { // Singleton
                     DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
 
                     irm.IDCamera = Integer.parseInt(dtm.getValueAt(row, 0).toString());
-                    irm.Marca = dtm.getValueAt(row, 1).toString();
+                    irm.Brand = dtm.getValueAt(row, 1).toString();
                     irm.ModelCamera = dtm.getValueAt(row, 2).toString();
-                    irm.AnFabricatie = Integer.parseInt(dtm.getValueAt(row, 3).toString());
-                    irm.Pret = Double.parseDouble(dtm.getValueAt(row, 4).toString());
-                    irm.PretInchiriere = Double.parseDouble(dtm.getValueAt(row, 5).toString());
-                    irm.DenumireFormat = dtm.getValueAt(row, 6).toString();
-                    irm.LatimeFilm = dtm.getValueAt(row, 7).toString();
-                    irm.DenumireTip = dtm.getValueAt(row, 8).toString();
-                    irm.DenumireMontura = dtm.getValueAt(row, 9).toString();
+                    irm.ManufacturingYear = Integer.parseInt(dtm.getValueAt(row, 3).toString());
+                    irm.Price = Double.parseDouble(dtm.getValueAt(row, 4).toString());
+                    irm.RentalPrice = Double.parseDouble(dtm.getValueAt(row, 5).toString());
+                    irm.NameFormat = dtm.getValueAt(row, 6).toString();
+                    irm.FilmWidth = dtm.getValueAt(row, 7).toString();
+                    irm.NameTip = dtm.getValueAt(row, 8).toString();
+                    irm.NameMount = dtm.getValueAt(row, 9).toString();
 
                     switch (column) {
                         case 0:
                             irm.IDCamera = Integer.parseInt(value);
                             break;
                         case 1:
-                            irm.Marca = String.valueOf(value);
+                            irm.Brand = String.valueOf(value);
                             break;
                         case 2:
                             irm.ModelCamera = String.valueOf(value);
                             break;
                         case 3:
-                            irm.AnFabricatie = Integer.parseInt(value);
+                            irm.ManufacturingYear = Integer.parseInt(value);
                             break;
                         case 4:
-                            irm.Pret = Double.parseDouble(value);
+                            irm.Price = Double.parseDouble(value);
                             break;
                         case 5:
-                            irm.PretInchiriere = Double.parseDouble(value);
+                            irm.RentalPrice = Double.parseDouble(value);
                             break;
                         case 6:
-                            irm.DenumireFormat = String.valueOf(value);
+                            irm.NameFormat = String.valueOf(value);
                             break;
                         case 7:
-                            irm.LatimeFilm = String.valueOf(value);
+                            irm.FilmWidth = String.valueOf(value);
                             break;
                         case 8:
-                            irm.DenumireFormat = String.valueOf(value);
+                            irm.NameFormat = String.valueOf(value);
                             break;
                         case 9:
-                            irm.DenumireMontura = String.valueOf(value);
+                            irm.NameMount = String.valueOf(value);
                             break;
                         default:
                             throw new Exception("Invalid column index");
@@ -405,27 +405,27 @@ public class MainGUI { // Singleton
                     RentModel.InnerRentModel irm = new RentModel.InnerRentModel();
                     DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
 
-                    irm.DURATA_IN_ZILE = Integer.parseInt(dtm.getValueAt(row, 0).toString());
-                    irm.ESTE_RETURNAT = Boolean.parseBoolean(dtm.getValueAt(row, 1).toString());
-                    irm.PENALIZARE = Double.parseDouble(dtm.getValueAt(row, 2).toString());
-                    irm.DATA_INCHIRIERE = Date.valueOf(dtm.getValueAt(row, 3).toString());
+                    irm.DURATION_IN_DAYS = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+                    irm.IS_RETURNED = Boolean.parseBoolean(dtm.getValueAt(row, 1).toString());
+                    irm.PENALTYFEE = Double.parseDouble(dtm.getValueAt(row, 2).toString());
+                    irm.RENT_DATE = Date.valueOf(dtm.getValueAt(row, 3).toString());
                     irm.IDCAMERA = Integer.parseInt(dtm.getValueAt(row, 4).toString());
                     irm.IDCLIENT = Integer.parseInt(dtm.getValueAt(row, 5).toString());
-                    irm.IDOBIECTIV = Integer.parseInt(dtm.getValueAt(row, 6).toString());
+                    irm.OBJECTIVEID = Integer.parseInt(dtm.getValueAt(row, 6).toString());
                     irm.IDANGAJAT = Integer.parseInt(dtm.getValueAt(row, 7).toString());
 
                     switch (column) {
                         case 0:
-                            irm.DURATA_IN_ZILE = Integer.parseInt(value);
+                            irm.DURATION_IN_DAYS = Integer.parseInt(value);
                             break;
                         case 1:
-                            irm.ESTE_RETURNAT = Boolean.parseBoolean(value);
+                            irm.IS_RETURNED = Boolean.parseBoolean(value);
                             break;
                         case 2:
-                            irm.PENALIZARE = Double.parseDouble(value);
+                            irm.PENALTYFEE = Double.parseDouble(value);
                             break;
                         case 3:
-                            irm.DATA_INCHIRIERE = Date.valueOf(value);
+                            irm.RENT_DATE = Date.valueOf(value);
                             break;
                         case 4:
                             irm.IDCAMERA = Integer.parseInt(value);
@@ -434,7 +434,7 @@ public class MainGUI { // Singleton
                             irm.IDCLIENT = Integer.parseInt(value);
                             break;
                         case 6:
-                            irm.IDOBIECTIV = Integer.parseInt(value);
+                            irm.OBJECTIVEID = Integer.parseInt(value);
                             break;
                         case 7:
                             irm.IDANGAJAT = Integer.parseInt(value);
@@ -494,13 +494,13 @@ public class MainGUI { // Singleton
                     CameraTypeModel.InnerCameraTypeModel irm = new CameraTypeModel.InnerCameraTypeModel();
                     DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
 
-                    irm.IDTip = Integer.parseInt(dtm.getValueAt(row, 0).toString());
-                    irm.Denumire = dtm.getValueAt(row, 1).toString();
+                    irm.TypeID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+                    irm.Name = dtm.getValueAt(row, 1).toString();
 
 
                     switch (column) {
                         case 1:
-                            irm.Denumire = String.valueOf(value);
+                            irm.Name = String.valueOf(value);
                             break;
                         default:
                             throw new Exception("Invalid column index");
@@ -537,7 +537,7 @@ public class MainGUI { // Singleton
         UserModel.InnerUserModel irm = new UserModel.InnerUserModel();
         DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
 
-        irm.IDUtilizator = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+        irm.UserID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
 
         modelList.add(irm);
         rm.deleteRow(modelList);
@@ -551,7 +551,7 @@ public class MainGUI { // Singleton
         EmployeeModel.InnerEmployeeModel irm = new EmployeeModel.InnerEmployeeModel();
         DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
 
-        irm.IDUtilizator = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+        irm.UserID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
 
         modelList.add(irm);
         rm.deleteRow(modelList);
@@ -564,7 +564,7 @@ public class MainGUI { // Singleton
         FormatModel.InnerFormatModel irm = new FormatModel.InnerFormatModel();
         DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
 
-        irm.IDFormat = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+        irm.FormatID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
 
         modelList.add(irm);
         rm.deleteRow(modelList);
@@ -577,7 +577,7 @@ public class MainGUI { // Singleton
         CameraTypeModel.InnerCameraTypeModel irm = new CameraTypeModel.InnerCameraTypeModel();
         DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
 
-        irm.IDTip = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+        irm.TypeID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
 
         modelList.add(irm);
         rm.deleteRow(modelList);
@@ -605,13 +605,13 @@ public class MainGUI { // Singleton
         RentModel.InnerRentModel irm = new RentModel.InnerRentModel();
         DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
 
-        irm.DURATA_IN_ZILE = Integer.parseInt(dtm.getValueAt(row, 0).toString());
-        irm.ESTE_RETURNAT = Boolean.parseBoolean(dtm.getValueAt(row, 1).toString());
-        irm.PENALIZARE = Double.parseDouble(dtm.getValueAt(row, 2).toString());
-        irm.DATA_INCHIRIERE = Date.valueOf(dtm.getValueAt(row, 3).toString());
+        irm.DURATION_IN_DAYS = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+        irm.IS_RETURNED = Boolean.parseBoolean(dtm.getValueAt(row, 1).toString());
+        irm.PENALTYFEE = Double.parseDouble(dtm.getValueAt(row, 2).toString());
+        irm.RENT_DATE = Date.valueOf(dtm.getValueAt(row, 3).toString());
         irm.IDCAMERA = Integer.parseInt(dtm.getValueAt(row, 4).toString());
         irm.IDCLIENT = Integer.parseInt(dtm.getValueAt(row, 5).toString());
-        irm.IDOBIECTIV = Integer.parseInt(dtm.getValueAt(row, 6).toString());
+        irm.OBJECTIVEID = Integer.parseInt(dtm.getValueAt(row, 6).toString());
         irm.IDANGAJAT = Integer.parseInt(dtm.getValueAt(row, 7).toString());
 
         modelList.add(irm);
