@@ -26,7 +26,7 @@ public class MainServiceTest {
     private DatabaseConnection getInMemory(){
         DatabaseConnection result = null;
         try{
-            result = new InMemory(Main.ORACLE_DB_ADDR, "c##tux", "fmilove", "oracle.jdbc.driver.OracleDriver", "XE", "C##TUX", "1521");
+            result = new InMemory();
         } catch (Exception e) {
             result = DatabaseConnection.getInstance(DatabaseConnection.DatabaseType.INMEMORY);
         }

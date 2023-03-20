@@ -58,7 +58,7 @@ public class Main {
                             public void run() {
                                 try {
                                     // Connect to Oracle Database and check if it's initialized
-                                    DatabaseConnection orcl = new OracleConnection(ORACLE_DB_ADDR, "c##tux", "fmilove", "oracle.jdbc.driver.OracleDriver", "XE", "C##TUX", "1521");
+                                    DatabaseConnection orcl = new OracleConnection(ORACLE_DB_ADDR, "c##tux", "fmilove", "oracle.jdbc.driver.OracleDriver", "ORCLCDB", "C##TUX", "1521");
                                     orcl.connect();
 
                                     if(!orcl.isInitialized())
@@ -76,7 +76,7 @@ public class Main {
                                 }
 
                                 try{
-                                    DatabaseConnection inmem = new InMemory(ORACLE_DB_ADDR, "c##tux", "fmilove", "oracle.jdbc.driver.OracleDriver", "XE", "C##TUX", "1521");
+                                    DatabaseConnection inmem = new InMemory();
                                     ModelInit.inmemInit();
                                 } catch (Exception ex) {
                                     System.out.println("Error setting up in memory data storage: " + ex.getMessage());

@@ -9,14 +9,14 @@ docker-compose up
 Apoi va conectati pe Linux cu:
 - host: 172.21.128.2
 - port: 1521
-- SID: XE
+- SID: ORCLCDB
 - user: SYSTEM
 - parola: fmilove
 
 Sau pe Windows cu:
 - host: 0.0.0.0
 - port: 1521
-- SID: XE
+- SID: ORCLCDB
 - user: SYSTEM
 - parola: fmilove
 
