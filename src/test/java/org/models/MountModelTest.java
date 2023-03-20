@@ -93,10 +93,10 @@ public class MountModelTest {
             MainService.getData(mountModel);
 
             ModelList<MountModel.InnerMountModel> modelList = mountModel.getModelList();
-            modelList.sort((o1, o2) -> o2.IDMontura - o1.IDMontura);
+            modelList.sort((o1, o2) -> o2.MountID - o1.MountID);
             MountModel.InnerMountModel data = modelList.getList().get(0);
 
-            data.Denumire = "Test2";
+            data.Name = "Test2";
 
             List<MountModel.InnerMountModel> list = new ArrayList<>();
             list.add(data);
@@ -116,17 +116,17 @@ public class MountModelTest {
             MainService.getData(mountModel);
 
             MountModel.InnerMountModel data = new MountModel.InnerMountModel();
-            data.IDMontura = 0;
-            data.Denumire = "Test";
+            data.MountID = 0;
+            data.Name = "Test";
 
             MainService.insert(mountModel, data);
 
             MainService.getData(mountModel);
             ModelList<MountModel.InnerMountModel> modelList = MainService.getModelList(mountModel);
-            modelList.sort((o1, o2) -> o2.IDMontura - o1.IDMontura);
+            modelList.sort((o1, o2) -> o2.MountID - o1.MountID);
             data = modelList.getList().get(0);
 
-            result.add(data.IDMontura);
+            result.add(data.MountID);
 
             return result;
         } catch (Exception e) {
@@ -143,7 +143,7 @@ public class MountModelTest {
             MainService.getData(mountModel);
 
             ModelList<MountModel.InnerMountModel> modelList = mountModel.getModelList();
-            modelList.sort((o1, o2) -> o2.IDMontura - o1.IDMontura);
+            modelList.sort((o1, o2) -> o2.MountID - o1.MountID);
             MountModel.InnerMountModel data = modelList.getList().get(0);
 
             List<MountModel.InnerMountModel> list = new ArrayList<>();

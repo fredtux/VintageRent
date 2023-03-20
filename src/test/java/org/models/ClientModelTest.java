@@ -95,10 +95,10 @@ public class ClientModelTest {
             MainService.getData(clientModel);
 
             ModelList<ClientModel.InnerClientModel> modelList = clientModel.getModelList();
-            modelList.sort((o1, o2) -> o2.IDUtilizator - o1.IDUtilizator);
+            modelList.sort((o1, o2) -> o2.UserID - o1.UserID);
             ClientModel.InnerClientModel data = modelList.getList().get(0);
 
-            data.NumeClient = "New Test";
+            data.SurnameClient = "New Test";
 
             List<ClientModel.InnerClientModel> list = new ArrayList<>();
             list.add(data);
@@ -119,18 +119,18 @@ public class ClientModelTest {
 
             ClientModel.InnerClientModel data = new ClientModel.InnerClientModel();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            data.IDUtilizator = 1;
-            data.NumeClient = "Test";
-            data.DataNasterii = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
+            data.UserID = 1;
+            data.SurnameClient = "Test";
+            data.BirthDate = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
 
             MainService.insert(clientModel, data);
 
             MainService.getData(clientModel);
             ModelList<ClientModel.InnerClientModel> modelList = MainService.getModelList(clientModel);
-            modelList.sort((o1, o2) -> o2.IDUtilizator - o1.IDUtilizator);
+            modelList.sort((o1, o2) -> o2.UserID - o1.UserID);
             data = modelList.getList().get(0);
 
-            result.add(data.IDUtilizator);
+            result.add(data.UserID);
 
             return result;
         } catch (Exception e) {
@@ -147,7 +147,7 @@ public class ClientModelTest {
             MainService.getData(clientModel);
 
             ModelList<ClientModel.InnerClientModel> modelList = clientModel.getModelList();
-            modelList.sort((o1, o2) -> o2.IDUtilizator - o1.IDUtilizator);
+            modelList.sort((o1, o2) -> o2.UserID - o1.UserID);
             ClientModel.InnerClientModel data = modelList.getList().get(0);
 
             List<ClientModel.InnerClientModel> list = new ArrayList<>();

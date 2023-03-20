@@ -39,11 +39,12 @@ public class MainService {
 
         Set<Integer> clientset = new HashSet<>();
         // Max heap
-        PriorityQueue<Double> rentPriceQueue = new PriorityQueue<>(Collections.reverseOrder());
+//        PriorityQueue<Double> rentPriceQueue = new PriorityQueue<>(Collections.reverseOrder());
+        TreeMap<Double, Double> rentPriceMap = new TreeMap<>();
 
         List<Integer> cameraIDs = new ArrayList<>();
         for (CameraModel.InnerCameraModel cameraModel : lcamera.getList()) {
-            if (cameraModel.IDFormat == formatID)
+            if (cameraModel.FormatID == formatID)
                 cameraIDs.add(cameraModel.IDCamera);
         }
 
@@ -51,15 +52,19 @@ public class MainService {
             if (rentModel.IDCAMERA == formatID) {
                 ++totalRents;
                 clientset.add(rentModel.IDCLIENT);
-                double rentPrice = rentModel.DURATA_IN_ZILE * getCameraRentPrice(rentModel.IDCAMERA, lcamera);
-                rentPriceQueue.add(rentPrice);
+                double rentPrice = rentModel.DURATION_IN_DAYS * getCameraRentPrice(rentModel.IDCAMERA, lcamera);
+//                rentPriceQueue.add(rentPrice);
+                rentPriceMap.put(rentPrice, rentPrice);
             }
         }
 
         numDistinctClients = clientset.size();
-        maxRentPrice = rentPriceQueue.peek() == null ? 0 : rentPriceQueue.poll();
-        secondMaxRentPrice = rentPriceQueue.peek() == null ? 0 : rentPriceQueue.poll();
-        thirdMaxRentPrice = rentPriceQueue.peek() == null ? 0 : rentPriceQueue.poll();
+//        maxRentPrice = rentPriceQueue.peek() == null ? 0 : rentPriceQueue.poll();
+//        secondMaxRentPrice = rentPriceQueue.peek() == null ? 0 : rentPriceQueue.poll();
+//        thirdMaxRentPrice = rentPriceQueue.peek() == null ? 0 : rentPriceQueue.poll();
+        maxRentPrice = rentPriceMap.lastEntry() == null ? 0 : rentPriceMap.lastEntry().getValue();
+        secondMaxRentPrice = rentPriceMap.lowerEntry(maxRentPrice) == null ? 0 : rentPriceMap.lowerEntry(maxRentPrice).getValue();
+        thirdMaxRentPrice = rentPriceMap.lowerEntry(secondMaxRentPrice) == null ? 0 : rentPriceMap.lowerEntry(secondMaxRentPrice).getValue();
 
         result.put("No. Rents", String.valueOf(totalRents));
         result.put("1st price", String.valueOf(maxRentPrice));
@@ -109,10 +114,10 @@ public class MainService {
                 cameraset.add(rentModel.IDCAMERA);
 
                 // Get total rent
-                totalRent += rentModel.DURATA_IN_ZILE * getCameraRentPrice(rentModel.IDCAMERA, lcamera);
+                totalRent += rentModel.DURATION_IN_DAYS * getCameraRentPrice(rentModel.IDCAMERA, lcamera);
 
                 // Get total penalty
-                totalPenalty += rentModel.PENALIZARE;
+                totalPenalty += rentModel.PENALTYFEE;
 
                 // Get average camera price
                 totalPrice += getCameraPrice(rentModel.IDCAMERA, lcamera);
@@ -137,7 +142,7 @@ public class MainService {
     private static double getCameraPrice(int cameraID, ModelList<CameraModel.InnerCameraModel> lcamera) {
         for (CameraModel.InnerCameraModel cameraModel : lcamera.getList()) {
             if (cameraModel.IDCamera == cameraID) {
-                return cameraModel.Pret;
+                return cameraModel.Price;
             }
         }
         return 0;
@@ -146,7 +151,7 @@ public class MainService {
     private static double getCameraRentPrice(int cameraID, ModelList<CameraModel.InnerCameraModel> lcamera) {
         for (CameraModel.InnerCameraModel cameraModel : lcamera.getList()) {
             if (cameraModel.IDCamera == cameraID) {
-                return cameraModel.PretInchiriere;
+                return cameraModel.RentalPrice;
             }
         }
         return 0;

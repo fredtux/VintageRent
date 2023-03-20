@@ -57,7 +57,7 @@ public class ClientReport {
         c3.weightx = 0.5;
         c3.weighty = 0.5;
         JLabel lblClient = new JLabel("Client");
-        lblClient.setText("Denumire");
+        lblClient.setText("Name");
         pnlMain.add(lblClient, c3);
 
         c3.gridx = 2;
@@ -66,7 +66,7 @@ public class ClientReport {
         clientModel.setDatabaseType(caller.getDatabaseType());
         clientModel.getData();
         for (ClientModel.InnerClientModel client : clientModel.getModelList().getList()) {
-            cmbClient.addItem(new ComboItem(client.NumeClient, client.IDUtilizator + ""));
+            cmbClient.addItem(new ComboItem(client.SurnameClient, client.UserID + ""));
         }
         pnlMain.add(cmbClient, c3);
 

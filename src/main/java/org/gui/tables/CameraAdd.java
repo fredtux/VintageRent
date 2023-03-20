@@ -14,7 +14,7 @@ public class CameraAdd {
     private MainGUI caller = null;
     private JFrame parentFrame = null;
     private static CameraAdd instance = null;
-    private JLabel lblDataInchiriere;
+    private JLabel lblRentDate;
     private JDatePanelImpl JDatePanelImpl1;
     private JDatePickerImpl JDatePickerImpl1;
     private JPanel pnlMain;
@@ -51,14 +51,14 @@ public class CameraAdd {
         c3.gridy = 1;
         c3.gridx = 1;
         c3.anchor = GridBagConstraints.WEST;
-        JLabel lblMarca = new JLabel("Marca");
-        lblMarca.setText("Marca");
-        pnlMain.add(lblMarca, c3);
+        JLabel lblBrand = new JLabel("Brand");
+        lblBrand.setText("Brand");
+        pnlMain.add(lblBrand, c3);
 
         c3.gridx = 2;
-        JTextField txtMarca = new JTextField();
-        txtMarca.setText("Canon");
-        pnlMain.add(txtMarca, c3);
+        JTextField txtBrand = new JTextField();
+        txtBrand.setText("Canon");
+        pnlMain.add(txtBrand, c3);
 
         c3.gridy = 2;
         c3.gridx = 1;
@@ -91,14 +91,14 @@ public class CameraAdd {
             listFormats = new ModelList<>();
         }
         for (FormatModel.InnerFormatModel format : listFormats.getList()) {
-            cmbFormat.addItem(new ComboItem(format.Denumire, format.IDFormat + ""));
+            cmbFormat.addItem(new ComboItem(format.Name, format.FormatID + ""));
         }
         pnlMain.add(cmbFormat, c3);
 
         c3.gridy = 5;
         c3.gridx = 1;
-        JLabel lblCameraType = new JLabel("TipCamera");
-        lblCameraType.setText("TipCamera");
+        JLabel lblCameraType = new JLabel("CameraType");
+        lblCameraType.setText("CameraType");
         pnlMain.add(lblCameraType, c3);
 
         c3.gridx = 2;
@@ -112,18 +112,18 @@ public class CameraAdd {
             listCameraTypes = new ModelList<>();
         }
         for (CameraTypeModel.InnerCameraTypeModel type : listCameraTypes.getList()) {
-            cmbCameraType.addItem(new ComboItem(type.Denumire, type.IDTip + ""));
+            cmbCameraType.addItem(new ComboItem(type.Name, type.TypeID + ""));
         }
         pnlMain.add(cmbCameraType, c3);
 
         c3.gridy = 6;
         c3.gridx = 1;
-        JLabel lblMontura = new JLabel("Montura");
-        lblMontura.setText("Montura");
-        pnlMain.add(lblMontura, c3);
+        JLabel lblMount = new JLabel("Mount");
+        lblMount.setText("Mount");
+        pnlMain.add(lblMount, c3);
 
         c3.gridx = 2;
-        JComboBox cmbMontura = new JComboBox();
+        JComboBox cmbMount = new JComboBox();
         MountModel monturaModel = MountModel.getInstance();
         monturaModel.setDatabaseType(caller.getDatabaseType());
         ModelList<MountModel.InnerMountModel> listMounts = null;
@@ -133,43 +133,43 @@ public class CameraAdd {
             listMounts = new ModelList<>();
         }
         for (MountModel.InnerMountModel montura : listMounts.getList()) {
-            cmbMontura.addItem(new ComboItem(montura.Denumire, montura.IDMontura + ""));
+            cmbMount.addItem(new ComboItem(montura.Name, montura.MountID + ""));
         }
-        pnlMain.add(cmbMontura, c3);
+        pnlMain.add(cmbMount, c3);
 
         c3.gridy = 7;
         c3.gridx = 1;
-        JLabel lblAnFabricatie = new JLabel("AnFabricatie");
-        lblAnFabricatie.setText("AnFabricatie");
-        pnlMain.add(lblAnFabricatie, c3);
+        JLabel lblManufacturingYear = new JLabel("ManufacturingYear");
+        lblManufacturingYear.setText("ManufacturingYear");
+        pnlMain.add(lblManufacturingYear, c3);
 
         c3.gridx = 2;
-        JTextField txtAnFabricatie = new JTextField();
-        txtAnFabricatie.setText("1985");
-        pnlMain.add(txtAnFabricatie, c3);
+        JTextField txtManufacturingYear = new JTextField();
+        txtManufacturingYear.setText("1985");
+        pnlMain.add(txtManufacturingYear, c3);
 
         c3.gridy = 8;
         c3.gridx = 1;
-        JLabel lblPret = new JLabel("Pret");
-        lblPret.setText("Este Pret");
-        pnlMain.add(lblPret, c3);
+        JLabel lblPrice = new JLabel("Price");
+        lblPrice.setText("Este Price");
+        pnlMain.add(lblPrice, c3);
 
         c3.gridx = 2;
-        JTextField txtPret = new JTextField();
-        txtPret.setText("999");
-        pnlMain.add(txtPret, c3);
+        JTextField txtPrice = new JTextField();
+        txtPrice.setText("999");
+        pnlMain.add(txtPrice, c3);
 
 
         c3.gridy = 9;
         c3.gridx = 1;
-        JLabel lblPretInchiriere = new JLabel("Pret Inchiriere");
-        lblPretInchiriere.setText("Pret Inchiriere");
-        pnlMain.add(lblPretInchiriere, c3);
+        JLabel lblRentalPrice = new JLabel("Price Rental");
+        lblRentalPrice.setText("Price Rental");
+        pnlMain.add(lblRentalPrice, c3);
 
         c3.gridx = 2;
-        JTextField txtPretInchiriere = new JTextField();
-        txtPretInchiriere.setText("19");
-        pnlMain.add(txtPretInchiriere, c3);
+        JTextField txtRentalPrice = new JTextField();
+        txtRentalPrice.setText("19");
+        pnlMain.add(txtRentalPrice, c3);
 
 
         JButton btnAdd = new JButton("Add");
@@ -177,14 +177,14 @@ public class CameraAdd {
         btnAdd.addActionListener(e -> {
             CameraModel cameraModel = CameraModel.getInstance();
             CameraModel.InnerCameraModel camera = new CameraModel.InnerCameraModel();
-            camera.Marca = txtMarca.getText();
+            camera.Brand = txtBrand.getText();
             camera.ModelCamera = txtModel.getText();
-            camera.IDFormat = Integer.parseInt(((ComboItem) cmbFormat.getSelectedItem()).getValue());
-            camera.IDTip = Integer.parseInt(((ComboItem) cmbCameraType.getSelectedItem()).getValue());
-            camera.IDMontura = Integer.parseInt(((ComboItem) cmbMontura.getSelectedItem()).getValue());
-            camera.AnFabricatie = Integer.parseInt(txtAnFabricatie.getText());
-            camera.Pret = Integer.parseInt(txtPret.getText());
-            camera.PretInchiriere = Integer.parseInt(txtPretInchiriere.getText());
+            camera.FormatID = Integer.parseInt(((ComboItem) cmbFormat.getSelectedItem()).getValue());
+            camera.TypeID = Integer.parseInt(((ComboItem) cmbCameraType.getSelectedItem()).getValue());
+            camera.MountID = Integer.parseInt(((ComboItem) cmbMount.getSelectedItem()).getValue());
+            camera.ManufacturingYear = Integer.parseInt(txtManufacturingYear.getText());
+            camera.Price = Integer.parseInt(txtPrice.getText());
+            camera.RentalPrice = Integer.parseInt(txtRentalPrice.getText());
             try {
                 cameraModel.insertRow(camera);
             } catch (Exception e1) {

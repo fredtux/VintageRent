@@ -21,7 +21,7 @@ public class UserAdd {
     private MainGUI caller = null;
     private JFrame parentFrame = null;
     private static UserAdd instance = null;
-    private JLabel lblDataInchiriere;
+    private JLabel lblRentDate;
     private JDatePanelImpl JDatePanelImpl1;
     private JDatePickerImpl JDatePickerImpl1;
     private JDatePanelImpl JDatePanelImpl2;
@@ -64,8 +64,8 @@ public class UserAdd {
         c3.anchor = GridBagConstraints.WEST;
 
 
-        JLabel lblUserName = new JLabel("Nume utilizator");
-        lblUserName.setText("Nume utilizator");
+        JLabel lblUserName = new JLabel("Surname utilizator");
+        lblUserName.setText("Surname utilizator");
         pnlMain.add(lblUserName, c3);
         c3.gridx = 2;
 
@@ -76,8 +76,8 @@ public class UserAdd {
         c3.gridy = 2;
         c3.gridx = 1;
         c3.anchor = GridBagConstraints.WEST;
-        JLabel lblPassword = new JLabel("Parola");
-        lblPassword.setText("Parola");
+        JLabel lblPassword = new JLabel("Password");
+        lblPassword.setText("Password");
         pnlMain.add(lblPassword, c3);
 
 
@@ -88,25 +88,25 @@ public class UserAdd {
 
         c3.gridy = 3;
         c3.gridx = 1;
-        JLabel lblNume = new JLabel("Nume");
-        lblNume.setText("Nume");
-        pnlMain.add(lblNume, c3);
+        JLabel lblSurname = new JLabel("Surname");
+        lblSurname.setText("Surname");
+        pnlMain.add(lblSurname, c3);
 
         c3.gridx = 2;
-        JTextField txtNume = new JTextField();
-        txtNume.setText("Nume");
-        pnlMain.add(txtNume, c3);
+        JTextField txtSurname = new JTextField();
+        txtSurname.setText("Surname");
+        pnlMain.add(txtSurname, c3);
 
         c3.gridy = 4;
         c3.gridx = 1;
-        JLabel lblPrenume = new JLabel("Prenume");
-        lblPrenume.setText("Prenume");
-        pnlMain.add(lblPrenume, c3);
+        JLabel lblFirstname = new JLabel("Firstname");
+        lblFirstname.setText("Firstname");
+        pnlMain.add(lblFirstname, c3);
 
         c3.gridx = 2;
-        JTextField txtPrenume = new JTextField();
-        txtPrenume.setText("Prenume");
-        pnlMain.add(txtPrenume, c3);
+        JTextField txtFirstname = new JTextField();
+        txtFirstname.setText("Firstname");
+        pnlMain.add(txtFirstname, c3);
 
         c3.gridy = 5;
         c3.gridx = 1;
@@ -137,12 +137,12 @@ public class UserAdd {
         btnAdd.addActionListener(e -> {
             UserModel userModel = UserModel.getInstance();
             UserModel.InnerUserModel user = new UserModel.InnerUserModel();
-            user.Prenume = txtPrenume.getText();
-            user.Nume = txtNume.getText();
+            user.Firstname = txtFirstname.getText();
+            user.Surname = txtSurname.getText();
             user.CNP = txtCNP.getText();
             user.Email = txtEmail.getText();
-            user.NumeUtilizator = txtUserName.getText();
-            user.Parola = txtPassword.getText();
+            user.UserName = txtUserName.getText();
+            user.Password = txtPassword.getText();
 
             try {
                 userModel.insertRow(user);

@@ -14,7 +14,7 @@ public class FormatAdd {
     private MainGUI caller = null;
     private JFrame parentFrame = null;
     private static FormatAdd instance = null;
-    private JLabel lblDataInchiriere;
+    private JLabel lblRentDate;
     private JDatePanelImpl JDatePanelImpl1;
     private JDatePickerImpl JDatePickerImpl1;
     private JPanel pnlMain;
@@ -51,34 +51,34 @@ public class FormatAdd {
         c3.gridy = 1;
         c3.gridx = 1;
         c3.anchor = GridBagConstraints.WEST;
-        JLabel lblDenumire = new JLabel("Denumire");
-        lblDenumire.setText("Denumire");
-        pnlMain.add(lblDenumire, c3);
+        JLabel lblName = new JLabel("Name");
+        lblName.setText("Name");
+        pnlMain.add(lblName, c3);
 
         c3.gridx = 2;
-        JTextField txtDenumire = new JTextField();
-        txtDenumire.setText("N/A");
-        pnlMain.add(txtDenumire, c3);
+        JTextField txtName = new JTextField();
+        txtName.setText("N/A");
+        pnlMain.add(txtName, c3);
 
         c3.gridy = 2;
         c3.gridx = 1;
         c3.anchor = GridBagConstraints.WEST;
-        JLabel lblLatimeFilm = new JLabel("Latime film");
-        lblLatimeFilm.setText("Latime film");
-        pnlMain.add(lblLatimeFilm, c3);
+        JLabel lblFilmWidth = new JLabel("Latime film");
+        lblFilmWidth.setText("Latime film");
+        pnlMain.add(lblFilmWidth, c3);
 
         c3.gridx = 2;
-        JTextField txtLatimeFilm = new JTextField();
-        txtLatimeFilm.setText("1");
-        pnlMain.add(txtLatimeFilm, c3);
+        JTextField txtFilmWidth = new JTextField();
+        txtFilmWidth.setText("1");
+        pnlMain.add(txtFilmWidth, c3);
 
         JButton btnAdd = new JButton("Add");
         btnAdd.setText("Add");
         btnAdd.addActionListener(e -> {
             FormatModel formatModel = FormatModel.getInstance();
             FormatModel.InnerFormatModel format = new FormatModel.InnerFormatModel();
-            format.Denumire = txtDenumire.getText();
-            format.LatimeFilm = txtLatimeFilm.getText();
+            format.Name = txtName.getText();
+            format.FilmWidth = txtFilmWidth.getText();
             try {
                 formatModel.insertRow(format);
             } catch (Exception e1) {

@@ -15,19 +15,19 @@ import java.util.Map;
 
 public class ClientModel extends Model implements LinkModelToDatabase<ModelList<ClientModel.InnerClientModel>, ClientModel.InnerClientModel> {
     public static class InnerClientModel extends AbstractInnerModel implements Comparable<InnerClientModel> {
-        public int IDUtilizator;
-        public Date DataNasterii;
-        public int IDTip;
-        public String DenumireTip;
+        public int UserID;
+        public Date BirthDate;
+        public int TypeID;
+        public String NameTip;
         public double DiscountTip;
-        public String NumeClient;
+        public String SurnameClient;
 
         @Override
         public int compareTo(InnerClientModel o) {
-            return this.IDUtilizator - o.IDUtilizator;
+            return this.UserID - o.UserID;
         }
     }
-    private String tableName = "CLIENTI";
+    private String tableName = "CLIENTS";
 
     private static ClientModel instance = null;
     private ModelList<InnerClientModel> modelList = null;
@@ -47,20 +47,20 @@ public class ClientModel extends Model implements LinkModelToDatabase<ModelList<
         this.databaseType = databaseType;
 
         if(databaseType == DatabaseConnection.DatabaseType.CSV){
-            this.tableName = "Clienti.csv";
+            this.tableName = "Clients.csv";
         } else if (databaseType == DatabaseConnection.DatabaseType.ORACLE){
-            this.tableName = "CLIENTI";
+            this.tableName = "CLIENTS";
         } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
             this.tableName = "client";
         }
     }
 
     public DefaultTableModel getTableModel() {
-        String[] columns = {"IDUtilizator", "DataNasterii", "IDTip", "DenumireTip", "DiscountTip", "NumeClient"};
+        String[] columns = {"UserID", "BirthDate", "TypeID", "NameTip", "DiscountTip", "SurnameClient"};
 
         DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
         for(InnerClientModel model : this.modelList.getList()){
-            Object[] obj = {model.IDUtilizator, model.DataNasterii, model.IDTip, model.DenumireTip, model.DiscountTip, model.NumeClient};
+            Object[] obj = {model.UserID, model.BirthDate, model.TypeID, model.NameTip, model.DiscountTip, model.SurnameClient};
             tableModel.addRow(obj);
         }
 
@@ -75,7 +75,7 @@ public class ClientModel extends Model implements LinkModelToDatabase<ModelList<
         else
             instance = this;
 
-        this.name = "Clienti";
+        this.name = "Clients";
         this.databaseType = DatabaseConnection.DatabaseType.ORACLE;
     }
 
@@ -86,12 +86,12 @@ public class ClientModel extends Model implements LinkModelToDatabase<ModelList<
         else
             instance = this;
 
-        this.name = "Clienti";
+        this.name = "Clients";
         this.databaseType = t;
         if(t == DatabaseConnection.DatabaseType.CSV)
-            this.tableName = "Clienti.csv";
+            this.tableName = "Clients.csv";
         else if(t == DatabaseConnection.DatabaseType.ORACLE)
-            this.tableName = "CLIENTI";
+            this.tableName = "CLIENTS";
         else if(t == DatabaseConnection.DatabaseType.INMEMORY)
             this.tableName = "client";
     }
@@ -101,10 +101,10 @@ public class ClientModel extends Model implements LinkModelToDatabase<ModelList<
 
         while(rs.next()){
             InnerClientModel model = new InnerClientModel();
-            model.IDUtilizator = rs.getInt("IDUtilizator");
-            model.DataNasterii = rs.getDate("DataNasterii");
-            model.IDTip = rs.getInt("IDTip");
-            model.NumeClient = rs.getString("NumeClient");
+            model.UserID = rs.getInt("UserID");
+            model.BirthDate = rs.getDate("BirthDate");
+            model.TypeID = rs.getInt("TypeID");
+            model.SurnameClient = rs.getString("SurnameClient");
 
             this.modelList.add(model);
         }
@@ -116,35 +116,35 @@ public class ClientModel extends Model implements LinkModelToDatabase<ModelList<
         Map<String, String> tables = null;
         if(databaseType == DatabaseConnection.DatabaseType.CSV) {
             tables = new HashMap<>();
-            tables.put("CLIENTI", "Clienti.csv");
-            tables.put("TIPCLIENTI", "TipClient.csv");
-            tables.put("UTILIZATORI", "Utilizatori.csv");
+            tables.put("CLIENTS", "Clients.csv");
+            tables.put("CLIENTTYPEI", "ClientType.csv");
+            tables.put("USERS", "Users.csv");
         } else if(databaseType == DatabaseConnection.DatabaseType.ORACLE) {
             tables = new HashMap<>();
-            tables.put("CLIENTI", "CLIENTI");
-            tables.put("TIPCLIENTI", "TIPCLIENT");
-            tables.put("UTILIZATORI", "UTILIZATORI");
+            tables.put("CLIENTS", "CLIENTS");
+            tables.put("CLIENTTYPEI", "CLIENTTYPE");
+            tables.put("USERS", "USERS");
         } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
             tables = new HashMap<>();
-            tables.put("CLIENTI", "client");
-            tables.put("TIPCLIENTI", "client_type");
-            tables.put("UTILIZATORI", "user");
+            tables.put("CLIENTS", "client");
+            tables.put("CLIENTTYPEI", "client_type");
+            tables.put("USERS", "user");
         }
 
 
-        ResultSet clienti = db.getAllTableData(tables.get("CLIENTI"));
-        ResultSet tipClienti = db.getAllTableData(tables.get("TIPCLIENTI"));
-        ResultSet utilizatori = db.getAllTableData(tables.get("UTILIZATORI"));
+        ResultSet clienti = db.getAllTableData(tables.get("CLIENTS"));
+        ResultSet tipClients = db.getAllTableData(tables.get("CLIENTTYPEI"));
+        ResultSet utilizatori = db.getAllTableData(tables.get("USERS"));
 
         Map<Integer, String> typeMap = new HashMap<>();
         Map<Integer, Double> discountMap = new HashMap<>();
-        while(tipClienti.next()){
-            typeMap.put(tipClienti.getInt("IDTIP"), tipClienti.getString("DENUMIRE"));
-            discountMap.put(tipClienti.getInt("IDTIP"), tipClienti.getDouble("DISCOUNT"));
+        while(tipClients.next()){
+            typeMap.put(tipClients.getInt("TYPEID"), tipClients.getString("NAME"));
+            discountMap.put(tipClients.getInt("TYPEID"), tipClients.getDouble("DISCOUNT"));
         }
         Map<Integer, String> userMap = new HashMap<>();
         while(utilizatori.next()){
-            userMap.put(utilizatori.getInt("IDUTILIZATOR"), utilizatori.getString("NUME") + " " + utilizatori.getString("PRENUME"));
+            userMap.put(utilizatori.getInt("USERID"), utilizatori.getString("SURNAME") + " " + utilizatori.getString("FIRSTNAME"));
         }
 
         // Add fields to cameras
@@ -152,20 +152,20 @@ public class ClientModel extends Model implements LinkModelToDatabase<ModelList<
         while(clienti.next()) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             InnerClientModel model = new InnerClientModel();
-            model.IDUtilizator = clienti.getInt("IDUtilizator");
+            model.UserID = clienti.getInt("UserID");
             try {
-                model.DataNasterii = new Date(sdf.parse(clienti.getString("DataNasterii")).getTime());
+                model.BirthDate = new Date(sdf.parse(clienti.getString("BirthDate")).getTime());
             } catch (Exception ex) {
-                model.DataNasterii = null;
+                model.BirthDate = null;
             }
-            model.IDTip = clienti.getInt("IDTip");
-            model.DenumireTip = typeMap.get(clienti.getInt("IDTip"));
+            model.TypeID = clienti.getInt("TypeID");
+            model.NameTip = typeMap.get(clienti.getInt("TypeID"));
             try {
-                model.DiscountTip = discountMap.get(clienti.getInt("IDTip"));
+                model.DiscountTip = discountMap.get(clienti.getInt("TypeID"));
             } catch (Exception ex) {
                 model.DiscountTip = 0.0;
             }
-            model.NumeClient = userMap.get(clienti.getInt("IDUtilizator"));
+            model.SurnameClient = userMap.get(clienti.getInt("UserID"));
 
             this.modelList.add(model);
         }
@@ -183,15 +183,15 @@ public class ClientModel extends Model implements LinkModelToDatabase<ModelList<
     public void updateData(ModelList<InnerClientModel> oneRow) throws Exception {
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         Map<String, String> set = new HashMap<>();
-        set.put("IDUtilizator", "'" + oneRow.get(0).IDUtilizator + "'");
+        set.put("UserID", "'" + oneRow.get(0).UserID + "'");
         if(databaseType == DatabaseConnection.DatabaseType.ORACLE)
-            set.put("DataNasterii", "TO_DATE('" + oneRow.get(0).DataNasterii + "', 'YYYY-MM-DD HH24:MI:SS')");
+            set.put("BirthDate", "TO_DATE('" + oneRow.get(0).BirthDate + "', 'YYYY-MM-DD HH24:MI:SS')");
         else if(databaseType == DatabaseConnection.DatabaseType.CSV){
-            set.put("DataNasterii", oneRow.get(0).DataNasterii + "");
+            set.put("BirthDate", oneRow.get(0).BirthDate + "");
         }
 
         Map<String, String> where = new HashMap<>();
-        where.put("IDUtilizator", String.valueOf(oneRow.get(0).IDUtilizator));
+        where.put("UserID", String.valueOf(oneRow.get(0).UserID));
 
         db.update(this.tableName, set, where);
         try{
@@ -199,7 +199,7 @@ public class ClientModel extends Model implements LinkModelToDatabase<ModelList<
         } catch (Exception ex) {
             System.out.println("Error logging to CSV: " + ex.getMessage());
         }
-//        db.update("UPDATE " + this.tableName + " SET MARCA = '" + oneRow.get(0).Marca + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRET = " + oneRow.get(0).Pret + ", PRETINCHIRIERE = " + oneRow.get(0).PretInchiriere + ", ANFABRICATIE = " + oneRow.get(0).AnFabricatie + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
+//        db.update("UPDATE " + this.tableName + " SET BRAND = '" + oneRow.get(0).Brand + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRICE = " + oneRow.get(0).Price + ", RENTALPRICE = " + oneRow.get(0).RentalPrice + ", MANUFACTURINGYEAR = " + oneRow.get(0).ManufacturingYear + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
     }
 
     @Override
@@ -207,7 +207,7 @@ public class ClientModel extends Model implements LinkModelToDatabase<ModelList<
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
 
         Map<String, String> where = new HashMap<>();
-        where.put("IDUtilizator", row.get(0).IDUtilizator + "");
+        where.put("UserID", row.get(0).UserID + "");
         db.delete(this.tableName, where);
         try{
             logger.log("ClientModel delete data");
@@ -264,13 +264,13 @@ public class ClientModel extends Model implements LinkModelToDatabase<ModelList<
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         List<Pair<String, String>> values = new ArrayList<>();
-        values.add(new Pair<>("IDUTILIZATOR", row.IDUtilizator + ""));
+        values.add(new Pair<>("USERID", row.UserID + ""));
         if(databaseType == DatabaseConnection.DatabaseType.ORACLE)
-            values.add(new Pair<String, String>("DATANASTERII", "TO_DATE('" + sdf.format(row.DataNasterii) + "', 'YYYY-MM-DD HH24:MI:SS')"));
+            values.add(new Pair<String, String>("BIRTHDATE", "TO_DATE('" + sdf.format(row.BirthDate) + "', 'YYYY-MM-DD HH24:MI:SS')"));
         else if(databaseType == DatabaseConnection.DatabaseType.CSV){
-            values.add(new Pair<String, String>("DATANASTERII", sdf.format(row.DataNasterii) + ""));
+            values.add(new Pair<String, String>("BIRTHDATE", sdf.format(row.BirthDate) + ""));
         }
-        values.add(new Pair<>("IDTIP", row.IDTip + ""));
+        values.add(new Pair<>("TYPEID", row.TypeID + ""));
 
 
         db.insert(this.tableName, values);

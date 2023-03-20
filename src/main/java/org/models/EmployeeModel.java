@@ -17,21 +17,21 @@ import java.util.Map;
 
 public class EmployeeModel extends Model implements LinkModelToDatabase<ModelList<EmployeeModel.InnerEmployeeModel>, EmployeeModel.InnerEmployeeModel> {
     public static class InnerEmployeeModel extends AbstractInnerModel implements Comparable<InnerEmployeeModel> {
-        public int IDUtilizator;
-        public LocalDateTime DataNasterii;
-        public LocalDateTime DataAngajarii;
+        public int UserID;
+        public LocalDateTime BirthDate;
+        public LocalDateTime HireDate;
         public int IDManager;
-        public int IDSalariu;
-        public int Salariu;
-        public String NumeAngajat;
-        public String NumeManager;
+        public int SalaryID;
+        public int Salary;
+        public String SurnameAngajat;
+        public String SurnameManager;
 
         @Override
         public int compareTo(InnerEmployeeModel o) {
-            return this.IDUtilizator - o.IDUtilizator;
+            return this.UserID - o.UserID;
         }
     }
-    private String tableName = "ANGAJATI";
+    private String tableName = "EMPLOYEE";
 
     private static EmployeeModel instance = null;
     private ModelList<InnerEmployeeModel> modelList = null;
@@ -51,20 +51,20 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
         this.databaseType = databaseType;
 
         if(databaseType == DatabaseConnection.DatabaseType.CSV){
-            this.tableName = "Angajati.csv";
+            this.tableName = "Employee.csv";
         } else if (databaseType == DatabaseConnection.DatabaseType.ORACLE){
-            this.tableName = "ANGAJATI";
+            this.tableName = "EMPLOYEE";
         } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
             this.tableName = "employee";
         }
     }
 
     public DefaultTableModel getTableModel() {
-        String[] columns = {"IDUtilizator", "DataNasterii", "DataAngajarii", "IDManager", "IDSalariu", "Salariu", "NumeAngajat", "NumeManager"};
+        String[] columns = {"UserID", "BirthDate", "HireDate", "IDManager", "SalaryID", "Salary", "SurnameAngajat", "SurnameManager"};
 
         DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
         for(InnerEmployeeModel model : this.modelList.getList()){
-            Object[] obj = {model.IDUtilizator, model.DataNasterii, model.DataAngajarii, model.IDManager, model.IDSalariu, model.Salariu, model.NumeAngajat, model.NumeManager};
+            Object[] obj = {model.UserID, model.BirthDate, model.HireDate, model.IDManager, model.SalaryID, model.Salary, model.SurnameAngajat, model.SurnameManager};
             tableModel.addRow(obj);
         }
 
@@ -79,7 +79,7 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
         else
             instance = this;
 
-        this.name = "Angajati";
+        this.name = "Employee";
         this.databaseType = DatabaseConnection.DatabaseType.ORACLE;
     }
 
@@ -90,12 +90,12 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
         else
             instance = this;
 
-        this.name = "Angajati";
+        this.name = "Employee";
         this.databaseType = t;
         if(t == DatabaseConnection.DatabaseType.CSV)
-            this.tableName = "Angajati.csv";
+            this.tableName = "Employee.csv";
         else if(t == DatabaseConnection.DatabaseType.ORACLE)
-            this.tableName = "ANGAJATI";
+            this.tableName = "EMPLOYEE";
         else if(t == DatabaseConnection.DatabaseType.INMEMORY)
             this.tableName = "employee";
     }
@@ -106,14 +106,14 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
 
         while(rs.next()){
             InnerEmployeeModel model = new InnerEmployeeModel();
-            model.IDUtilizator = rs.getInt("IDUTILIZATOR");
-            model.DataNasterii = LocalDateTime.parse(rs.getString("DATANASTERII"));
-            model.DataAngajarii = LocalDateTime.parse(rs.getString("DATAANGAJARII"));
+            model.UserID = rs.getInt("USERID");
+            model.BirthDate = LocalDateTime.parse(rs.getString("BIRTHDATE"));
+            model.HireDate = LocalDateTime.parse(rs.getString("HIREDATE"));
             model.IDManager = rs.getInt("IDMANAGER");
-            model.IDSalariu = rs.getInt("IDSALARIU");
-            model.Salariu = rs.getInt("SALARIU");
-            model.NumeAngajat = rs.getString("NUMEANGAJAT");
-            model.NumeManager = rs.getString("NUMEMANAGER");
+            model.SalaryID = rs.getInt("SALARYID");
+            model.Salary = rs.getInt("SALARY");
+            model.SurnameAngajat = rs.getString("SURNAMEANGAJAT");
+            model.SurnameManager = rs.getString("SURNAMEMANAGER");
 
             this.modelList.add(model);
         }
@@ -125,51 +125,61 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
         Map<String, String> tables = null;
         if(databaseType == DatabaseConnection.DatabaseType.CSV) {
             tables = new HashMap<>();
-            tables.put("ANGAJATI", "Angajati.csv");
-            tables.put("SALARIU", "Salariu.csv");
-            tables.put("UTILIZATORI", "Utilizatori.csv");
+            tables.put("EMPLOYEE", "Employee.csv");
+            tables.put("SALARY", "Salary.csv");
+            tables.put("USERS", "Users.csv");
         } else if(databaseType == DatabaseConnection.DatabaseType.ORACLE){
             tables = new HashMap<>();
-            tables.put("ANGAJATI", "ANGAJATI");
-            tables.put("SALARIU", "SALARIU");
-            tables.put("UTILIZATORI", "UTILIZATORI");
+            tables.put("EMPLOYEE", "EMPLOYEE");
+            tables.put("SALARY", "SALARY");
+            tables.put("USERS", "USERS");
         } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
             tables = new HashMap<>();
-            tables.put("ANGAJATI", "employee");
-            tables.put("SALARIU", "salary");
-            tables.put("UTILIZATORI", "user");
+            tables.put("EMPLOYEE", "employee");
+            tables.put("SALARY", "salary");
+            tables.put("USERS", "user");
         }
 
 
-        ResultSet angajati = db.getAllTableData(tables.get("ANGAJATI"));
-        ResultSet salarii = db.getAllTableData(tables.get("SALARIU"));
-        ResultSet utilizatori = db.getAllTableData(tables.get("UTILIZATORI"));
+        ResultSet angajati = db.getAllTableData(tables.get("EMPLOYEE"));
+        ResultSet salarii = db.getAllTableData(tables.get("SALARY"));
+        ResultSet utilizatori = db.getAllTableData(tables.get("USERS"));
 
-        Map<Integer, Integer> salariuMap = new HashMap<>();
+        Map<Integer, Integer> salaryMap = new HashMap<>();
         while(salarii.next()){
-            salariuMap.put(salarii.getInt("IDSALARIU"), salarii.getInt("IDSALARIU"));
+            salaryMap.put(salarii.getInt("SALARYID"), salarii.getInt("SALARYID"));
         }
 
         Map<Integer, String> userMap = new HashMap<>();
         while(utilizatori.next()){
-            userMap.put(utilizatori.getInt("IDUTILIZATOR"), utilizatori.getString("NUME") + " " + utilizatori.getString("PRENUME"));
+            userMap.put(utilizatori.getInt("USERID"), utilizatori.getString("SURNAME") + " " + utilizatori.getString("FIRSTNAME"));
         }
 
         // Add fields to cameras
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+
         this.modelList = new ModelList<>(true);
         while(angajati.next()) {
             InnerEmployeeModel model = new InnerEmployeeModel();
-            model.IDUtilizator = angajati.getInt("IDUTILIZATOR");
+            model.UserID = angajati.getInt("USERID");
             try {
-                model.DataNasterii = LocalDateTime.parse(angajati.getString("DATANASTERII"), formatter);
+                model.BirthDate = LocalDateTime.parse(angajati.getString("BIRTHDATE"), formatter);
             } catch (Exception ex){
-                model.DataNasterii = null;
+                try {
+                    model.BirthDate = LocalDateTime.parse(angajati.getString("BIRTHDATE"), formatter2);
+                } catch (Exception ex2){
+                    model.BirthDate = null;
+                }
             }
             try {
-                model.DataAngajarii = LocalDateTime.parse(angajati.getString("DATAANGAJARII"), formatter);
+                model.HireDate = LocalDateTime.parse(angajati.getString("HIREDATE"), formatter);
             } catch (Exception ex){
-                model.DataAngajarii = null;
+                try {
+                    model.HireDate = LocalDateTime.parse(angajati.getString("HIREDATE"), formatter2);
+                } catch (Exception ex2){
+                    model.HireDate = null;
+                }
             }
             String manager = angajati.getString("IDMANAGER");
             if(manager == null || manager == ""){
@@ -177,21 +187,21 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
             } else {
                 model.IDManager = Integer.parseInt(manager);
             }
-            model.IDSalariu = angajati.getInt("IDSALARIU");
+            model.SalaryID = angajati.getInt("SALARYID");
             try {
-                model.Salariu = salariuMap.get(model.IDSalariu);
+                model.Salary = salaryMap.get(model.SalaryID);
             } catch (Exception ex){
-                model.Salariu = 0;
+                model.Salary = 0;
             }
             try {
-                model.NumeAngajat = userMap.get(model.IDUtilizator);
+                model.SurnameAngajat = userMap.get(model.UserID);
             } catch (Exception ex){
-                model.NumeAngajat = "";
+                model.SurnameAngajat = "";
             }
             try{
-            model.NumeManager = userMap.get(model.IDManager);
+            model.SurnameManager = userMap.get(model.IDManager);
             } catch (Exception ex){
-                model.NumeManager = "";
+                model.SurnameManager = "";
             }
 
             this.modelList.add(model);
@@ -211,22 +221,26 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         Map<String, String> set = new HashMap<>();
-        set.put("IDUTILIZATOR", "'" + oneRow.get(0).IDUtilizator + "'");
+        set.put("USERID", "'" + oneRow.get(0).UserID + "'");
         if(databaseType == DatabaseConnection.DatabaseType.ORACLE)
-            set.put("DATANASTERII", "TO_DATE('" + oneRow.get(0).DataNasterii.format(dtf) + "', 'YYYY-MM-DD HH24:MI:SS')");
+            set.put("BIRTHDATE", "TO_DATE('" + oneRow.get(0).BirthDate.format(dtf) + "', 'YYYY-MM-DD HH24:MI:SS')");
         else if(databaseType == DatabaseConnection.DatabaseType.CSV){
-            set.put("DATANASTERII", oneRow.get(0).DataNasterii.format(dtf) + "");
+            set.put("BIRTHDATE", oneRow.get(0).BirthDate.format(dtf) + "");
+        } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
+            set.put("BIRTHDATE", oneRow.get(0).BirthDate.format(dtf) + "");
         }
 
         if(databaseType == DatabaseConnection.DatabaseType.ORACLE)
-            set.put("DATAANGAJARII", "TO_DATE('" + oneRow.get(0).DataAngajarii.format(dtf) + "', 'YYYY-MM-DD HH24:MI:SS')");
+            set.put("HIREDATE", "TO_DATE('" + oneRow.get(0).HireDate.format(dtf) + "', 'YYYY-MM-DD HH24:MI:SS')");
         else if(databaseType == DatabaseConnection.DatabaseType.CSV){
-            set.put("DATAANGAJARII", oneRow.get(0).DataAngajarii.format(dtf) + "");
+            set.put("HIREDATE", oneRow.get(0).HireDate.format(dtf) + "");
+        } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
+            set.put("HIREDATE", oneRow.get(0).HireDate.format(dtf) + "");
         }
 
 
         Map<String, String> where = new HashMap<>();
-        where.put("IDUtilizator", String.valueOf(oneRow.get(0).IDUtilizator));
+        where.put("UserID", String.valueOf(oneRow.get(0).UserID));
 
         db.update(this.tableName, set, where);
         try{
@@ -234,7 +248,7 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
         } catch (Exception ex) {
             System.out.println("Error logging to CSV: " + ex.getMessage());
         }
-//        db.update("UPDATE " + this.tableName + " SET MARCA = '" + oneRow.get(0).Marca + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRET = " + oneRow.get(0).Pret + ", PRETINCHIRIERE = " + oneRow.get(0).PretInchiriere + ", ANFABRICATIE = " + oneRow.get(0).AnFabricatie + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
+//        db.update("UPDATE " + this.tableName + " SET BRAND = '" + oneRow.get(0).Brand + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRICE = " + oneRow.get(0).Price + ", RENTALPRICE = " + oneRow.get(0).RentalPrice + ", MANUFACTURINGYEAR = " + oneRow.get(0).ManufacturingYear + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
     }
 
     @Override
@@ -242,7 +256,7 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
 
         Map<String, String> where = new HashMap<>();
-        where.put("IDUTILIZATOR", row.get(0).IDUtilizator + "");
+        where.put("USERID", row.get(0).UserID + "");
         db.delete(this.tableName, where);
         try{
             logger.log("EmployeeModel delete data");
@@ -300,21 +314,25 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         List<Pair<String, String>> values = new ArrayList<>();
-        values.add(new Pair<String, String>("IDUTILIZATOR", row.IDUtilizator + ""));
+        values.add(new Pair<String, String>("USERID", row.UserID + ""));
         if(databaseType == DatabaseConnection.DatabaseType.ORACLE)
-            values.add(new Pair<String, String>("DATANASTERII", "TO_DATE('" + row.DataNasterii.format(dtf) + "', 'YYYY-MM-DD HH24:MI:SS')"));
+            values.add(new Pair<String, String>("BIRTHDATE", "TO_DATE('" + row.BirthDate.format(dtf) + "', 'YYYY-MM-DD HH24:MI:SS')"));
         else if(databaseType == DatabaseConnection.DatabaseType.CSV){
-            values.add(new Pair<String, String>("DATANASTERII", row.DataNasterii.format(dtf) + ""));
+            values.add(new Pair<String, String>("BIRTHDATE", row.BirthDate.format(dtf) + ""));
+        } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
+            values.add(new Pair<String, String>("BIRTHDATE", row.BirthDate.format(dtf) + ""));
         }
 
         if(databaseType == DatabaseConnection.DatabaseType.ORACLE)
-            values.add(new Pair<String, String>("DATAANGAJARII", "TO_DATE('" + row.DataAngajarii.format(dtf) + "', 'YYYY-MM-DD HH24:MI:SS')"));
+            values.add(new Pair<String, String>("HIREDATE", "TO_DATE('" + row.HireDate.format(dtf) + "', 'YYYY-MM-DD HH24:MI:SS')"));
         else if(databaseType == DatabaseConnection.DatabaseType.CSV){
-            values.add(new Pair<String, String>("DATAANGAJARII", row.DataAngajarii.format(dtf) + ""));
+            values.add(new Pair<String, String>("HIREDATE", row.HireDate.format(dtf) + ""));
+        } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
+            values.add(new Pair<String, String>("HIREDATE", row.HireDate.format(dtf) + ""));
         }
 
         values.add(new Pair<>("IDMANAGER", row.IDManager + ""));
-        values.add(new Pair<>("IDSALARIU", row.IDSalariu + ""));
+        values.add(new Pair<>("SALARYID", row.SalaryID + ""));
 
         db.insert(this.tableName, values);
         try{

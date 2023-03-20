@@ -95,7 +95,552 @@ public class InMemory extends DatabaseConnection {
 
     @Override
     public void update(String tableName, Map<String, String> set, Map<String, String> where) throws Exception {
-        return;
+        for(String key : set.keySet()) {
+            if(set.get(key).substring(0, 1).equals("'") && set.get(key).substring(set.get(key).length() - 1).equals("'")) {
+                set.put(key, set.get(key).substring(1, set.get(key).length() - 1));
+            }
+        }
+
+        if(tableName.equals("camera")) {
+            for(CameraModel.InnerCameraModel data : cameras.getList()) {
+                int counter = 0;
+                for(String key : where.keySet()) {
+                    for(Field f : data.getClass().getDeclaredFields()) {
+                        f.setAccessible(true);
+                        if(f.getName().toLowerCase().replace("_", "").equals(key.toLowerCase())) {
+                            if(f.get(data).toString().equals(where.get(key))) {
+                                ++counter;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if(counter == where.size()){
+                    for(String key : set.keySet()) {
+                        for(Field f : data.getClass().getDeclaredFields()) {
+                            f.setAccessible(true);
+                            if(f.getName().toLowerCase().replace("_", "").equals(key.toLowerCase())) {
+                                if(f.getType().equals(String.class)) {
+                                    f.set(data, set.get(key));
+                                    break;
+                                } else if(f.getType().equals(int.class)) {
+                                    f.set(data, Integer.parseInt(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(double.class)) {
+                                    f.set(data, Double.parseDouble(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(float.class)) {
+                                    f.set(data, Float.parseFloat(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(boolean.class)) {
+                                    f.set(data, Boolean.parseBoolean(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(LocalDateTime.class)) {
+                                    f.set(data, LocalDateTime.parse(set.get(key), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                                    break;
+                                } else if(f.getType().equals(Date.class)) {
+                                    f.set(data, new SimpleDateFormat("yyyy-MM-dd").parse(set.get(key)));
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    break;
+                }
+            }
+        } else if(tableName.equals("camera_type")) {
+            for(CameraTypeModel.InnerCameraTypeModel data : cameraTypes.getList()) {
+                int counter = 0;
+                for(String key : where.keySet()) {
+                    for(Field f : data.getClass().getDeclaredFields()) {
+                        f.setAccessible(true);
+                        if(f.getName().toLowerCase().replace("_", "").equals(key.toLowerCase())) {
+                            if(f.get(data).toString().equals(where.get(key))) {
+                                ++counter;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if(counter == where.size()){
+                    for(String key : set.keySet()) {
+                        for(Field f : data.getClass().getDeclaredFields()) {
+                            f.setAccessible(true);
+                            if(f.getName().toLowerCase().replace("_", "").equals(key.toLowerCase())) {
+                                if(f.getType().equals(String.class)) {
+                                    f.set(data, set.get(key));
+                                    break;
+                                } else if(f.getType().equals(int.class)) {
+                                    f.set(data, Integer.parseInt(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(double.class)) {
+                                    f.set(data, Double.parseDouble(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(float.class)) {
+                                    f.set(data, Float.parseFloat(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(boolean.class)) {
+                                    f.set(data, Boolean.parseBoolean(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(LocalDateTime.class)) {
+                                    f.set(data, LocalDateTime.parse(set.get(key), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                                    break;
+                                } else if(f.getType().equals(Date.class)) {
+                                    f.set(data, new SimpleDateFormat("yyyy-MM-dd").parse(set.get(key)));
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    break;
+                }
+            }
+        } else if(tableName.equals("client")) {
+            for(ClientModel.InnerClientModel data : clients.getList()) {
+                int counter = 0;
+                for(String key : where.keySet()) {
+                    for(Field f : data.getClass().getDeclaredFields()) {
+                        f.setAccessible(true);
+                        if(f.getName().toLowerCase().replace("_", "").equals(key.toLowerCase())) {
+                            if(f.get(data).toString().equals(where.get(key))) {
+                                ++counter;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if(counter == where.size()){
+                    for(String key : set.keySet()) {
+                        for(Field f : data.getClass().getDeclaredFields()) {
+                            f.setAccessible(true);
+                            if(f.getName().toLowerCase().replace("_", "").equals(key.toLowerCase())) {
+                                if(f.getType().equals(String.class)) {
+                                    f.set(data, set.get(key));
+                                    break;
+                                } else if(f.getType().equals(int.class)) {
+                                    f.set(data, Integer.parseInt(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(double.class)) {
+                                    f.set(data, Double.parseDouble(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(float.class)) {
+                                    f.set(data, Float.parseFloat(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(boolean.class)) {
+                                    f.set(data, Boolean.parseBoolean(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(LocalDateTime.class)) {
+                                    f.set(data, LocalDateTime.parse(set.get(key), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                                    break;
+                                } else if(f.getType().equals(Date.class)) {
+                                    f.set(data, new SimpleDateFormat("yyyy-MM-dd").parse(set.get(key)));
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    break;
+                }
+            }
+        } else if(tableName.equals("client_type")) {
+            for(ClientTypeModel.InnerClientTypeModel data : clientTypes.getList()) {
+                int counter = 0;
+                for(String key : where.keySet()) {
+                    for(Field f : data.getClass().getDeclaredFields()) {
+                        f.setAccessible(true);
+                        if(f.getName().toLowerCase().replace("_", "").equals(key.toLowerCase())) {
+                            if(f.get(data).toString().equals(where.get(key))) {
+                                ++counter;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if(counter == where.size()){
+                    for(String key : set.keySet()) {
+                        for(Field f : data.getClass().getDeclaredFields()) {
+                            f.setAccessible(true);
+                            if(f.getName().toLowerCase().replace("_", "").equals(key.toLowerCase())) {
+                                if(f.getType().equals(String.class)) {
+                                    f.set(data, set.get(key));
+                                    break;
+                                } else if(f.getType().equals(int.class)) {
+                                    f.set(data, Integer.parseInt(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(double.class)) {
+                                    f.set(data, Double.parseDouble(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(float.class)) {
+                                    f.set(data, Float.parseFloat(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(boolean.class)) {
+                                    f.set(data, Boolean.parseBoolean(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(LocalDateTime.class)) {
+                                    f.set(data, LocalDateTime.parse(set.get(key), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                                    break;
+                                } else if(f.getType().equals(Date.class)) {
+                                    f.set(data, new SimpleDateFormat("yyyy-MM-dd").parse(set.get(key)));
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    break;
+                }
+            }
+        } else if(tableName.equals("employee")) {
+            for(EmployeeModel.InnerEmployeeModel data : employees.getList()) {
+                int counter = 0;
+                for(String key : where.keySet()) {
+                    for(Field f : data.getClass().getDeclaredFields()) {
+                        f.setAccessible(true);
+                        if(f.getName().toLowerCase().replace("_", "").equals(key.toLowerCase())) {
+                            if(f.get(data).toString().equals(where.get(key))) {
+                                ++counter;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if(counter == where.size()){
+                    for(String key : set.keySet()) {
+                        for(Field f : data.getClass().getDeclaredFields()) {
+                            f.setAccessible(true);
+                            if(f.getName().toLowerCase().replace("_", "").equals(key.toLowerCase())) {
+                                if(f.getType().equals(String.class)) {
+                                    f.set(data, set.get(key));
+                                    break;
+                                } else if(f.getType().equals(int.class)) {
+                                    f.set(data, Integer.parseInt(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(double.class)) {
+                                    f.set(data, Double.parseDouble(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(float.class)) {
+                                    f.set(data, Float.parseFloat(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(boolean.class)) {
+                                    f.set(data, Boolean.parseBoolean(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(LocalDateTime.class)) {
+                                    f.set(data, LocalDateTime.parse(set.get(key), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                                    break;
+                                } else if(f.getType().equals(Date.class)) {
+                                    f.set(data, new SimpleDateFormat("yyyy-MM-dd").parse(set.get(key)));
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    break;
+                }
+            }
+        } else if(tableName.equals("format")) {
+            for(FormatModel.InnerFormatModel data : formats.getList()) {
+                int counter = 0;
+                for(String key : where.keySet()) {
+                    for(Field f : data.getClass().getDeclaredFields()) {
+                        f.setAccessible(true);
+                        if(f.getName().toLowerCase().replace("_", "").equals(key.toLowerCase())) {
+                            if(f.get(data).toString().equals(where.get(key))) {
+                                ++counter;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if(counter == where.size()){
+                    for(String key : set.keySet()) {
+                        for(Field f : data.getClass().getDeclaredFields()) {
+                            f.setAccessible(true);
+                            if(f.getName().toLowerCase().replace("_", "").equals(key.toLowerCase())) {
+                                if(f.getType().equals(String.class)) {
+                                    f.set(data, set.get(key));
+                                    break;
+                                } else if(f.getType().equals(int.class)) {
+                                    f.set(data, Integer.parseInt(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(double.class)) {
+                                    f.set(data, Double.parseDouble(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(float.class)) {
+                                    f.set(data, Float.parseFloat(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(boolean.class)) {
+                                    f.set(data, Boolean.parseBoolean(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(LocalDateTime.class)) {
+                                    f.set(data, LocalDateTime.parse(set.get(key), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                                    break;
+                                } else if(f.getType().equals(Date.class)) {
+                                    f.set(data, new SimpleDateFormat("yyyy-MM-dd").parse(set.get(key)));
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    break;
+                }
+            }
+        } else if(tableName.equals("mount")) {
+            for(MountModel.InnerMountModel data : mounts.getList()) {
+                int counter = 0;
+                for(String key : where.keySet()) {
+                    for(Field f : data.getClass().getDeclaredFields()) {
+                        f.setAccessible(true);
+                        if(f.getName().toLowerCase().replace("_", "").equals(key.toLowerCase())) {
+                            if(f.get(data).toString().equals(where.get(key))) {
+                                ++counter;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if(counter == where.size()){
+                    for(String key : set.keySet()) {
+                        for(Field f : data.getClass().getDeclaredFields()) {
+                            f.setAccessible(true);
+                            if(f.getName().toLowerCase().replace("_", "").equals(key.toLowerCase())) {
+                                if(f.getType().equals(String.class)) {
+                                    f.set(data, set.get(key));
+                                    break;
+                                } else if(f.getType().equals(int.class)) {
+                                    f.set(data, Integer.parseInt(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(double.class)) {
+                                    f.set(data, Double.parseDouble(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(float.class)) {
+                                    f.set(data, Float.parseFloat(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(boolean.class)) {
+                                    f.set(data, Boolean.parseBoolean(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(LocalDateTime.class)) {
+                                    f.set(data, LocalDateTime.parse(set.get(key), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                                    break;
+                                } else if(f.getType().equals(Date.class)) {
+                                    f.set(data, new SimpleDateFormat("yyyy-MM-dd").parse(set.get(key)));
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    break;
+                }
+            }
+        } else if(tableName.equals("objective")) {
+            for(ObjectiveModel.InnerObjectiveModel data : objectives.getList()) {
+                int counter = 0;
+                for(String key : where.keySet()) {
+                    for(Field f : data.getClass().getDeclaredFields()) {
+                        f.setAccessible(true);
+                        if(f.getName().toLowerCase().replace("_", "").equals(key.toLowerCase())) {
+                            if(f.get(data).toString().equals(where.get(key))) {
+                                ++counter;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if(counter == where.size()){
+                    for(String key : set.keySet()) {
+                        for(Field f : data.getClass().getDeclaredFields()) {
+                            f.setAccessible(true);
+                            if(f.getName().toLowerCase().replace("_", "").equals(key.toLowerCase())) {
+                                if(f.getType().equals(String.class)) {
+                                    f.set(data, set.get(key));
+                                    break;
+                                } else if(f.getType().equals(int.class)) {
+                                    f.set(data, Integer.parseInt(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(double.class)) {
+                                    f.set(data, Double.parseDouble(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(float.class)) {
+                                    f.set(data, Float.parseFloat(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(boolean.class)) {
+                                    f.set(data, Boolean.parseBoolean(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(LocalDateTime.class)) {
+                                    f.set(data, LocalDateTime.parse(set.get(key), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                                    break;
+                                } else if(f.getType().equals(Date.class)) {
+                                    f.set(data, new SimpleDateFormat("yyyy-MM-dd").parse(set.get(key)));
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    break;
+                }
+            }
+        } else if(tableName.equals("rent")) {
+            for(RentModel.InnerRentModel data : rents.getList()) {
+                int counter = 0;
+                for(String key : where.keySet()) {
+                    for(Field f : data.getClass().getDeclaredFields()) {
+                        f.setAccessible(true);
+                        if(f.getName().toLowerCase().replace("_", "").equals(key.toLowerCase())) {
+                            if(f.get(data).toString().equals(where.get(key))) {
+                                ++counter;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if(counter == where.size()){
+                    for(String key : set.keySet()) {
+                        for(Field f : data.getClass().getDeclaredFields()) {
+                            f.setAccessible(true);
+                            if(f.getName().toLowerCase().replace("_", "").equals(key.toLowerCase())) {
+                                if(f.getType().equals(String.class)) {
+                                    f.set(data, set.get(key));
+                                    break;
+                                } else if(f.getType().equals(int.class)) {
+                                    f.set(data, Integer.parseInt(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(double.class)) {
+                                    f.set(data, Double.parseDouble(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(float.class)) {
+                                    f.set(data, Float.parseFloat(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(boolean.class)) {
+                                    f.set(data, Boolean.parseBoolean(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(LocalDateTime.class)) {
+                                    f.set(data, LocalDateTime.parse(set.get(key), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                                    break;
+                                } else if(f.getType().equals(Date.class)) {
+                                    f.set(data, Date.valueOf(set.get(key)));
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    break;
+                }
+            }
+        } else if(tableName.equals("salary")) {
+            for(SalaryModel.InnerSalaryModel data : salaries.getList()) {
+                int counter = 0;
+                for(String key : where.keySet()) {
+                    for(Field f : data.getClass().getDeclaredFields()) {
+                        f.setAccessible(true);
+                        if(f.getName().toLowerCase().replace("_", "").equals(key.toLowerCase())) {
+                            if(f.get(data).toString().equals(where.get(key))) {
+                                ++counter;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if(counter == where.size()){
+                    for(String key : set.keySet()) {
+                        for(Field f : data.getClass().getDeclaredFields()) {
+                            f.setAccessible(true);
+                            if(f.getName().toLowerCase().replace("_", "").equals(key.toLowerCase())) {
+                                if(f.getType().equals(String.class)) {
+                                    f.set(data, set.get(key));
+                                    break;
+                                } else if(f.getType().equals(int.class)) {
+                                    f.set(data, Integer.parseInt(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(double.class)) {
+                                    f.set(data, Double.parseDouble(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(float.class)) {
+                                    f.set(data, Float.parseFloat(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(boolean.class)) {
+                                    f.set(data, Boolean.parseBoolean(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(LocalDateTime.class)) {
+                                    f.set(data, LocalDateTime.parse(set.get(key), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                                    break;
+                                } else if(f.getType().equals(Date.class)) {
+                                    f.set(data, new SimpleDateFormat("yyyy-MM-dd").parse(set.get(key)));
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    break;
+                }
+            }
+        } else if(tableName.equals("user")) {
+            for(UserModel.InnerUserModel data : users.getList()) {
+                int counter = 0;
+                for(String key : where.keySet()) {
+                    for(Field f : data.getClass().getDeclaredFields()) {
+                        f.setAccessible(true);
+                        if(f.getName().toLowerCase().replace("_", "").equals(key.toLowerCase())) {
+                            if(f.get(data).toString().equals(where.get(key))) {
+                                ++counter;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if(counter == where.size()){
+                    for(String key : set.keySet()) {
+                        for(Field f : data.getClass().getDeclaredFields()) {
+                            f.setAccessible(true);
+                            if(f.getName().toLowerCase().replace("_", "").equals(key.toLowerCase())) {
+                                if(f.getType().equals(String.class)) {
+                                    f.set(data, set.get(key));
+                                    break;
+                                } else if(f.getType().equals(int.class)) {
+                                    f.set(data, Integer.parseInt(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(double.class)) {
+                                    f.set(data, Double.parseDouble(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(float.class)) {
+                                    f.set(data, Float.parseFloat(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(boolean.class)) {
+                                    f.set(data, Boolean.parseBoolean(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(LocalDateTime.class)) {
+                                    f.set(data, LocalDateTime.parse(set.get(key), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                                    break;
+                                } else if(f.getType().equals(Date.class)) {
+                                    f.set(data, new SimpleDateFormat("yyyy-MM-dd").parse(set.get(key)));
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    break;
+                }
+            }
+        }
     }
 
     public ResultSet getResultSet(List<String> headers, List<List<Object>> data) throws Exception {
@@ -218,16 +763,22 @@ public class InMemory extends DatabaseConnection {
     @Override
     public void insert(String tableName, List<Pair<String, String>> values) throws Exception {
         List<String> headers = null;
+
+        for(Pair<String, String> p: values){
+            if(p.second.length() >= 2 && p.second.substring(0,1).equals("'") && p.second.substring(p.second.length()-1).equals("'"))
+                p.second = p.second.substring(1, p.second.length()-1);
+        }
+
         if (tableName.equals("camera_type")) {
-            // Get largest IDTip from cameraTypes
+            // Get largest TypeID from cameraTypes
             int idTip = 0;
             for (CameraTypeModel.InnerCameraTypeModel c : this.cameraTypes.getList()) {
-                if (c.IDTip > idTip)
-                    idTip = c.IDTip;
+                if (c.TypeID > idTip)
+                    idTip = c.TypeID;
             }
 
             for (Pair<String, String> p : values) {
-                if (p.first.toLowerCase().equals("idtip")) {
+                if (p.first.toLowerCase().equals("typeid")) {
                     p.second = String.valueOf(idTip + 1);
 
                     break;
@@ -301,12 +852,12 @@ public class InMemory extends DatabaseConnection {
         } else if (tableName.equals("format")) {
             int id = 0;
             for (FormatModel.InnerFormatModel c : this.formats.getList()) {
-                if (c.IDFormat > id)
-                    id = c.IDFormat;
+                if (c.FormatID > id)
+                    id = c.FormatID;
             }
 
             for (Pair<String, String> p : values) {
-                if (p.first.toLowerCase().equals("idformat")) {
+                if (p.first.toLowerCase().equals("formatid")) {
                     p.second = String.valueOf(id + 1);
                     break;
                 }
@@ -340,12 +891,12 @@ public class InMemory extends DatabaseConnection {
         } else if (tableName.equals("client")) {
             int id = 0;
             for (ClientModel.InnerClientModel c : this.clients.getList()) {
-                if (c.IDUtilizator > id)
-                    id = c.IDUtilizator;
+                if (c.UserID > id)
+                    id = c.UserID;
             }
 
             for (Pair<String, String> p : values) {
-                if (p.first.toLowerCase().equals("idutilizator")) {
+                if (p.first.toLowerCase().equals("userid")) {
                     p.second = String.valueOf(id + 1);
                     break;
                 }
@@ -392,12 +943,12 @@ public class InMemory extends DatabaseConnection {
         } else if (tableName.equals("mount")) {
             int id = 0;
             for (MountModel.InnerMountModel c : this.mounts.getList()) {
-                if (c.IDMontura > id)
-                    id = c.IDMontura;
+                if (c.MountID > id)
+                    id = c.MountID;
             }
 
             for (Pair<String, String> p : values) {
-                if (p.first.toLowerCase().equals("idmontura")) {
+                if (p.first.toLowerCase().equals("mountid")) {
                     p.second = String.valueOf(id + 1);
                     break;
                 }
@@ -431,12 +982,12 @@ public class InMemory extends DatabaseConnection {
         } else if (tableName.equals("client_type")) {
             int id = 0;
             for (ClientTypeModel.InnerClientTypeModel c : this.clientTypes.getList()) {
-                if (c.IDTip > id)
-                    id = c.IDTip;
+                if (c.TypeID > id)
+                    id = c.TypeID;
             }
 
             for (Pair<String, String> p : values) {
-                if (p.first.toLowerCase().equals("idtip")) {
+                if (p.first.toLowerCase().equals("typeid")) {
                     p.second = String.valueOf(id + 1);
                     break;
                 }
@@ -470,12 +1021,12 @@ public class InMemory extends DatabaseConnection {
         } else if (tableName.equals("user")) {
             int id = 0;
             for (UserModel.InnerUserModel c : this.users.getList()) {
-                if (c.IDUtilizator > id)
-                    id = c.IDUtilizator;
+                if (c.UserID > id)
+                    id = c.UserID;
             }
 
             for (Pair<String, String> p : values) {
-                if (p.first.toLowerCase().equals("idutilizator")) {
+                if (p.first.toLowerCase().equals("userid")) {
                     p.second = String.valueOf(id + 1);
                     break;
                 }
@@ -522,12 +1073,12 @@ public class InMemory extends DatabaseConnection {
         } else if (tableName.equals("employee")) {
             int id = 0;
             for (EmployeeModel.InnerEmployeeModel c : this.employees.getList()) {
-                if (c.IDUtilizator > id)
-                    id = c.IDUtilizator;
+                if (c.UserID > id)
+                    id = c.UserID;
             }
 
             for (Pair<String, String> p : values) {
-                if (p.first.toLowerCase().equals("idutilizator")) {
+                if (p.first.toLowerCase().equals("userid")) {
                     p.second = String.valueOf(id + 1);
                     break;
                 }
@@ -574,12 +1125,12 @@ public class InMemory extends DatabaseConnection {
         } else if (tableName.equals("salary")) {
             int id = 0;
             for (SalaryModel.InnerSalaryModel c : this.salaries.getList()) {
-                if (c.IDSalariu > id)
-                    id = c.IDSalariu;
+                if (c.SalaryID > id)
+                    id = c.SalaryID;
             }
 
             for (Pair<String, String> p : values) {
-                if (p.first.toLowerCase().equals("idsalariu")) {
+                if (p.first.toLowerCase().equals("salaryid")) {
                     p.second = String.valueOf(id + 1);
                     break;
                 }
@@ -626,12 +1177,12 @@ public class InMemory extends DatabaseConnection {
         } else if (tableName.equals("objective")) {
             int id = 0;
             for (ObjectiveModel.InnerObjectiveModel c : this.objectives.getList()) {
-                if (c.IDObiectiv > id)
-                    id = c.IDObiectiv;
+                if (c.ObjectiveID > id)
+                    id = c.ObjectiveID;
             }
 
             for (Pair<String, String> p : values) {
-                if (p.first.toLowerCase().equals("idobiectiv")) {
+                if (p.first.toLowerCase().equals("objectiveid")) {
                     p.second = String.valueOf(id + 1);
                     break;
                 }
@@ -657,10 +1208,9 @@ public class InMemory extends DatabaseConnection {
                             f.set(model, Boolean.parseBoolean(p.second));
                             break;
                         } else if (f.getType() == Date.class) {
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                             try {
-                                f.set(model, sdf.parse(p.second));
-                            } catch (ParseException e) {
+                                f.set(model, Date.valueOf(p.second));
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                             break;
@@ -677,7 +1227,7 @@ public class InMemory extends DatabaseConnection {
 
         } else if (tableName.equals("rent")) {
             for (Pair<String, String> p : values) {
-                if (p.first.toLowerCase().equals("datainchiriere")) {
+                if (p.first.toLowerCase().equals("rentdate")) {
                     p.second = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                     break;
                 }
@@ -687,7 +1237,7 @@ public class InMemory extends DatabaseConnection {
             RentModel.InnerRentModel model = new RentModel.InnerRentModel();
             for (Pair<String, String> p : values) {
                 for (Field f : model.getClass().getDeclaredFields()) {
-                    if (f.getName().toLowerCase().equals(p.first.toLowerCase())) {
+                    if (f.getName().toLowerCase().replace("_", "").equals(p.first.toLowerCase())) {
                         f.setAccessible(true);
                         // Cast p.second to f.getType()
                         if (f.getType() == String.class) {
@@ -703,10 +1253,9 @@ public class InMemory extends DatabaseConnection {
                             f.set(model, Boolean.parseBoolean(p.second));
                             break;
                         } else if (f.getType() == Date.class) {
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                             try {
-                                f.set(model, sdf.parse(p.second));
-                            } catch (ParseException e) {
+                                f.set(model, Date.valueOf(p.second));
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                             break;

@@ -14,27 +14,27 @@ import java.util.Map;
 
 public class CameraModel extends Model implements LinkModelToDatabase<ModelList<CameraModel.InnerCameraModel>, CameraModel.InnerCameraModel> {
     public static class InnerCameraModel extends AbstractInnerModel implements Comparable<InnerCameraModel> {
-        public String Marca;
+        public String Brand;
         public String ModelCamera;
-        public int AnFabricatie;
-        public double Pret;
-        public double PretInchiriere;
+        public int ManufacturingYear;
+        public double Price;
+        public double RentalPrice;
         public int IDCamera;
 
-        public String DenumireFormat;
-        public String LatimeFilm;
-        public String DenumireTip;
-        public String DenumireMontura;
-        public int IDFormat;
-        public int IDTip;
-        public int IDMontura;
+        public String NameFormat;
+        public String FilmWidth;
+        public String NameTip;
+        public String NameMount;
+        public int FormatID;
+        public int TypeID;
+        public int MountID;
 
         @Override
         public int compareTo(InnerCameraModel o) {
             return this.IDCamera - o.IDCamera;
         }
     }
-    private String tableName = "CAMERE";
+    private String tableName = "CAMERA";
 
     private static CameraModel instance = null;
     private ModelList<InnerCameraModel> modelList = null;
@@ -54,20 +54,20 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
         this.databaseType = databaseType;
 
         if(databaseType == DatabaseConnection.DatabaseType.CSV){
-            this.tableName = "Camere.csv";
+            this.tableName = "Camera.csv";
         } else if (databaseType == DatabaseConnection.DatabaseType.ORACLE){
-            this.tableName = "CAMERE";
+            this.tableName = "CAMERA";
         } else if (databaseType == DatabaseConnection.DatabaseType.INMEMORY){
             this.tableName = "camera";
         }
     }
 
     public DefaultTableModel getTableModel() {
-        String[] columns = {"IDCamera", "Marca", "ModelCamera", "AnFabricatie", "Pret", "PretInchiriere", "DenumireFormat", "LatimeFilm", "DenumireTip", "DenumireMontura"};
+        String[] columns = {"IDCamera", "Brand", "ModelCamera", "ManufacturingYear", "Price", "RentalPrice", "NameFormat", "FilmWidth", "NameTip", "NameMount"};
 
         DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
         for(InnerCameraModel model : this.modelList.getList()){
-            Object[] obj = {model.IDCamera, model.Marca, model.ModelCamera, model.AnFabricatie, model.Pret, model.PretInchiriere, model.DenumireFormat, model.LatimeFilm, model.DenumireTip, model.DenumireMontura};
+            Object[] obj = {model.IDCamera, model.Brand, model.ModelCamera, model.ManufacturingYear, model.Price, model.RentalPrice, model.NameFormat, model.FilmWidth, model.NameTip, model.NameMount};
             tableModel.addRow(obj);
         }
 
@@ -96,9 +96,9 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
         this.name = "Camera";
         this.databaseType = t;
         if(t == DatabaseConnection.DatabaseType.CSV)
-            this.tableName = "Camere.csv";
+            this.tableName = "Camera.csv";
         else if(t == DatabaseConnection.DatabaseType.ORACLE)
-            this.tableName = "CAMERE";
+            this.tableName = "CAMERA";
         else if(t == DatabaseConnection.DatabaseType.INMEMORY)
             this.tableName = "camera";
     }
@@ -108,19 +108,19 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
 
         while(rs.next()){
             InnerCameraModel model = new InnerCameraModel();
-            model.Marca = rs.getString("MARCA");
+            model.Brand = rs.getString("BRAND");
             model.ModelCamera = rs.getString("MODELCAMERA");
-            model.AnFabricatie = rs.getInt("ANFABRICATIE");
-            model.Pret = rs.getDouble("PRET");
-            model.PretInchiriere = rs.getDouble("PRETINCHIRIERE");
+            model.ManufacturingYear = rs.getInt("MANUFACTURINGYEAR");
+            model.Price = rs.getDouble("PRICE");
+            model.RentalPrice = rs.getDouble("RENTALPRICE");
             model.IDCamera = rs.getInt("IDCAMERA");
-            model.DenumireTip = rs.getString("DENUMIRETIP");
-            model.DenumireFormat = rs.getString("DENUMIREFORMAT");
-            model.LatimeFilm = rs.getString("LATIMEFILM");
-            model.DenumireMontura = rs.getString("DENUMIREMONTURA");
-            model.IDFormat = rs.getInt("IDFORMAT");
-            model.IDTip = rs.getInt("IDTIP");
-            model.IDMontura = rs.getInt("IDMONTURA");
+            model.NameTip = rs.getString("NAMETIP");
+            model.NameFormat = rs.getString("NAMEFORMAT");
+            model.FilmWidth = rs.getString("FILMWIDTH");
+            model.NameMount = rs.getString("NAMEMOUNT");
+            model.FormatID = rs.getInt("FORMATID");
+            model.TypeID = rs.getInt("TYPEID");
+            model.MountID = rs.getInt("MOUNTID");
 
             this.modelList.add(model);
         }
@@ -132,65 +132,65 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
         Map<String, String> tables = null;
         if(databaseType == DatabaseConnection.DatabaseType.CSV) {
             tables = new HashMap<>();
-            tables.put("CAMERE", "Camere.csv");
+            tables.put("CAMERA", "Camera.csv");
             tables.put("FORMAT", "Format.csv");
-            tables.put("TIPCAMERA", "TipCamera.csv");
-            tables.put("MONTURA", "Montura.csv");
+            tables.put("CAMERATYPE", "CameraType.csv");
+            tables.put("MOUNT", "Mount.csv");
         } else if(databaseType == DatabaseConnection.DatabaseType.ORACLE){
             tables = new HashMap<>();
-            tables.put("CAMERE", "CAMERE");
+            tables.put("CAMERA", "CAMERA");
             tables.put("FORMAT", "FORMAT");
-            tables.put("TIPCAMERA", "TIPCAMERA");
-            tables.put("MONTURA", "MONTURA");
+            tables.put("CAMERATYPE", "CAMERATYPE");
+            tables.put("MOUNT", "MOUNT");
         } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
             tables = new HashMap<>();
-            tables.put("CAMERE", "camera");
+            tables.put("CAMERA", "camera");
             tables.put("FORMAT", "format");
-            tables.put("TIPCAMERA", "camera_type");
-            tables.put("MONTURA", "mount");
+            tables.put("CAMERATYPE", "camera_type");
+            tables.put("MOUNT", "mount");
         }
 
 
-        ResultSet cameras = db.getAllTableData(tables.get("CAMERE"));
+        ResultSet cameras = db.getAllTableData(tables.get("CAMERA"));
         ResultSet formats = db.getAllTableData(tables.get("FORMAT"));
-        ResultSet types = db.getAllTableData(tables.get("TIPCAMERA"));
-        ResultSet mounts = db.getAllTableData(tables.get("MONTURA"));
+        ResultSet types = db.getAllTableData(tables.get("CAMERATYPE"));
+        ResultSet mounts = db.getAllTableData(tables.get("MOUNT"));
 
-        // Make a HashMap of formats with IDFORMAT as key
+        // Make a HashMap of formats with FORMATID as key
         Map<Integer, String> formatMap = new HashMap<>();
         while(formats.next()) {
-            formatMap.put(formats.getInt("IDFORMAT"), formats.getString("DENUMIRE"));
+            formatMap.put(formats.getInt("FORMATID"), formats.getString("NAME"));
         }
 
-        // Make a HashMap of types with IDTIP as key
+        // Make a HashMap of types with TYPEID as key
         Map<Integer, String> typeMap = new HashMap<>();
         while(types.next()) {
-            typeMap.put(types.getInt("IDTIP"), types.getString("DENUMIRE"));
+            typeMap.put(types.getInt("TYPEID"), types.getString("NAME"));
         }
 
-        // Make a HashMap of mounts with IDMONTURA as key
+        // Make a HashMap of mounts with MOUNTID as key
         Map<Integer, String> mountMap = new HashMap<>();
         while(mounts.next()) {
-            mountMap.put(mounts.getInt("IDMONTURA"), mounts.getString("DENUMIRE"));
+            mountMap.put(mounts.getInt("MOUNTID"), mounts.getString("NAME"));
         }
 
         // Add fields to cameras
         this.modelList = new ModelList<>(true);
         while(cameras.next()) {
             InnerCameraModel model = new InnerCameraModel();
-            model.Marca = cameras.getString("MARCA");
+            model.Brand = cameras.getString("BRAND");
             model.ModelCamera = cameras.getString("MODELCAMERA");
-            model.AnFabricatie = cameras.getInt("ANFABRICATIE");
-            model.Pret = cameras.getDouble("PRET");
-            model.PretInchiriere = cameras.getDouble("PRETINCHIRIERE");
+            model.ManufacturingYear = cameras.getInt("MANUFACTURINGYEAR");
+            model.Price = cameras.getDouble("PRICE");
+            model.RentalPrice = cameras.getDouble("RENTALPRICE");
             model.IDCamera = cameras.getInt("IDCAMERA");
-            model.DenumireTip = typeMap.get(cameras.getInt("IDTIP"));
-            model.DenumireFormat = formatMap.get(cameras.getInt("IDFORMAT"));
-            model.LatimeFilm = formatMap.get(cameras.getInt("IDFORMAT"));
-            model.DenumireMontura = mountMap.get(cameras.getInt("IDMONTURA"));
-            model.IDFormat = cameras.getInt("IDFORMAT");
-            model.IDTip = cameras.getInt("IDTIP");
-            model.IDMontura = cameras.getInt("IDMONTURA");
+            model.NameTip = typeMap.get(cameras.getInt("TYPEID"));
+            model.NameFormat = formatMap.get(cameras.getInt("FORMATID"));
+            model.FilmWidth = formatMap.get(cameras.getInt("FORMATID"));
+            model.NameMount = mountMap.get(cameras.getInt("MOUNTID"));
+            model.FormatID = cameras.getInt("FORMATID");
+            model.TypeID = cameras.getInt("TYPEID");
+            model.MountID = cameras.getInt("MOUNTID");
 
             this.modelList.add(model);
         }
@@ -208,14 +208,14 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
     public void updateData(ModelList<InnerCameraModel> oneRow) throws Exception {
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         Map<String, String> set = new HashMap<>();
-        set.put("MARCA", "'" + oneRow.get(0).Marca + "'");
+        set.put("BRAND", "'" + oneRow.get(0).Brand + "'");
         set.put("MODELCAMERA", "'" + oneRow.get(0).ModelCamera + "'");
-        set.put("IDFORMAT", String.valueOf(oneRow.get(0).IDFormat));
-        set.put("IDTIP", String.valueOf(oneRow.get(0).IDTip));
-        set.put("IDMONTURA", String.valueOf(oneRow.get(0).IDMontura));
-        set.put("ANFABRICATIE", String.valueOf(oneRow.get(0).AnFabricatie));
-        set.put("PRET", String.valueOf(oneRow.get(0).Pret));
-        set.put("PRETINCHIRIERE", String.valueOf(oneRow.get(0).PretInchiriere));
+//        set.put("FORMATID", String.valueOf(oneRow.get(0).FormatID));
+//        set.put("TYPEID", String.valueOf(oneRow.get(0).TypeID));
+//        set.put("MOUNTID", String.valueOf(oneRow.get(0).MountID));
+        set.put("MANUFACTURINGYEAR", String.valueOf(oneRow.get(0).ManufacturingYear));
+        set.put("PRICE", String.valueOf(oneRow.get(0).Price));
+        set.put("RENTALPRICE", String.valueOf(oneRow.get(0).RentalPrice));
 
         Map<String, String> where = new HashMap<>();
         where.put("IDCAMERA", String.valueOf(oneRow.get(0).IDCamera));
@@ -225,7 +225,7 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
         } catch (Exception ex) {
             System.out.println("Error logging to CSV: " + ex.getMessage());
         }
-//        db.update("UPDATE " + this.tableName + " SET MARCA = '" + oneRow.get(0).Marca + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRET = " + oneRow.get(0).Pret + ", PRETINCHIRIERE = " + oneRow.get(0).PretInchiriere + ", ANFABRICATIE = " + oneRow.get(0).AnFabricatie + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
+//        db.update("UPDATE " + this.tableName + " SET BRAND = '" + oneRow.get(0).Brand + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRICE = " + oneRow.get(0).Price + ", RENTALPRICE = " + oneRow.get(0).RentalPrice + ", MANUFACTURINGYEAR = " + oneRow.get(0).ManufacturingYear + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
     }
 
     @Override
@@ -290,14 +290,14 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
 
         List<Pair<String, String>> values = new ArrayList<>();
         values.add(new Pair<>("IDCAMERA", ""));
-        values.add(new Pair<>("MARCA", "'" + row.Marca + "'"));
+        values.add(new Pair<>("BRAND", "'" + row.Brand + "'"));
         values.add(new Pair<>("MODELCAMERA", "'" + row.ModelCamera + "'"));
-        values.add(new Pair<>("IDFORMAT", String.valueOf(row.IDFormat)));
-        values.add(new Pair<>("IDTIP", String.valueOf(row.IDTip)));
-        values.add(new Pair<>("IDMONTURA", String.valueOf(row.IDMontura)));
-        values.add(new Pair<>("ANFABRICATIE", String.valueOf(row.AnFabricatie)));
-        values.add(new Pair<>("PRET", String.valueOf(row.Pret)));
-        values.add(new Pair<>("PRETINCHIRIERE", String.valueOf(row.PretInchiriere)));
+        values.add(new Pair<>("FORMATID", String.valueOf(row.FormatID)));
+        values.add(new Pair<>("TYPEID", String.valueOf(row.TypeID)));
+        values.add(new Pair<>("MOUNTID", String.valueOf(row.MountID)));
+        values.add(new Pair<>("MANUFACTURINGYEAR", String.valueOf(row.ManufacturingYear)));
+        values.add(new Pair<>("PRICE", String.valueOf(row.Price)));
+        values.add(new Pair<>("RENTALPRICE", String.valueOf(row.RentalPrice)));
 
 
         db.insert(this.tableName, values);

@@ -21,7 +21,7 @@ public class RentAdd {
     private MainGUI caller = null;
     private JFrame parentFrame = null;
     private static RentAdd instance = null;
-    private JLabel lblDataInchiriere;
+    private JLabel lblRentDate;
     private JDatePanelImpl JDatePanelImpl1;
     private JDatePickerImpl JDatePickerImpl1;
     private JPanel pnlMain;
@@ -74,9 +74,9 @@ public class RentAdd {
 //        pnlDate.add(JDatePickerImpl1);
         JDatePickerImpl1.setBounds(220,350,120,30);
 
-        this.lblDataInchiriere = new JLabel("Data inchiriere");
-        this.lblDataInchiriere.setText("Data inchiriere");
-        pnlMain.add(this.lblDataInchiriere, c3);
+        this.lblRentDate = new JLabel("Data inchiriere");
+        this.lblRentDate.setText("Data inchiriere");
+        pnlMain.add(this.lblRentDate, c3);
         c3.gridx = 2;
         pnlMain.add(JDatePickerImpl1, c3);
 
@@ -115,7 +115,7 @@ public class RentAdd {
             listCameras = new ModelList<>();
         }
         for (CameraModel.InnerCameraModel camera : listCameras.getList()) {
-            cmbCamera.addItem(new ComboItem(camera.Marca + " " + camera.ModelCamera, String.valueOf(camera.IDCamera)));
+            cmbCamera.addItem(new ComboItem(camera.Brand + " " + camera.ModelCamera, String.valueOf(camera.IDCamera)));
         }
         pnlMain.add(cmbCamera, c3);
 
@@ -136,7 +136,7 @@ public class RentAdd {
             listClients = new ModelList<>();
         }
         for (ClientModel.InnerClientModel client : listClients.getList()) {
-            cmbClient.addItem(new ComboItem(client.NumeClient, client.IDUtilizator + ""));
+            cmbClient.addItem(new ComboItem(client.SurnameClient, client.UserID + ""));
         }
         pnlMain.add(cmbClient, c3);
 
@@ -157,7 +157,7 @@ public class RentAdd {
             listEmployees = new ModelList<>();
         }
         for (EmployeeModel.InnerEmployeeModel angajat : listEmployees.getList()) {
-            cmbAngajat.addItem(new ComboItem(angajat.NumeAngajat, angajat.IDUtilizator + ""));
+            cmbAngajat.addItem(new ComboItem(angajat.SurnameAngajat, angajat.UserID + ""));
         }
         pnlMain.add(cmbAngajat, c3);
 
@@ -178,32 +178,32 @@ public class RentAdd {
             listObjectives = new ModelList<>();
         }
         for (ObjectiveModel.InnerObjectiveModel obiectiv : listObjectives.getList()) {
-            cmbObiectiv.addItem(new ComboItem(obiectiv.Denumire, obiectiv.IDObiectiv + ""));
+            cmbObiectiv.addItem(new ComboItem(obiectiv.Name, obiectiv.ObjectiveID + ""));
         }
         pnlMain.add(cmbObiectiv, c3);
 
         c3.gridy = 8;
         c3.gridx = 1;
-        JLabel lblEsteReturnat = new JLabel("Este returnat");
-        lblEsteReturnat.setText("Este returnat");
-        pnlMain.add(lblEsteReturnat, c3);
+        JLabel lblIsReturned = new JLabel("Este returnat");
+        lblIsReturned.setText("Este returnat");
+        pnlMain.add(lblIsReturned, c3);
 
         c3.gridx = 2;
-        JComboBox cmbEsteReturnat = new JComboBox();
-        cmbEsteReturnat.addItem(new ComboItem("Da", "1"));
-        cmbEsteReturnat.addItem(new ComboItem("Nu", "0"));
-        pnlMain.add(cmbEsteReturnat, c3);
+        JComboBox cmbIsReturned = new JComboBox();
+        cmbIsReturned.addItem(new ComboItem("Da", "1"));
+        cmbIsReturned.addItem(new ComboItem("Nu", "0"));
+        pnlMain.add(cmbIsReturned, c3);
 
         c3.gridy = 9;
         c3.gridx = 1;
-        JLabel lblPenalizare = new JLabel("Penalizare");
-        lblPenalizare.setText("Penalizare");
-        pnlMain.add(lblPenalizare, c3);
+        JLabel lblPenaltyFee = new JLabel("PenaltyFee");
+        lblPenaltyFee.setText("PenaltyFee");
+        pnlMain.add(lblPenaltyFee, c3);
 
         c3.gridx = 2;
-        JTextField txtPenalizare = new JTextField();
-        txtPenalizare.setText("0");
-        pnlMain.add(txtPenalizare, c3);
+        JTextField txtPenaltyFee = new JTextField();
+        txtPenaltyFee.setText("0");
+        pnlMain.add(txtPenaltyFee, c3);
 
 
         JButton btnAdd = new JButton("Add");
@@ -214,12 +214,12 @@ public class RentAdd {
             rent.IDCAMERA = Integer.parseInt(((ComboItem) cmbCamera.getSelectedItem()).getValue());
             rent.IDCLIENT = Integer.parseInt(((ComboItem) cmbClient.getSelectedItem()).getValue());
             rent.IDANGAJAT = Integer.parseInt(((ComboItem) cmbAngajat.getSelectedItem()).getValue());
-            rent.IDOBIECTIV = Integer.parseInt(((ComboItem) cmbObiectiv.getSelectedItem()).getValue());
-            rent.DURATA_IN_ZILE = Integer.parseInt(txtDurata.getText());
-            int ret = Integer.parseInt(((ComboItem) cmbEsteReturnat.getSelectedItem()).getValue());
-            rent.ESTE_RETURNAT = ret == 1;
-            rent.PENALIZARE = Integer.parseInt(txtPenalizare.getText());
-            rent.DATA_INCHIRIERE = (Date) JDatePickerImpl1.getModel().getValue();
+            rent.OBJECTIVEID = Integer.parseInt(((ComboItem) cmbObiectiv.getSelectedItem()).getValue());
+            rent.DURATION_IN_DAYS = Integer.parseInt(txtDurata.getText());
+            int ret = Integer.parseInt(((ComboItem) cmbIsReturned.getSelectedItem()).getValue());
+            rent.IS_RETURNED = ret == 1;
+            rent.PENALTYFEE = Integer.parseInt(txtPenaltyFee.getText());
+            rent.RENT_DATE = (Date) JDatePickerImpl1.getModel().getValue();
 
             try {
                 rentModel.insertRow(rent);

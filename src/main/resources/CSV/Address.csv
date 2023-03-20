@@ -1,4 +1,4 @@
-"IDADRESA","STRADA","ORAS","JUDET","CODPOSTAL","IDCLIENT"
+"ADDRESSID","STREET","CITY","COUNTY","POSTALCODE","IDCLIENT"
 "1","Str. Plopului","Buzau","Buzau","120200","5"
 "2","Str. Macesului","Bucuresti","Bucuresti","120201","6"
 "3","Str. Rosiei","Buzau","Buzau","120200","7"

@@ -96,7 +96,7 @@ public class CameraModelTest {
             modelList.sort((o1, o2) -> o2.IDCamera - o1.IDCamera);
             CameraModel.InnerCameraModel data = modelList.getList().get(0);
 
-            ++data.Pret;
+            ++data.Price;
 
             List<CameraModel.InnerCameraModel> list = new ArrayList<>();
             list.add(data);
@@ -118,13 +118,13 @@ public class CameraModelTest {
             CameraModel.InnerCameraModel data = new CameraModel.InnerCameraModel();
             data.IDCamera = 10001;
             data.ModelCamera = "Test";
-            data.IDMontura = 1;
-            data.IDFormat = 1;
-            data.PretInchiriere = 100;
-            data.Pret = 100;
-            data.AnFabricatie = 1970;
-            data.Marca = "Test";
-            data.IDTip = 1;
+            data.MountID = 1;
+            data.FormatID = 1;
+            data.RentalPrice = 100;
+            data.Price = 100;
+            data.ManufacturingYear = 1970;
+            data.Brand = "Test";
+            data.TypeID = 1;
 
             MainService.insert(cameraModel, data);
 

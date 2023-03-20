@@ -21,7 +21,7 @@ public class EmployeeAdd {
     private MainGUI caller = null;
     private JFrame parentFrame = null;
     private static EmployeeAdd instance = null;
-    private JLabel lblDataInchiriere;
+    private JLabel lblRentDate;
     private JDatePanelImpl JDatePanelImpl1;
     private JDatePickerImpl JDatePickerImpl1;
     private JDatePanelImpl JDatePanelImpl2;
@@ -76,9 +76,9 @@ public class EmployeeAdd {
 //        pnlDate.add(JDatePickerImpl1);
         JDatePickerImpl1.setBounds(220,350,120,30);
 
-        this.lblDataInchiriere = new JLabel("Data nasterii");
-        this.lblDataInchiriere.setText("Data nasterii");
-        pnlMain.add(this.lblDataInchiriere, c3);
+        this.lblRentDate = new JLabel("Data nasterii");
+        this.lblRentDate.setText("Data nasterii");
+        pnlMain.add(this.lblRentDate, c3);
         c3.gridx = 2;
         pnlMain.add(JDatePickerImpl1, c3);
 
@@ -87,9 +87,9 @@ public class EmployeeAdd {
         c3.gridy = 2;
         c3.gridx = 1;
         c3.anchor = GridBagConstraints.WEST;
-        JLabel lblDataAngajarii = new JLabel("Data Angajarii");
-        lblDataAngajarii.setText("Data Angajarii");
-        pnlMain.add(lblDataAngajarii, c3);
+        JLabel lblHireDate = new JLabel("Data Angajarii");
+        lblHireDate.setText("Data Angajarii");
+        pnlMain.add(lblHireDate, c3);
 
 
         c3.gridx = 2;
@@ -114,18 +114,18 @@ public class EmployeeAdd {
             listManagers = new ModelList<>();
         }
         for (EmployeeModel.InnerEmployeeModel manager : listManagers.getList()) {
-            cmbManager.addItem(new ComboItem(manager.NumeAngajat, manager.IDUtilizator + ""));
+            cmbManager.addItem(new ComboItem(manager.SurnameAngajat, manager.UserID + ""));
         }
         pnlMain.add(cmbManager, c3);
 
         c3.gridy = 4;
         c3.gridx = 1;
-        JLabel lblSalariu = new JLabel("Salariu");
-        lblSalariu.setText("Salariu");
-        pnlMain.add(lblSalariu, c3);
+        JLabel lblSalary = new JLabel("Salary");
+        lblSalary.setText("Salary");
+        pnlMain.add(lblSalary, c3);
 
         c3.gridx = 2;
-        JComboBox cmbSalariu = new JComboBox();
+        JComboBox cmbSalary = new JComboBox();
         SalaryModel salaryModel = SalaryModel.getInstance();
         salaryModel.setDatabaseType(caller.getDatabaseType());
         ModelList<SalaryModel.InnerSalaryModel> listSalaries = null;
@@ -135,14 +135,14 @@ public class EmployeeAdd {
             listSalaries = new ModelList<>();
         }
         for (SalaryModel.InnerSalaryModel salary : listSalaries.getList()) {
-            cmbSalariu.addItem(new ComboItem(salary.Salariu + "", salary.IDSalariu + ""));
+            cmbSalary.addItem(new ComboItem(salary.Salary + "", salary.SalaryID + ""));
         }
-        pnlMain.add(cmbSalariu, c3);
+        pnlMain.add(cmbSalary, c3);
 
         c3.gridy = 5;
         c3.gridx = 1;
-        JLabel lblUtilizator = new JLabel("Nume");
-        lblUtilizator.setText("Nume");
+        JLabel lblUtilizator = new JLabel("Surname");
+        lblUtilizator.setText("Surname");
         pnlMain.add(lblUtilizator, c3);
 
         c3.gridx = 2;
@@ -156,7 +156,7 @@ public class EmployeeAdd {
             listUsers = new ModelList<>();
         }
         for (UserModel.InnerUserModel user : listUsers.getList()) {
-            cmbUtilizator.addItem(new ComboItem(user.Nume + " " + user.Prenume, user.IDUtilizator + ""));
+            cmbUtilizator.addItem(new ComboItem(user.Surname + " " + user.Firstname, user.UserID + ""));
         }
         pnlMain.add(cmbUtilizator, c3);
 
@@ -168,11 +168,11 @@ public class EmployeeAdd {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             EmployeeModel employeeModel = EmployeeModel.getInstance();
             EmployeeModel.InnerEmployeeModel employee = new EmployeeModel.InnerEmployeeModel();
-            employee.DataNasterii = LocalDateTime.parse(JDatePickerImpl1.getModel().getValue().toString() + " 00:00:00", dtf);
-            employee.DataAngajarii = LocalDateTime.parse(JDatePickerImpl2.getModel().getValue().toString() + " 00:00:00", dtf);
+            employee.BirthDate = LocalDateTime.parse(JDatePickerImpl1.getModel().getValue().toString() + " 00:00:00", dtf);
+            employee.HireDate = LocalDateTime.parse(JDatePickerImpl2.getModel().getValue().toString() + " 00:00:00", dtf);
             employee.IDManager = Integer.parseInt(((ComboItem) cmbManager.getSelectedItem()).getValue());
-            employee.IDSalariu = Integer.parseInt(((ComboItem) cmbSalariu.getSelectedItem()).getValue());
-            employee.IDUtilizator = Integer.parseInt(((ComboItem) cmbUtilizator.getSelectedItem()).getValue());
+            employee.SalaryID = Integer.parseInt(((ComboItem) cmbSalary.getSelectedItem()).getValue());
+            employee.UserID = Integer.parseInt(((ComboItem) cmbUtilizator.getSelectedItem()).getValue());
             try {
                 employeeModel.insertRow(employee);
             } catch (Exception e1) {

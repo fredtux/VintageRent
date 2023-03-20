@@ -1,9 +1,7 @@
 package org.actions;
 
 import org.database.DatabaseConnection;
-import org.database.csv.CsvConnection;
 import org.database.memory.InMemory;
-import org.database.oracle.OracleConnection;
 import org.junit.Test;
 import org.models.ModelInit;
 import org.vintage.Main;
@@ -18,6 +16,8 @@ public class MainServiceTest {
     public MainServiceTest(){
         try {
             this.inmem = this.getInMemory();
+            ModelInit.inmemInit();
+
         } catch (Exception e) {
             fail(e.getMessage());
         }

@@ -97,10 +97,10 @@ public class EmployeeModelTest {
             MainService.getData(employeeModel);
 
             ModelList<EmployeeModel.InnerEmployeeModel> modelList = employeeModel.getModelList();
-            modelList.sort((o1, o2) -> o2.IDUtilizator - o1.IDUtilizator);
+            modelList.sort((o1, o2) -> o2.UserID - o1.UserID);
             EmployeeModel.InnerEmployeeModel data = modelList.getList().get(0);
 
-            data.NumeAngajat = "New Test";
+            data.SurnameAngajat = "New Test";
 
             List<EmployeeModel.InnerEmployeeModel> list = new ArrayList<>();
             list.add(data);
@@ -121,21 +121,21 @@ public class EmployeeModelTest {
 
             EmployeeModel.InnerEmployeeModel data = new EmployeeModel.InnerEmployeeModel();
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            data.IDUtilizator = 1;
-            data.DataNasterii = LocalDateTime.parse("2000-01-01 00:00:00", dtf);
-            data.DataAngajarii = LocalDateTime.parse("2020-01-01 00:00:00", dtf);
-            data.IDSalariu = 1;
+            data.UserID = 1;
+            data.BirthDate = LocalDateTime.parse("2000-01-01 00:00:01", dtf);
+            data.HireDate = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
+            data.SalaryID = 1;
             data.IDManager = 1;
-            data.NumeAngajat = "Test";
+            data.SurnameAngajat = "Test";
 
             MainService.insert(employeeModel, data);
 
             MainService.getData(employeeModel);
             ModelList<EmployeeModel.InnerEmployeeModel> modelList = MainService.getModelList(employeeModel);
-            modelList.sort((o1, o2) -> o2.IDUtilizator - o1.IDUtilizator);
+            modelList.sort((o1, o2) -> o2.UserID - o1.UserID);
             data = modelList.getList().get(0);
 
-            result.add(data.IDUtilizator);
+            result.add(data.UserID);
 
             return result;
         } catch (Exception e) {
@@ -152,7 +152,7 @@ public class EmployeeModelTest {
             MainService.getData(employeeModel);
 
             ModelList<EmployeeModel.InnerEmployeeModel> modelList = employeeModel.getModelList();
-            modelList.sort((o1, o2) -> o2.IDUtilizator - o1.IDUtilizator);
+            modelList.sort((o1, o2) -> o2.UserID - o1.UserID);
             EmployeeModel.InnerEmployeeModel data = modelList.getList().get(0);
 
             List<EmployeeModel.InnerEmployeeModel> list = new ArrayList<>();

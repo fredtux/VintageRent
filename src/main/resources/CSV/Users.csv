@@ -1,4 +1,4 @@
-"IDUTILIZATOR","NUMEUTILIZATOR","PAROLA","NUME","PRENUME","CNP","EMAIL"
+"USERID","USERNAME","PASSWORD","SURNAME","FIRSTNAME","CNP","EMAIL"
 "1","tuxmaster","3c4ac1a78d4a9974c20d7ac6773f94d9","Dinu","Florin","","tuxmaster@magazinbd.ro"
 "2","richard.avedon","3c4ac1a78d4a9974c20d7ac6773f94d9","Richard","Avedon","1590506100523","richardavedon@magazinbd.ro"
 "3","dorothea.lange","3c4ac1a78d4a9974c20d7ac6773f94d9","Lange","Dorothea","2400506100523","dorothea.lange@magazinbd.ro"
