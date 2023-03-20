@@ -226,11 +226,15 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
             set.put("DATANASTERII", "TO_DATE('" + oneRow.get(0).DataNasterii.format(dtf) + "', 'YYYY-MM-DD HH24:MI:SS')");
         else if(databaseType == DatabaseConnection.DatabaseType.CSV){
             set.put("DATANASTERII", oneRow.get(0).DataNasterii.format(dtf) + "");
+        } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
+            set.put("DATANASTERII", oneRow.get(0).DataNasterii.format(dtf) + "");
         }
 
         if(databaseType == DatabaseConnection.DatabaseType.ORACLE)
             set.put("DATAANGAJARII", "TO_DATE('" + oneRow.get(0).DataAngajarii.format(dtf) + "', 'YYYY-MM-DD HH24:MI:SS')");
         else if(databaseType == DatabaseConnection.DatabaseType.CSV){
+            set.put("DATAANGAJARII", oneRow.get(0).DataAngajarii.format(dtf) + "");
+        } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
             set.put("DATAANGAJARII", oneRow.get(0).DataAngajarii.format(dtf) + "");
         }
 

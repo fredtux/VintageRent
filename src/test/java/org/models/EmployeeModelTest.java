@@ -122,8 +122,8 @@ public class EmployeeModelTest {
             EmployeeModel.InnerEmployeeModel data = new EmployeeModel.InnerEmployeeModel();
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             data.IDUtilizator = 1;
-            data.DataNasterii = LocalDateTime.parse("2000-01-01 00:00:00", dtf);
-            data.DataAngajarii = LocalDateTime.parse("2020-01-01 00:00:00", dtf);
+            data.DataNasterii = LocalDateTime.parse("2000-01-01 00:00:01", dtf);
+            data.DataAngajarii = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
             data.IDSalariu = 1;
             data.IDManager = 1;
             data.NumeAngajat = "Test";

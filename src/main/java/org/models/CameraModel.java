@@ -210,9 +210,9 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
         Map<String, String> set = new HashMap<>();
         set.put("MARCA", "'" + oneRow.get(0).Marca + "'");
         set.put("MODELCAMERA", "'" + oneRow.get(0).ModelCamera + "'");
-        set.put("IDFORMAT", String.valueOf(oneRow.get(0).IDFormat));
-        set.put("IDTIP", String.valueOf(oneRow.get(0).IDTip));
-        set.put("IDMONTURA", String.valueOf(oneRow.get(0).IDMontura));
+//        set.put("IDFORMAT", String.valueOf(oneRow.get(0).IDFormat));
+//        set.put("IDTIP", String.valueOf(oneRow.get(0).IDTip));
+//        set.put("IDMONTURA", String.valueOf(oneRow.get(0).IDMontura));
         set.put("ANFABRICATIE", String.valueOf(oneRow.get(0).AnFabricatie));
         set.put("PRET", String.valueOf(oneRow.get(0).Pret));
         set.put("PRETINCHIRIERE", String.valueOf(oneRow.get(0).PretInchiriere));
