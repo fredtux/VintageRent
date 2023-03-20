@@ -770,15 +770,15 @@ public class InMemory extends DatabaseConnection {
         }
 
         if (tableName.equals("camera_type")) {
-            // Get largest IDTip from cameraTypes
+            // Get largest TypeID from cameraTypes
             int idTip = 0;
             for (CameraTypeModel.InnerCameraTypeModel c : this.cameraTypes.getList()) {
-                if (c.IDTip > idTip)
-                    idTip = c.IDTip;
+                if (c.TypeID > idTip)
+                    idTip = c.TypeID;
             }
 
             for (Pair<String, String> p : values) {
-                if (p.first.toLowerCase().equals("idtip")) {
+                if (p.first.toLowerCase().equals("typeid")) {
                     p.second = String.valueOf(idTip + 1);
 
                     break;
@@ -852,12 +852,12 @@ public class InMemory extends DatabaseConnection {
         } else if (tableName.equals("format")) {
             int id = 0;
             for (FormatModel.InnerFormatModel c : this.formats.getList()) {
-                if (c.IDFormat > id)
-                    id = c.IDFormat;
+                if (c.FormatID > id)
+                    id = c.FormatID;
             }
 
             for (Pair<String, String> p : values) {
-                if (p.first.toLowerCase().equals("idformat")) {
+                if (p.first.toLowerCase().equals("formatid")) {
                     p.second = String.valueOf(id + 1);
                     break;
                 }
@@ -891,12 +891,12 @@ public class InMemory extends DatabaseConnection {
         } else if (tableName.equals("client")) {
             int id = 0;
             for (ClientModel.InnerClientModel c : this.clients.getList()) {
-                if (c.IDUtilizator > id)
-                    id = c.IDUtilizator;
+                if (c.UserID > id)
+                    id = c.UserID;
             }
 
             for (Pair<String, String> p : values) {
-                if (p.first.toLowerCase().equals("idutilizator")) {
+                if (p.first.toLowerCase().equals("userid")) {
                     p.second = String.valueOf(id + 1);
                     break;
                 }
@@ -943,12 +943,12 @@ public class InMemory extends DatabaseConnection {
         } else if (tableName.equals("mount")) {
             int id = 0;
             for (MountModel.InnerMountModel c : this.mounts.getList()) {
-                if (c.IDMontura > id)
-                    id = c.IDMontura;
+                if (c.MountID > id)
+                    id = c.MountID;
             }
 
             for (Pair<String, String> p : values) {
-                if (p.first.toLowerCase().equals("idmontura")) {
+                if (p.first.toLowerCase().equals("mountid")) {
                     p.second = String.valueOf(id + 1);
                     break;
                 }
@@ -982,12 +982,12 @@ public class InMemory extends DatabaseConnection {
         } else if (tableName.equals("client_type")) {
             int id = 0;
             for (ClientTypeModel.InnerClientTypeModel c : this.clientTypes.getList()) {
-                if (c.IDTip > id)
-                    id = c.IDTip;
+                if (c.TypeID > id)
+                    id = c.TypeID;
             }
 
             for (Pair<String, String> p : values) {
-                if (p.first.toLowerCase().equals("idtip")) {
+                if (p.first.toLowerCase().equals("typeid")) {
                     p.second = String.valueOf(id + 1);
                     break;
                 }
@@ -1021,12 +1021,12 @@ public class InMemory extends DatabaseConnection {
         } else if (tableName.equals("user")) {
             int id = 0;
             for (UserModel.InnerUserModel c : this.users.getList()) {
-                if (c.IDUtilizator > id)
-                    id = c.IDUtilizator;
+                if (c.UserID > id)
+                    id = c.UserID;
             }
 
             for (Pair<String, String> p : values) {
-                if (p.first.toLowerCase().equals("idutilizator")) {
+                if (p.first.toLowerCase().equals("userid")) {
                     p.second = String.valueOf(id + 1);
                     break;
                 }
@@ -1073,12 +1073,12 @@ public class InMemory extends DatabaseConnection {
         } else if (tableName.equals("employee")) {
             int id = 0;
             for (EmployeeModel.InnerEmployeeModel c : this.employees.getList()) {
-                if (c.IDUtilizator > id)
-                    id = c.IDUtilizator;
+                if (c.UserID > id)
+                    id = c.UserID;
             }
 
             for (Pair<String, String> p : values) {
-                if (p.first.toLowerCase().equals("idutilizator")) {
+                if (p.first.toLowerCase().equals("userid")) {
                     p.second = String.valueOf(id + 1);
                     break;
                 }
@@ -1125,12 +1125,12 @@ public class InMemory extends DatabaseConnection {
         } else if (tableName.equals("salary")) {
             int id = 0;
             for (SalaryModel.InnerSalaryModel c : this.salaries.getList()) {
-                if (c.IDSalariu > id)
-                    id = c.IDSalariu;
+                if (c.SalaryID > id)
+                    id = c.SalaryID;
             }
 
             for (Pair<String, String> p : values) {
-                if (p.first.toLowerCase().equals("idsalariu")) {
+                if (p.first.toLowerCase().equals("salaryid")) {
                     p.second = String.valueOf(id + 1);
                     break;
                 }
@@ -1177,12 +1177,12 @@ public class InMemory extends DatabaseConnection {
         } else if (tableName.equals("objective")) {
             int id = 0;
             for (ObjectiveModel.InnerObjectiveModel c : this.objectives.getList()) {
-                if (c.IDObiectiv > id)
-                    id = c.IDObiectiv;
+                if (c.ObjectiveID > id)
+                    id = c.ObjectiveID;
             }
 
             for (Pair<String, String> p : values) {
-                if (p.first.toLowerCase().equals("idobiectiv")) {
+                if (p.first.toLowerCase().equals("objectiveid")) {
                     p.second = String.valueOf(id + 1);
                     break;
                 }
@@ -1227,7 +1227,7 @@ public class InMemory extends DatabaseConnection {
 
         } else if (tableName.equals("rent")) {
             for (Pair<String, String> p : values) {
-                if (p.first.toLowerCase().equals("datainchiriere")) {
+                if (p.first.toLowerCase().equals("rentdate")) {
                     p.second = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                     break;
                 }
