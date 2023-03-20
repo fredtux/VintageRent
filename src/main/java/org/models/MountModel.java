@@ -13,15 +13,15 @@ import java.util.Map;
 
 public class MountModel extends Model implements LinkModelToDatabase<ModelList<MountModel.InnerMountModel>, MountModel.InnerMountModel> {
     public static class InnerMountModel extends AbstractInnerModel implements Comparable<InnerMountModel> {
-        public int IDMontura;
-        public String Denumire;
+        public int MountID;
+        public String Name;
 
         @Override
         public int compareTo(InnerMountModel o) {
-            return this.IDMontura - o.IDMontura;
+            return this.MountID - o.MountID;
         }
     }
-    private String tableName = "MONTURA";
+    private String tableName = "MOUNT";
 
     private static MountModel instance = null;
     private ModelList<InnerMountModel> modelList = null;
@@ -41,20 +41,20 @@ public class MountModel extends Model implements LinkModelToDatabase<ModelList<M
         this.databaseType = databaseType;
 
         if(databaseType == DatabaseConnection.DatabaseType.CSV){
-            this.tableName = "Montura.csv";
+            this.tableName = "Mount.csv";
         } else if (databaseType == DatabaseConnection.DatabaseType.ORACLE){
-            this.tableName = "MONTURA";
+            this.tableName = "MOUNT";
         } else if (databaseType == DatabaseConnection.DatabaseType.INMEMORY){
             this.tableName = "mount";
         }
     }
 
     public DefaultTableModel getTableModel() {
-        String[] columns = {"IDTip", "Denumire"};
+        String[] columns = {"TypeID", "Name"};
 
         DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
         for(InnerMountModel model : this.modelList.getList()){
-            Object[] obj = {model.IDMontura, model.Denumire};
+            Object[] obj = {model.MountID, model.Name};
             tableModel.addRow(obj);
         }
 
@@ -69,7 +69,7 @@ public class MountModel extends Model implements LinkModelToDatabase<ModelList<M
         else
             instance = this;
 
-        this.name = "Montura";
+        this.name = "Mount";
         this.databaseType = DatabaseConnection.DatabaseType.ORACLE;
     }
 
@@ -80,12 +80,12 @@ public class MountModel extends Model implements LinkModelToDatabase<ModelList<M
         else
             instance = this;
 
-        this.name = "Montura";
+        this.name = "Mount";
         this.databaseType = t;
         if(t == DatabaseConnection.DatabaseType.CSV)
-            this.tableName = "Montura.csv";
+            this.tableName = "Mount.csv";
         else if(t == DatabaseConnection.DatabaseType.ORACLE)
-            this.tableName = "MONTURA";
+            this.tableName = "MOUNT";
         else if(t == DatabaseConnection.DatabaseType.INMEMORY)
             this.tableName = "mount";
     }
@@ -95,8 +95,8 @@ public class MountModel extends Model implements LinkModelToDatabase<ModelList<M
 
         while(rs.next()){
             InnerMountModel model = new InnerMountModel();
-            model.IDMontura = rs.getInt("IDMONTURA");
-            model.Denumire = rs.getString("DENUMIRE");
+            model.MountID = rs.getInt("MOUNTID");
+            model.Name = rs.getString("NAME");
 
             this.modelList.add(model);
         }
@@ -108,24 +108,24 @@ public class MountModel extends Model implements LinkModelToDatabase<ModelList<M
         Map<String, String> tables = null;
         if(databaseType == DatabaseConnection.DatabaseType.CSV) {
             tables = new HashMap<>();
-            tables.put("MONTURA", "Montura.csv");
+            tables.put("MOUNT", "Mount.csv");
         } else if(databaseType == DatabaseConnection.DatabaseType.ORACLE){
             tables = new HashMap<>();
-            tables.put("MONTURA", "MONTURA");
+            tables.put("MOUNT", "MOUNT");
         } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
             tables = new HashMap<>();
-            tables.put("MONTURA", "mount");
+            tables.put("MOUNT", "mount");
         }
 
 
-        ResultSet formats = db.getAllTableData(tables.get("MONTURA"));
+        ResultSet formats = db.getAllTableData(tables.get("MOUNT"));
 
         // Add fields to cameras
         this.modelList = new ModelList<>(true);
         while(formats.next()) {
             InnerMountModel model = new InnerMountModel();
-            model.IDMontura = formats.getInt("IDMONTURA");
-            model.Denumire = formats.getString("DENUMIRE");
+            model.MountID = formats.getInt("MOUNTID");
+            model.Name = formats.getString("NAME");
 
             this.modelList.add(model);
         }
@@ -143,16 +143,16 @@ public class MountModel extends Model implements LinkModelToDatabase<ModelList<M
     public void updateData(ModelList<InnerMountModel> oneRow) throws Exception {
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         Map<String, String> set = new HashMap<>();
-        set.put("DENUMIRE", "'" + oneRow.get(0).Denumire + "'");
+        set.put("NAME", "'" + oneRow.get(0).Name + "'");
         Map<String, String> where = new HashMap<>();
-        where.put("IDMONTURA", oneRow.get(0).IDMontura + "");
+        where.put("MOUNTID", oneRow.get(0).MountID + "");
         db.update(this.tableName, set, where);
         try{
             logger.log("MountModel update data");
         } catch (Exception ex) {
             System.out.println("Error logging to CSV: " + ex.getMessage());
         }
-//        db.update("UPDATE " + this.tableName + " SET MARCA = '" + oneRow.get(0).Marca + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRET = " + oneRow.get(0).Pret + ", PRETINCHIRIERE = " + oneRow.get(0).PretInchiriere + ", ANFABRICATIE = " + oneRow.get(0).AnFabricatie + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
+//        db.update("UPDATE " + this.tableName + " SET BRAND = '" + oneRow.get(0).Brand + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRICE = " + oneRow.get(0).Price + ", RENTALPRICE = " + oneRow.get(0).RentalPrice + ", MANUFACTURINGYEAR = " + oneRow.get(0).ManufacturingYear + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
     }
 
     @Override
@@ -160,7 +160,7 @@ public class MountModel extends Model implements LinkModelToDatabase<ModelList<M
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
 
         Map<String, String> where = new HashMap<>();
-        where.put("IDMONTURA", row.get(0).IDMontura + "");
+        where.put("MOUNTID", row.get(0).MountID + "");
         db.delete(this.tableName, where);
         try{
             logger.log("MountModel delete data");
@@ -216,8 +216,8 @@ public class MountModel extends Model implements LinkModelToDatabase<ModelList<M
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
 
         List<Pair<String, String>> values = new ArrayList<>();
-        values.add(new Pair<>("IDMONTURA", ""));
-        values.add(new Pair<>("DENUMIRE", "'" + row.Denumire + "'"));
+        values.add(new Pair<>("MOUNTID", ""));
+        values.add(new Pair<>("NAME", "'" + row.Name + "'"));
 
         db.insert(this.tableName, values);
 

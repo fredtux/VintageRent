@@ -13,16 +13,16 @@ import java.util.Map;
 
 public class SalaryModel extends Model implements LinkModelToDatabase<ModelList<SalaryModel.InnerSalaryModel>, SalaryModel.InnerSalaryModel> {
     public static class InnerSalaryModel extends AbstractInnerModel implements Comparable<InnerSalaryModel> {
-        public int IDSalariu;
-        public int Salariu;
+        public int SalaryID;
+        public int Salary;
         public double Bonus;
 
         @Override
         public int compareTo(InnerSalaryModel o) {
-            return this.IDSalariu - o.IDSalariu;
+            return this.SalaryID - o.SalaryID;
         }
     }
-    private String tableName = "SALARIU";
+    private String tableName = "SALARY";
 
     private static SalaryModel instance = null;
     private ModelList<InnerSalaryModel> modelList = null;
@@ -42,20 +42,20 @@ public class SalaryModel extends Model implements LinkModelToDatabase<ModelList<
         this.databaseType = databaseType;
 
         if(databaseType == DatabaseConnection.DatabaseType.CSV){
-            this.tableName = "Salariu.csv";
+            this.tableName = "Salary.csv";
         } else if (databaseType == DatabaseConnection.DatabaseType.ORACLE){
-            this.tableName = "SALARIU";
+            this.tableName = "SALARY";
         } else if (databaseType == DatabaseConnection.DatabaseType.INMEMORY){
             this.tableName = "salary";
         }
     }
 
     public DefaultTableModel getTableModel() {
-        String[] columns = {"IDSalariu", "Salariu", "Bonus"};
+        String[] columns = {"SalaryID", "Salary", "Bonus"};
 
         DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
         for(InnerSalaryModel model : this.modelList.getList()){
-            Object[] obj = {model.IDSalariu, model.Salariu, model.Bonus};
+            Object[] obj = {model.SalaryID, model.Salary, model.Bonus};
             tableModel.addRow(obj);
         }
 
@@ -70,7 +70,7 @@ public class SalaryModel extends Model implements LinkModelToDatabase<ModelList<
         else
             instance = this;
 
-        this.name = "Salariu";
+        this.name = "Salary";
         this.databaseType = DatabaseConnection.DatabaseType.ORACLE;
     }
 
@@ -81,12 +81,12 @@ public class SalaryModel extends Model implements LinkModelToDatabase<ModelList<
         else
             instance = this;
 
-        this.name = "Salariu";
+        this.name = "Salary";
         this.databaseType = t;
         if(t == DatabaseConnection.DatabaseType.CSV)
-            this.tableName = "Salariu.csv";
+            this.tableName = "Salary.csv";
         else if(t == DatabaseConnection.DatabaseType.ORACLE)
-            this.tableName = "SALARIU";
+            this.tableName = "SALARY";
         else if(t == DatabaseConnection.DatabaseType.INMEMORY)
             this.tableName = "salary";
     }
@@ -96,8 +96,8 @@ public class SalaryModel extends Model implements LinkModelToDatabase<ModelList<
 
         while(rs.next()){
             InnerSalaryModel model = new InnerSalaryModel();
-            model.IDSalariu = rs.getInt("IDSALARIU");
-            model.Salariu = rs.getInt("SALARIU");
+            model.SalaryID = rs.getInt("SALARYID");
+            model.Salary = rs.getInt("SALARY");
             model.Bonus = rs.getDouble("BONUS");
 
             this.modelList.add(model);
@@ -110,24 +110,24 @@ public class SalaryModel extends Model implements LinkModelToDatabase<ModelList<
         Map<String, String> tables = null;
         if(databaseType == DatabaseConnection.DatabaseType.CSV) {
             tables = new HashMap<>();
-            tables.put("SALARIU", "Salariu.csv");
+            tables.put("SALARY", "Salary.csv");
         } else if(databaseType == DatabaseConnection.DatabaseType.ORACLE){
             tables = new HashMap<>();
-            tables.put("SALARIU", "SALARIU");
+            tables.put("SALARY", "SALARY");
         } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
             tables = new HashMap<>();
-            tables.put("SALARIU", "salary");
+            tables.put("SALARY", "salary");
         }
 
 
-        ResultSet formats = db.getAllTableData(tables.get("SALARIU"));
+        ResultSet formats = db.getAllTableData(tables.get("SALARY"));
 
         // Add fields to cameras
         this.modelList = new ModelList<>(true);
         while(formats.next()) {
             InnerSalaryModel model = new InnerSalaryModel();
-            model.IDSalariu = formats.getInt("IDSALARIU");
-            model.Salariu = formats.getInt("SALARIU");
+            model.SalaryID = formats.getInt("SALARYID");
+            model.Salary = formats.getInt("SALARY");
             model.Bonus = formats.getDouble("BONUS");
 
             this.modelList.add(model);
@@ -146,17 +146,17 @@ public class SalaryModel extends Model implements LinkModelToDatabase<ModelList<
     public void updateData(ModelList<InnerSalaryModel> oneRow) throws Exception {
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         Map<String, String> set = new HashMap<>();
-        set.put("SALARIU", oneRow.get(0).Salariu + "");
+        set.put("SALARY", oneRow.get(0).Salary + "");
         set.put("BONUS", oneRow.get(0).Bonus + "");
         Map<String, String> where = new HashMap<>();
-        where.put("IDSALARIU", oneRow.get(0).IDSalariu + "");
+        where.put("SALARYID", oneRow.get(0).SalaryID + "");
         db.update(this.tableName, set, where);
         try{
             logger.log("SalaryModel update data");
         } catch (Exception ex) {
             System.out.println("Error logging to CSV: " + ex.getMessage());
         }
-//        db.update("UPDATE " + this.tableName + " SET MARCA = '" + oneRow.get(0).Marca + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRET = " + oneRow.get(0).Pret + ", PRETINCHIRIERE = " + oneRow.get(0).PretInchiriere + ", ANFABRICATIE = " + oneRow.get(0).AnFabricatie + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
+//        db.update("UPDATE " + this.tableName + " SET BRAND = '" + oneRow.get(0).Brand + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRICE = " + oneRow.get(0).Price + ", RENTALPRICE = " + oneRow.get(0).RentalPrice + ", MANUFACTURINGYEAR = " + oneRow.get(0).ManufacturingYear + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
     }
 
     @Override
@@ -164,7 +164,7 @@ public class SalaryModel extends Model implements LinkModelToDatabase<ModelList<
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
 
         Map<String, String> where = new HashMap<>();
-        where.put("IDSALARIU", row.get(0).IDSalariu + "");
+        where.put("SALARYID", row.get(0).SalaryID + "");
         db.delete(this.tableName, where);
         try{
             logger.log("SalaryModel delete data");
@@ -220,8 +220,8 @@ public class SalaryModel extends Model implements LinkModelToDatabase<ModelList<
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
 
         List<Pair<String, String>> values = new ArrayList<>();
-        values.add(new Pair<>("IDSALARIU",""));
-        values.add(new Pair<>("SALARIU", row.Salariu + ""));
+        values.add(new Pair<>("SALARYID",""));
+        values.add(new Pair<>("SALARY", row.Salary + ""));
         values.add(new Pair<>("BONUS", row.Bonus + ""));
 
         db.insert(this.tableName, values);

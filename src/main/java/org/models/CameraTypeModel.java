@@ -13,15 +13,15 @@ import java.util.Map;
 
 public class CameraTypeModel extends Model implements LinkModelToDatabase<ModelList<CameraTypeModel.InnerCameraTypeModel>, CameraTypeModel.InnerCameraTypeModel> {
     public static class InnerCameraTypeModel extends AbstractInnerModel implements Comparable<InnerCameraTypeModel> {
-        public int IDTip;
-        public String Denumire;
+        public int TypeID;
+        public String Name;
 
         @Override
         public int compareTo(InnerCameraTypeModel o) {
-            return this.IDTip - o.IDTip;
+            return this.TypeID - o.TypeID;
         }
     }
-    private String tableName = "TIPCAMERA";
+    private String tableName = "CAMERATYPE";
 
     private static CameraTypeModel instance = null;
     private ModelList<InnerCameraTypeModel> modelList = null;
@@ -41,20 +41,20 @@ public class CameraTypeModel extends Model implements LinkModelToDatabase<ModelL
         this.databaseType = databaseType;
 
         if(databaseType == DatabaseConnection.DatabaseType.CSV){
-            this.tableName = "TipCamera.csv";
+            this.tableName = "CameraType.csv";
         } else if (databaseType == DatabaseConnection.DatabaseType.ORACLE){
-            this.tableName = "TIPCAMERA";
+            this.tableName = "CAMERATYPE";
         } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
             this.tableName = "camera_type";
         }
     }
 
     public DefaultTableModel getTableModel() {
-        String[] columns = {"IDTip", "Denumire"};
+        String[] columns = {"TypeID", "Name"};
 
         DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
         for(InnerCameraTypeModel model : this.modelList.getList()){
-            Object[] obj = {model.IDTip, model.Denumire};
+            Object[] obj = {model.TypeID, model.Name};
             tableModel.addRow(obj);
         }
 
@@ -69,7 +69,7 @@ public class CameraTypeModel extends Model implements LinkModelToDatabase<ModelL
         else
             instance = this;
 
-        this.name = "TipCamera";
+        this.name = "CameraType";
         this.databaseType = DatabaseConnection.DatabaseType.ORACLE;
     }
 
@@ -80,12 +80,12 @@ public class CameraTypeModel extends Model implements LinkModelToDatabase<ModelL
         else
             instance = this;
 
-        this.name = "TipCamera";
+        this.name = "CameraType";
         this.databaseType = t;
         if(t == DatabaseConnection.DatabaseType.CSV)
-            this.tableName = "TipCamera.csv";
+            this.tableName = "CameraType.csv";
         else if(t == DatabaseConnection.DatabaseType.ORACLE)
-            this.tableName = "TIPCAMERA";
+            this.tableName = "CAMERATYPE";
         else if(t == DatabaseConnection.DatabaseType.INMEMORY)
             this.tableName = "camera_type";
     }
@@ -95,8 +95,8 @@ public class CameraTypeModel extends Model implements LinkModelToDatabase<ModelL
 
         while(rs.next()){
             InnerCameraTypeModel model = new InnerCameraTypeModel();
-            model.IDTip = rs.getInt("IDTIP");
-            model.Denumire = rs.getString("DENUMIRE");
+            model.TypeID = rs.getInt("TYPEID");
+            model.Name = rs.getString("NAME");
 
             this.modelList.add(model);
         }
@@ -108,24 +108,24 @@ public class CameraTypeModel extends Model implements LinkModelToDatabase<ModelL
         Map<String, String> tables = null;
         if(databaseType == DatabaseConnection.DatabaseType.CSV) {
             tables = new HashMap<>();
-            tables.put("TIPCAMERA", "TipCamera.csv");
+            tables.put("CAMERATYPE", "CameraType.csv");
         } else if(databaseType == DatabaseConnection.DatabaseType.ORACLE) {
             tables = new HashMap<>();
-            tables.put("TIPCAMERA", "TIPCAMERA");
+            tables.put("CAMERATYPE", "CAMERATYPE");
         } else {
             tables = new HashMap<>();
-            tables.put("TIPCAMERA", "camera_type");
+            tables.put("CAMERATYPE", "camera_type");
         }
 
 
-        ResultSet formats = db.getAllTableData(tables.get("TIPCAMERA"));
+        ResultSet formats = db.getAllTableData(tables.get("CAMERATYPE"));
 
         // Add fields to cameras
         this.modelList = new ModelList<>(true);
         while(formats.next()) {
             InnerCameraTypeModel model = new InnerCameraTypeModel();
-            model.IDTip = formats.getInt("IDTIP");
-            model.Denumire = formats.getString("DENUMIRE");
+            model.TypeID = formats.getInt("TYPEID");
+            model.Name = formats.getString("NAME");
 
             this.modelList.add(model);
         }
@@ -143,16 +143,16 @@ public class CameraTypeModel extends Model implements LinkModelToDatabase<ModelL
     public void updateData(ModelList<InnerCameraTypeModel> oneRow) throws Exception {
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         Map<String, String> set = new HashMap<>();
-        set.put("DENUMIRE", "'" + oneRow.get(0).Denumire + "'");
+        set.put("NAME", "'" + oneRow.get(0).Name + "'");
         Map<String, String> where = new HashMap<>();
-        where.put("IDTIP", oneRow.get(0).IDTip + "");
+        where.put("TYPEID", oneRow.get(0).TypeID + "");
         db.update(this.tableName, set, where);
         try{
             logger.log("CameraTypeModel update data");
         } catch (Exception ex) {
             System.out.println("Error logging to CSV: " + ex.getMessage());
         }
-//        db.update("UPDATE " + this.tableName + " SET MARCA = '" + oneRow.get(0).Marca + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRET = " + oneRow.get(0).Pret + ", PRETINCHIRIERE = " + oneRow.get(0).PretInchiriere + ", ANFABRICATIE = " + oneRow.get(0).AnFabricatie + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
+//        db.update("UPDATE " + this.tableName + " SET BRAND = '" + oneRow.get(0).Brand + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRICE = " + oneRow.get(0).Price + ", RENTALPRICE = " + oneRow.get(0).RentalPrice + ", MANUFACTURINGYEAR = " + oneRow.get(0).ManufacturingYear + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
     }
 
     @Override
@@ -160,7 +160,7 @@ public class CameraTypeModel extends Model implements LinkModelToDatabase<ModelL
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
 
         Map<String, String> where = new HashMap<>();
-        where.put("IDTIP", row.get(0).IDTip + "");
+        where.put("TYPEID", row.get(0).TypeID + "");
         db.delete(this.tableName, where);
         try{
             logger.log("CameraTypeModel delete data");
@@ -216,8 +216,8 @@ public class CameraTypeModel extends Model implements LinkModelToDatabase<ModelL
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
 
         List<Pair<String, String>> values = new ArrayList<>();
-        values.add(new Pair<>("IDTIP", ""));
-        values.add(new Pair<>("DENUMIRE", "'" + row.Denumire + "'"));
+        values.add(new Pair<>("TYPEID", ""));
+        values.add(new Pair<>("NAME", "'" + row.Name + "'"));
 
         db.insert(this.tableName, values);
         try{

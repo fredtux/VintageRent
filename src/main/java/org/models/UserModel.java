@@ -17,20 +17,20 @@ import java.util.Map;
 
 public class UserModel extends Model implements LinkModelToDatabase<ModelList<UserModel.InnerUserModel>, UserModel.InnerUserModel> {
     public static class InnerUserModel extends AbstractInnerModel implements Comparable<InnerUserModel> {
-        public int IDUtilizator;
-        public String NumeUtilizator;
-        public String Parola;
-        public String Nume;
-        public String Prenume;
+        public int UserID;
+        public String UserName;
+        public String Password;
+        public String Surname;
+        public String Firstname;
         public String CNP;
         public String Email;
 
         @Override
         public int compareTo(InnerUserModel o) {
-            return this.IDUtilizator - o.IDUtilizator;
+            return this.UserID - o.UserID;
         }
     }
-    private String tableName = "UTILIZATORI";
+    private String tableName = "USERS";
 
     private static UserModel instance = null;
     private ModelList<InnerUserModel> modelList = null;
@@ -50,20 +50,20 @@ public class UserModel extends Model implements LinkModelToDatabase<ModelList<Us
         this.databaseType = databaseType;
 
         if(databaseType == DatabaseConnection.DatabaseType.CSV){
-            this.tableName = "Utilizatori.csv";
+            this.tableName = "Users.csv";
         } else if (databaseType == DatabaseConnection.DatabaseType.ORACLE){
-            this.tableName = "UTILIZATORI";
+            this.tableName = "USERS";
         } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
             this.tableName = "user";
         }
     }
 
     public DefaultTableModel getTableModel() {
-        String[] columns = {"IDUtilizator", "NumeUtilizator", "Parola", "Nume", "Prenume", "CNP", "Email"};
+        String[] columns = {"UserID", "UserName", "Password", "Surname", "Firstname", "CNP", "Email"};
 
         DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
         for(InnerUserModel model : this.modelList.getList()){
-            Object[] obj = {model.IDUtilizator, model.NumeUtilizator, model.Parola, model.Nume, model.Prenume, model.CNP, model.Email};
+            Object[] obj = {model.UserID, model.UserName, model.Password, model.Surname, model.Firstname, model.CNP, model.Email};
             tableModel.addRow(obj);
         }
 
@@ -78,7 +78,7 @@ public class UserModel extends Model implements LinkModelToDatabase<ModelList<Us
         else
             instance = this;
 
-        this.name = "Utilizatori";
+        this.name = "Users";
         this.databaseType = DatabaseConnection.DatabaseType.ORACLE;
     }
 
@@ -89,12 +89,12 @@ public class UserModel extends Model implements LinkModelToDatabase<ModelList<Us
         else
             instance = this;
 
-        this.name = "Utilizatori";
+        this.name = "Users";
         this.databaseType = t;
         if(t == DatabaseConnection.DatabaseType.CSV)
-            this.tableName = "Utilizatori.csv";
+            this.tableName = "Users.csv";
         else if(t == DatabaseConnection.DatabaseType.ORACLE)
-            this.tableName = "UTILIZATORI";
+            this.tableName = "USERS";
         else if(t == DatabaseConnection.DatabaseType.INMEMORY)
             this.tableName = "user";
     }
@@ -104,11 +104,11 @@ public class UserModel extends Model implements LinkModelToDatabase<ModelList<Us
 
         while(rs.next()){
             InnerUserModel model = new InnerUserModel();
-            model.IDUtilizator = rs.getInt("IDUTILIZATOR");
-            model.NumeUtilizator = rs.getString("NUMEUTILIZATOR");
-            model.Parola = rs.getString("PAROLA");
-            model.Nume = rs.getString("NUME");
-            model.Prenume = rs.getString("PRENUME");
+            model.UserID = rs.getInt("USERID");
+            model.UserName = rs.getString("USERNAME");
+            model.Password = rs.getString("PASSWORD");
+            model.Surname = rs.getString("SURNAME");
+            model.Firstname = rs.getString("FIRSTNAME");
             model.CNP = rs.getString("CNP");
             model.Email = rs.getString("EMAIL");
 
@@ -122,28 +122,28 @@ public class UserModel extends Model implements LinkModelToDatabase<ModelList<Us
         Map<String, String> tables = null;
         if(databaseType == DatabaseConnection.DatabaseType.CSV) {
             tables = new HashMap<>();
-            tables.put("UTILIZATORI", "Utilizatori.csv");
+            tables.put("USERS", "Users.csv");
         } else if(databaseType == DatabaseConnection.DatabaseType.ORACLE){
             tables = new HashMap<>();
-            tables.put("UTILIZATORI", "UTILIZATORI");
+            tables.put("USERS", "USERS");
         } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
             tables = new HashMap<>();
-            tables.put("UTILIZATORI", "user");
+            tables.put("USERS", "user");
         }
 
 
-        ResultSet angajati = db.getAllTableData(tables.get("UTILIZATORI"));
+        ResultSet angajati = db.getAllTableData(tables.get("USERS"));
 
         // Add fields to cameras
         this.modelList = new ModelList<>(true);
         while(angajati.next()) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             InnerUserModel model = new InnerUserModel();
-            model.IDUtilizator = angajati.getInt("IDUTILIZATOR");
-            model.NumeUtilizator = angajati.getString("NUMEUTILIZATOR");
-            model.Parola = angajati.getString("PAROLA");
-            model.Nume = angajati.getString("NUME");
-            model.Prenume = angajati.getString("PRENUME");
+            model.UserID = angajati.getInt("USERID");
+            model.UserName = angajati.getString("USERNAME");
+            model.Password = angajati.getString("PASSWORD");
+            model.Surname = angajati.getString("SURNAME");
+            model.Firstname = angajati.getString("FIRSTNAME");
             model.CNP = angajati.getString("CNP");
             model.Email = angajati.getString("EMAIL");
 
@@ -163,16 +163,16 @@ public class UserModel extends Model implements LinkModelToDatabase<ModelList<Us
     public void updateData(ModelList<InnerUserModel> oneRow) throws Exception {
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         Map<String, String> set = new HashMap<>();
-        set.put("IDUTILIZATOR", "'" + oneRow.get(0).IDUtilizator + "'");
-        set.put("NUMEUTILIZATOR", "'" + oneRow.get(0).NumeUtilizator + "'");
-        set.put("PAROLA", "'" + oneRow.get(0).Parola + "'");
-        set.put("NUME", "'" + oneRow.get(0).Nume + "'");
-        set.put("PRENUME", "'" + oneRow.get(0).Prenume + "'");
+        set.put("USERID", "'" + oneRow.get(0).UserID + "'");
+        set.put("USERNAME", "'" + oneRow.get(0).UserName + "'");
+        set.put("PASSWORD", "'" + oneRow.get(0).Password + "'");
+        set.put("SURNAME", "'" + oneRow.get(0).Surname + "'");
+        set.put("FIRSTNAME", "'" + oneRow.get(0).Firstname + "'");
         set.put("CNP", "'" + oneRow.get(0).CNP + "'");
         set.put("EMAIL", "'" + oneRow.get(0).Email + "'");
 
         Map<String, String> where = new HashMap<>();
-        where.put("IDUTILIZATOR", String.valueOf(oneRow.get(0).IDUtilizator));
+        where.put("USERID", String.valueOf(oneRow.get(0).UserID));
 
         db.update(this.tableName, set, where);
         try{
@@ -180,7 +180,7 @@ public class UserModel extends Model implements LinkModelToDatabase<ModelList<Us
         } catch (Exception ex) {
             System.out.println("Error logging to CSV: " + ex.getMessage());
         }
-//        db.update("UPDATE " + this.tableName + " SET MARCA = '" + oneRow.get(0).Marca + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRET = " + oneRow.get(0).Pret + ", PRETINCHIRIERE = " + oneRow.get(0).PretInchiriere + ", ANFABRICATIE = " + oneRow.get(0).AnFabricatie + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
+//        db.update("UPDATE " + this.tableName + " SET BRAND = '" + oneRow.get(0).Brand + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRICE = " + oneRow.get(0).Price + ", RENTALPRICE = " + oneRow.get(0).RentalPrice + ", MANUFACTURINGYEAR = " + oneRow.get(0).ManufacturingYear + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
     }
 
     @Override
@@ -188,7 +188,7 @@ public class UserModel extends Model implements LinkModelToDatabase<ModelList<Us
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
 
         Map<String, String> where = new HashMap<>();
-        where.put("IDUTILIZATOR", row.get(0).IDUtilizator + "");
+        where.put("USERID", row.get(0).UserID + "");
         db.delete(this.tableName, where);
         try{
             logger.log("UserModel delete data");
@@ -244,11 +244,11 @@ public class UserModel extends Model implements LinkModelToDatabase<ModelList<Us
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
 
         List<Pair<String, String>> values = new ArrayList<>();
-        values.add(new Pair<>("IDUTILIZATOR",""));
-        values.add(new Pair<>("NUMEUTILIZATOR", "'" + row.NumeUtilizator + "'"));
-        values.add(new Pair<>("PAROLA", "'" + makeMD5(row.Parola) + "'"));
-        values.add(new Pair<>("NUME", "'" + row.Nume + "'"));
-        values.add(new Pair<>("PRENUME", "'" + row.Prenume + "'"));
+        values.add(new Pair<>("USERID",""));
+        values.add(new Pair<>("USERNAME", "'" + row.UserName + "'"));
+        values.add(new Pair<>("PASSWORD", "'" + makeMD5(row.Password) + "'"));
+        values.add(new Pair<>("SURNAME", "'" + row.Surname + "'"));
+        values.add(new Pair<>("FIRSTNAME", "'" + row.Firstname + "'"));
         values.add(new Pair<>("CNP", "'" + row.CNP + "'"));
         values.add(new Pair<>("EMAIL", "'" + row.Email + "'"));
 

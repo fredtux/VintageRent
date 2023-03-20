@@ -17,20 +17,20 @@ import java.util.Map;
 
 public class RentModel extends Model implements LinkModelToDatabase<ModelList<RentModel.InnerRentModel>, RentModel.InnerRentModel> {
     public static class InnerRentModel extends AbstractInnerModel{
-        public int DURATA_IN_ZILE;
-        public boolean ESTE_RETURNAT;
-        public double PENALIZARE;
-        public Date DATA_INCHIRIERE;
+        public int DURATION_IN_DAYS;
+        public boolean IS_RETURNED;
+        public double PENALTYFEE;
+        public Date RENT_DATE;
         public int IDCAMERA;
         public int IDCLIENT;
-        public int IDOBIECTIV;
+        public int OBJECTIVEID;
         public int IDANGAJAT;
-        public String NUME_CAMERA;
-        public String NUME_CLIENT;
-        public String NUME_OBIECTIV;
-        public String NUME_ANGAJAT;
+        public String NAME_CAMERA;
+        public String NAME_CLIENT;
+        public String NAME_OBIECTIV;
+        public String NAME_ANGAJAT;
     }
-    private String tableName = "INCHIRIERE";
+    private String tableName = "RENTAL";
 
     private static RentModel instance = null;
     private ModelList<InnerRentModel> modelList = null;
@@ -50,20 +50,20 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
         this.databaseType = databaseType;
 
         if(databaseType == DatabaseConnection.DatabaseType.CSV){
-            this.tableName = "Inchiriere.csv";
+            this.tableName = "Rental.csv";
         } else if (databaseType == DatabaseConnection.DatabaseType.ORACLE){
-            this.tableName = "INCHIRIERE";
+            this.tableName = "RENTAL";
         } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
             this.tableName = "rent";
         }
     }
 
     public DefaultTableModel getTableModel() {
-        String[] columns = {"DURATA_IN_ZILE", "ESTE_RETURNAT", "PENALIZARE", "DATA_INCHIRIERE", "IDCAMERA", "IDCLIENT", "IDOBIECTIV", "IDANGAJAT"};
+        String[] columns = {"DURATION_IN_DAYS", "IS_RETURNED", "PENALTYFEE", "RENT_DATE", "IDCAMERA", "IDCLIENT", "OBJECTIVEID", "IDANGAJAT"};
 
         DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
         for(InnerRentModel model : this.modelList.getList()){
-            Object[] obj = {model.DURATA_IN_ZILE, model.ESTE_RETURNAT, model.PENALIZARE, model.DATA_INCHIRIERE, model.IDCAMERA, model.IDCLIENT, model.IDOBIECTIV, model.IDANGAJAT};
+            Object[] obj = {model.DURATION_IN_DAYS, model.IS_RETURNED, model.PENALTYFEE, model.RENT_DATE, model.IDCAMERA, model.IDCLIENT, model.OBJECTIVEID, model.IDANGAJAT};
             tableModel.addRow(obj);
         }
 
@@ -91,9 +91,9 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
         this.name = "Rent";
         this.databaseType = t;
         if(t == DatabaseConnection.DatabaseType.CSV)
-            this.tableName = "Inchiriere.csv";
+            this.tableName = "Rental.csv";
         else if(t == DatabaseConnection.DatabaseType.ORACLE)
-            this.tableName = "INCHIRIERE";
+            this.tableName = "RENTAL";
         else if(t == DatabaseConnection.DatabaseType.INMEMORY)
             this.tableName = "rent";
     }
@@ -103,19 +103,19 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
 
         while(rs.next()){
             InnerRentModel model = new InnerRentModel();
-            model.DURATA_IN_ZILE = rs.getInt("DURATAINZILE");
+            model.DURATION_IN_DAYS = rs.getInt("DURATIONINDAYS");
             try {
-                model.DATA_INCHIRIERE = rs.getDate("DATAINCHIRIERE");
+                model.RENT_DATE = rs.getDate("RENTDATE");
             } catch (Exception e) {
-                LocalDateTime localDateTime = LocalDateTime.parse(rs.getString("DATAINCHIRIERE"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-                model.DATA_INCHIRIERE = Date.valueOf(localDateTime.toLocalDate());
+                LocalDateTime localDateTime = LocalDateTime.parse(rs.getString("RENTDATE"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                model.RENT_DATE = Date.valueOf(localDateTime.toLocalDate());
             }
             model.IDANGAJAT = rs.getInt("IDANGAJAT");
             model.IDCAMERA = rs.getInt("IDCAMERA");
             model.IDCLIENT = rs.getInt("IDCLIENT");
-            model.IDOBIECTIV = rs.getInt("IDOBIECTIV");
-            model.ESTE_RETURNAT = rs.getBoolean("ESTERETURNAT");
-            model.PENALIZARE = rs.getDouble("PENALIZARE");
+            model.OBJECTIVEID = rs.getInt("OBJECTIVEID");
+            model.IS_RETURNED = rs.getBoolean("ISRETURNED");
+            model.PENALTYFEE = rs.getDouble("PENALTYFEE");
             this.modelList.add(model);
         }
     }
@@ -126,33 +126,33 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
         Map<String, String> tables = null;
         if(databaseType == DatabaseConnection.DatabaseType.CSV) {
             tables = new HashMap<>();
-            tables.put("INCHIRIERE", "Inchiriere.csv");
-            tables.put("CAMERE", "Camere.csv");
-            tables.put("CLIENTI", "Clienti.csv");
-            tables.put("ANGAJATI", "Angajati.csv");
-            tables.put("OBIECTIVE", "Obiective.csv");
+            tables.put("RENTAL", "Rental.csv");
+            tables.put("CAMERA", "Camera.csv");
+            tables.put("CLIENTS", "Clients.csv");
+            tables.put("EMPLOYEE", "Employee.csv");
+            tables.put("OBJECTIVE", "Objective.csv");
         } else if(databaseType == DatabaseConnection.DatabaseType.ORACLE){
             tables = new HashMap<>();
-            tables.put("INCHIRIERE", "INCHIRIERE");
-            tables.put("CAMERE", "CAMERE");
-            tables.put("CLIENTI", "CLIENTI");
-            tables.put("ANGAJATI", "ANGAJATI");
-            tables.put("OBIECTIVE", "OBIECTIVE");
+            tables.put("RENTAL", "RENTAL");
+            tables.put("CAMERA", "CAMERA");
+            tables.put("CLIENTS", "CLIENTS");
+            tables.put("EMPLOYEE", "EMPLOYEE");
+            tables.put("OBJECTIVE", "OBJECTIVE");
         } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
             tables = new HashMap<>();
-            tables.put("INCHIRIERE", "rent");
-            tables.put("CAMERE", "camera");
-            tables.put("CLIENTI", "client");
-            tables.put("ANGAJATI", "employee");
-            tables.put("OBIECTIVE", "objective");
+            tables.put("RENTAL", "rent");
+            tables.put("CAMERA", "camera");
+            tables.put("CLIENTS", "client");
+            tables.put("EMPLOYEE", "employee");
+            tables.put("OBJECTIVE", "objective");
         }
 
 
-        ResultSet inchiriere = db.getAllTableData(tables.get("INCHIRIERE"));
-        ResultSet camere = db.getAllTableData(tables.get("CAMERE"));
-        ResultSet clienti = db.getAllTableData(tables.get("CLIENTI"));
-        ResultSet angajati = db.getAllTableData(tables.get("ANGAJATI"));
-        ResultSet obiective = db.getAllTableData(tables.get("OBIECTIVE"));
+        ResultSet inchiriere = db.getAllTableData(tables.get("RENTAL"));
+        ResultSet camere = db.getAllTableData(tables.get("CAMERA"));
+        ResultSet clienti = db.getAllTableData(tables.get("CLIENTS"));
+        ResultSet angajati = db.getAllTableData(tables.get("EMPLOYEE"));
+        ResultSet obiective = db.getAllTableData(tables.get("OBJECTIVE"));
 
         Map<Integer, String> camereMap = new HashMap<>();
         while(camere.next())
@@ -160,48 +160,48 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
 
         Map<Integer, String> clientiMap = new HashMap<>();
         while(clienti.next())
-            clientiMap.put(clienti.getInt("IDUTILIZATOR"), clienti.getString("IDUTILIZATOR"));
+            clientiMap.put(clienti.getInt("USERID"), clienti.getString("USERID"));
 
         Map<Integer, String> angajatiMap = new HashMap<>();
         while(angajati.next())
-            angajatiMap.put(angajati.getInt("IDUTILIZATOR"), angajati.getString("IDUTILIZATOR"));
+            angajatiMap.put(angajati.getInt("USERID"), angajati.getString("USERID"));
 
         Map<Integer, String> obiectiveMap = new HashMap<>();
         while(obiective.next())
-            obiectiveMap.put(obiective.getInt("IDOBIECTIV"), obiective.getString("DENUMIRE"));
+            obiectiveMap.put(obiective.getInt("OBJECTIVEID"), obiective.getString("NAME"));
 
         this.modelList = new ModelList<>();
         while(inchiriere.next()){
             InnerRentModel model = new InnerRentModel();
             try {
-                model.DATA_INCHIRIERE = inchiriere.getDate("DATAINCHIRIERE");
+                model.RENT_DATE = inchiriere.getDate("RENTDATE");
             } catch (Exception e) {
                 try {
-                    LocalDateTime localDateTime = LocalDateTime.parse(inchiriere.getString("DATAINCHIRIERE"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-                    model.DATA_INCHIRIERE = Date.valueOf(localDateTime.toLocalDate());
+                    LocalDateTime localDateTime = LocalDateTime.parse(inchiriere.getString("RENTDATE"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                    model.RENT_DATE = Date.valueOf(localDateTime.toLocalDate());
                 } catch (Exception ex) {
                     try{
-                        LocalDateTime localDateTime = LocalDateTime.parse(inchiriere.getString("DATAINCHIRIERE"), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                        model.DATA_INCHIRIERE = Date.valueOf(localDateTime.toLocalDate());
+                        LocalDateTime localDateTime = LocalDateTime.parse(inchiriere.getString("RENTDATE"), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+                        model.RENT_DATE = Date.valueOf(localDateTime.toLocalDate());
                     } catch(Exception exx){
-                        model.DATA_INCHIRIERE = null;
+                        model.RENT_DATE = null;
                     }
                 }
             }
-            model.DURATA_IN_ZILE = inchiriere.getInt("DURATAINZILE");
+            model.DURATION_IN_DAYS = inchiriere.getInt("DURATIONINDAYS");
             model.IDCAMERA = inchiriere.getInt("IDCAMERA");
             model.IDCLIENT = inchiriere.getInt("IDCLIENT");
             model.IDANGAJAT = inchiriere.getInt("IDANGAJAT");
-            model.IDOBIECTIV = inchiriere.getInt("IDOBIECTIV");
+            model.OBJECTIVEID = inchiriere.getInt("OBJECTIVEID");
             try {
-                model.ESTE_RETURNAT = inchiriere.getBoolean("ESTERETURNAT");
+                model.IS_RETURNED = inchiriere.getBoolean("ISRETURNED");
             } catch (Exception e) {
-                model.ESTE_RETURNAT = false;
+                model.IS_RETURNED = false;
             }
             try {
-                model.PENALIZARE = inchiriere.getDouble("PENALIZARE");
+                model.PENALTYFEE = inchiriere.getDouble("PENALTYFEE");
             } catch (Exception e) {
-                model.PENALIZARE = 0;
+                model.PENALTYFEE = 0;
             }
             this.modelList.add(model);
         }
@@ -221,22 +221,22 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         Map<String, String> set = new HashMap<>();
-        set.put("DURATAINZILE", oneRow.get(0).DURATA_IN_ZILE + "");
-        set.put("ESTERETURNAT", oneRow.get(0).ESTE_RETURNAT ? "'1'" : "'0'");
-        set.put("PENALIZARE", oneRow.get(0).PENALIZARE + "");
+        set.put("DURATIONINDAYS", oneRow.get(0).DURATION_IN_DAYS + "");
+        set.put("ISRETURNED", oneRow.get(0).IS_RETURNED ? "'1'" : "'0'");
+        set.put("PENALTYFEE", oneRow.get(0).PENALTYFEE + "");
         if(databaseType == DatabaseConnection.DatabaseType.ORACLE)
-            set.put("DATAINCHIRIERE", "TO_DATE('" + oneRow.get(0).DATA_INCHIRIERE + "', 'YYYY-MM-DD HH24:MI:SS')");
+            set.put("RENTDATE", "TO_DATE('" + oneRow.get(0).RENT_DATE + "', 'YYYY-MM-DD HH24:MI:SS')");
         else if(databaseType == DatabaseConnection.DatabaseType.CSV){
-            set.put("DATAINCHIRIERE", oneRow.get(0).DATA_INCHIRIERE + "");
+            set.put("RENTDATE", oneRow.get(0).RENT_DATE + "");
         } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
-            set.put("DATAINCHIRIERE", oneRow.get(0).DATA_INCHIRIERE + "");
+            set.put("RENTDATE", oneRow.get(0).RENT_DATE + "");
         }
 
         Map<String, String> where = new HashMap<>();
         where.put("IDANGAJAT", oneRow.get(0).IDANGAJAT + "");
         where.put("IDCAMERA", oneRow.get(0).IDCAMERA + "");
         where.put("IDCLIENT", oneRow.get(0).IDCLIENT + "");
-        where.put("IDOBIECTIV", oneRow.get(0).IDOBIECTIV + "");
+        where.put("OBJECTIVEID", oneRow.get(0).OBJECTIVEID + "");
         db.update(this.tableName, set, where);
         try{
             logger.log("RentModel update data");
@@ -252,19 +252,19 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
 
         Map<String, String> where = new HashMap<>();
         if(databaseType == DatabaseConnection.DatabaseType.ORACLE)
-            where.put("DATAINCHIRIERE", "TO_DATE('" + sdf.format(row.get(0).DATA_INCHIRIERE) + "', 'YYYY-MM-DD HH24:MI:SS')");
+            where.put("RENTDATE", "TO_DATE('" + sdf.format(row.get(0).RENT_DATE) + "', 'YYYY-MM-DD HH24:MI:SS')");
         else if(databaseType == DatabaseConnection.DatabaseType.CSV){
-            where.put("DATAINCHIRIERE", sdf.format(row.get(0).DATA_INCHIRIERE) + " 00:00:00");
+            where.put("RENTDATE", sdf.format(row.get(0).RENT_DATE) + " 00:00:00");
         } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
-            where.put("DATAINCHIRIERE", sdf.format(row.get(0).DATA_INCHIRIERE) + " 00:00:00");
+            where.put("RENTDATE", sdf.format(row.get(0).RENT_DATE) + " 00:00:00");
         }
-        where.put("DURATAINZILE", row.get(0).DURATA_IN_ZILE + "");
-        where.put("ESTERETURNAT", row.get(0).ESTE_RETURNAT ? "'1'" : "'0'");
-        where.put("PENALIZARE", row.get(0).PENALIZARE + "");
+        where.put("DURATIONINDAYS", row.get(0).DURATION_IN_DAYS + "");
+        where.put("ISRETURNED", row.get(0).IS_RETURNED ? "'1'" : "'0'");
+        where.put("PENALTYFEE", row.get(0).PENALTYFEE + "");
         where.put("IDANGAJAT", row.get(0).IDANGAJAT + "");
         where.put("IDCAMERA", row.get(0).IDCAMERA + "");
         where.put("IDCLIENT", row.get(0).IDCLIENT + "");
-        where.put("IDOBIECTIV", row.get(0).IDOBIECTIV + "");
+        where.put("OBJECTIVEID", row.get(0).OBJECTIVEID + "");
         db.delete(this.tableName, where);
         try{
             logger.log("RentModel delete data");
@@ -322,19 +322,19 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
 
         List<Pair<String, String>> values = new ArrayList<>();
         if(databaseType == DatabaseConnection.DatabaseType.ORACLE)
-            values.add(new Pair<String, String>("DATAINCHIRIERE", "TO_DATE('" + sdf.format(row.DATA_INCHIRIERE) + "', 'YYYY-MM-DD HH24:MI:SS')"));
+            values.add(new Pair<String, String>("RENTDATE", "TO_DATE('" + sdf.format(row.RENT_DATE) + "', 'YYYY-MM-DD HH24:MI:SS')"));
         else if(databaseType == DatabaseConnection.DatabaseType.CSV){
-            values.add(new Pair<String, String>("DATAINCHIRIERE", sdf.format(row.DATA_INCHIRIERE) + ""));
+            values.add(new Pair<String, String>("RENTDATE", sdf.format(row.RENT_DATE) + ""));
         } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
-            values.add(new Pair<String, String>("DATAINCHIRIERE", sdf.format(row.DATA_INCHIRIERE) + ""));
+            values.add(new Pair<String, String>("RENTDATE", sdf.format(row.RENT_DATE) + ""));
         }
-        values.add(new Pair<String, String>("DURATAINZILE", row.DURATA_IN_ZILE + ""));
+        values.add(new Pair<String, String>("DURATIONINDAYS", row.DURATION_IN_DAYS + ""));
         values.add(new Pair<String, String>("IDCAMERA", row.IDCAMERA + ""));
         values.add(new Pair<String, String>("IDCLIENT", row.IDCLIENT + ""));
         values.add(new Pair<String, String>("IDANGAJAT", row.IDANGAJAT + ""));
-        values.add(new Pair<String, String>("IDOBIECTIV", row.IDOBIECTIV + ""));
-        values.add(new Pair<String, String>("ESTERETURNAT", row.ESTE_RETURNAT ? "'1'" : "'0'"));
-        values.add(new Pair<String, String>("PENALIZARE", row.PENALIZARE + ""));
+        values.add(new Pair<String, String>("OBJECTIVEID", row.OBJECTIVEID + ""));
+        values.add(new Pair<String, String>("ISRETURNED", row.IS_RETURNED ? "'1'" : "'0'"));
+        values.add(new Pair<String, String>("PENALTYFEE", row.PENALTYFEE + ""));
 
         db.insert(this.tableName, values);
 

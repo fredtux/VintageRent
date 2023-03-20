@@ -14,24 +14,24 @@ import java.util.Map;
 
 public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelList<ObjectiveModel.InnerObjectiveModel>, ObjectiveModel.InnerObjectiveModel> {
     public static class InnerObjectiveModel extends AbstractInnerModel implements Comparable<InnerObjectiveModel> {
-        public int IDObiectiv;
-        public String Denumire;
-        public int DistantaFocala;
-        public double DiafragmaMinima;
-        public double DiafragmaMaxima;
-        public int Diametru;
-        public int Pret;
-        public int PretInchiriere;
-        public int IDMontura;
-        public String DenumireMontura;
+        public int ObjectiveID;
+        public String Name;
+        public int FocalDistance;
+        public double MinimumAperture;
+        public double MaximumAperture;
+        public int Diameter;
+        public int Price;
+        public int RentalPrice;
+        public int MountID;
+        public String NameMount;
 
 
         @Override
         public int compareTo(InnerObjectiveModel o) {
-            return this.IDObiectiv - o.IDObiectiv;
+            return this.ObjectiveID - o.ObjectiveID;
         }
     }
-    private String tableName = "OBIECTIVE";
+    private String tableName = "OBJECTIVE";
 
     private static ObjectiveModel instance = null;
     private ModelList<InnerObjectiveModel> modelList = null;
@@ -51,20 +51,20 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
         this.databaseType = databaseType;
 
         if(databaseType == DatabaseConnection.DatabaseType.CSV){
-            this.tableName = "Obiective.csv";
+            this.tableName = "Objective.csv";
         } else if (databaseType == DatabaseConnection.DatabaseType.ORACLE){
-            this.tableName = "OBIECTIVE";
+            this.tableName = "OBJECTIVE";
         } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
             this.tableName = "objective";
         }
     }
 
     public DefaultTableModel getTableModel() {
-        String[] columns = {"IDObiectiv", "Denumire", "DistantaFocala", "DiafragmaMinima", "DiafragmaMaxima", "Diametru", "Pret", "PretInchiriere", "IDMontura", "DenumireMontura"};
+        String[] columns = {"ObjectiveID", "Name", "FocalDistance", "MinimumAperture", "MaximumAperture", "Diameter", "Price", "RentalPrice", "MountID", "NameMount"};
 
         DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
         for(InnerObjectiveModel model : this.modelList.getList()){
-            Object[] obj = {model.IDObiectiv, model.Denumire, model.DistantaFocala, model.DiafragmaMinima, model.DiafragmaMaxima, model.Diametru, model.Pret, model.PretInchiriere, model.IDMontura, model.DenumireMontura};
+            Object[] obj = {model.ObjectiveID, model.Name, model.FocalDistance, model.MinimumAperture, model.MaximumAperture, model.Diameter, model.Price, model.RentalPrice, model.MountID, model.NameMount};
             tableModel.addRow(obj);
         }
 
@@ -79,7 +79,7 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
         else
             instance = this;
 
-        this.name = "Obiective";
+        this.name = "Objective";
         this.databaseType = DatabaseConnection.DatabaseType.ORACLE;
     }
 
@@ -90,12 +90,12 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
         else
             instance = this;
 
-        this.name = "Obiective";
+        this.name = "Objective";
         this.databaseType = t;
         if(t == DatabaseConnection.DatabaseType.CSV)
-            this.tableName = "Obiective.csv";
+            this.tableName = "Objective.csv";
         else if(t == DatabaseConnection.DatabaseType.ORACLE)
-            this.tableName = "OBIECTIVE";
+            this.tableName = "OBJECTIVE";
         else if(t == DatabaseConnection.DatabaseType.INMEMORY)
             this.tableName = "objective";
     }
@@ -105,13 +105,13 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
 
         while(rs.next()){
             InnerObjectiveModel model = new InnerObjectiveModel();
-            model.IDObiectiv = rs.getInt("IDOBIECTIV");
-            model.Denumire = rs.getString("DENUMIRE");
-            model.DistantaFocala = rs.getInt("DISTANTAFOCALA");
-            model.DiafragmaMinima = rs.getDouble("DIAFRAGMAMINIMA");
-            model.DiafragmaMaxima = rs.getDouble("DIAFRAGMAMAXIMA");
-            model.Diametru = rs.getInt("DIAMETRU");
-            model.Pret = rs.getInt("PRET");
+            model.ObjectiveID = rs.getInt("OBJECTIVEID");
+            model.Name = rs.getString("NAME");
+            model.FocalDistance = rs.getInt("FOCALDISTANCE");
+            model.MinimumAperture = rs.getDouble("MINIMUMAPERTURE");
+            model.MaximumAperture = rs.getDouble("MAXIMUMAPERTURE");
+            model.Diameter = rs.getInt("DIAMETER");
+            model.Price = rs.getInt("PRICE");
 
 
             this.modelList.add(model);
@@ -124,52 +124,52 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
         Map<String, String> tables = null;
         if(databaseType == DatabaseConnection.DatabaseType.CSV) {
             tables = new HashMap<>();
-            tables.put("OBIECTIVE", "Obiective.csv");
-            tables.put("MONTURA", "Montura.csv");
+            tables.put("OBJECTIVE", "Objective.csv");
+            tables.put("MOUNT", "Mount.csv");
         } else if(databaseType == DatabaseConnection.DatabaseType.ORACLE){
             tables = new HashMap<>();
-            tables.put("OBIECTIVE", "OBIECTIVE");
-            tables.put("MONTURA", "MONTURA");
+            tables.put("OBJECTIVE", "OBJECTIVE");
+            tables.put("MOUNT", "MOUNT");
         } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
             tables = new HashMap<>();
-            tables.put("OBIECTIVE", "objective");
-            tables.put("MONTURA", "mount");
+            tables.put("OBJECTIVE", "objective");
+            tables.put("MOUNT", "mount");
         }
 
 
-        ResultSet obiective = db.getAllTableData(tables.get("OBIECTIVE"));
-        ResultSet monturi = db.getAllTableData(tables.get("MONTURA"));
+        ResultSet obiective = db.getAllTableData(tables.get("OBJECTIVE"));
+        ResultSet monturi = db.getAllTableData(tables.get("MOUNT"));
 
         Map<Integer, String> monturaMap = new HashMap<>();
         while(monturi.next()){
-            monturaMap.put(monturi.getInt("IDMONTURA"), monturi.getString("DENUMIRE"));
+            monturaMap.put(monturi.getInt("MOUNTID"), monturi.getString("NAME"));
         }
 
         // Add fields to cameras
         this.modelList = new ModelList<>(true);
         while(obiective.next()) {
             InnerObjectiveModel model = new InnerObjectiveModel();
-            model.IDObiectiv = obiective.getInt("IDOBIECTIV");
-            model.Denumire = obiective.getString("DENUMIRE");
-            model.DistantaFocala = obiective.getInt("DISTANTAFOCALA");
+            model.ObjectiveID = obiective.getInt("OBJECTIVEID");
+            model.Name = obiective.getString("NAME");
+            model.FocalDistance = obiective.getInt("FOCALDISTANCE");
             try {
-                model.DiafragmaMinima = obiective.getDouble("DIAFRAGMAMINIMA");
+                model.MinimumAperture = obiective.getDouble("MINIMUMAPERTURE");
             } catch (Exception ex){
-                model.DiafragmaMinima = 0.0;
+                model.MinimumAperture = 0.0;
             }
             try {
-                model.DiafragmaMaxima = obiective.getDouble("DIAFRAGMAMAXIMA");
+                model.MaximumAperture = obiective.getDouble("MAXIMUMAPERTURE");
             } catch (Exception ex){
-                model.DiafragmaMaxima = 0.0;
+                model.MaximumAperture = 0.0;
             }
-            model.Diametru = obiective.getInt("DIAMETRU");
-            model.Pret = obiective.getInt("PRET");
-            model.PretInchiriere = obiective.getInt("PRETINCHIRIERE");
-            model.IDMontura = obiective.getInt("IDMONTURA");
+            model.Diameter = obiective.getInt("DIAMETER");
+            model.Price = obiective.getInt("PRICE");
+            model.RentalPrice = obiective.getInt("RENTALPRICE");
+            model.MountID = obiective.getInt("MOUNTID");
             try {
-                model.DenumireMontura = monturaMap.get(model.IDMontura);
+                model.NameMount = monturaMap.get(model.MountID);
             } catch (Exception ex){
-                model.DenumireMontura = "";
+                model.NameMount = "";
             }
 
             this.modelList.add(model);
@@ -188,17 +188,17 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
     public void updateData(ModelList<InnerObjectiveModel> oneRow) throws Exception {
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         Map<String, String> set = new HashMap<>();
-        set.put("DENUMIRE", "'" + oneRow.get(0).Denumire + "'");
-        set.put("DISTANTAFOCALA", String.valueOf(oneRow.get(0).DistantaFocala));
-        set.put("DIAFRAGMAMINIMA", String.valueOf(oneRow.get(0).DiafragmaMinima));
-        set.put("DIAFRAGMAMAXIMA", String.valueOf(oneRow.get(0).DiafragmaMaxima));
-        set.put("DIAMETRU", String.valueOf(oneRow.get(0).Diametru));
-        set.put("PRET", String.valueOf(oneRow.get(0).Pret));
-        set.put("PRETINCHIRIERE", String.valueOf(oneRow.get(0).PretInchiriere));
+        set.put("NAME", "'" + oneRow.get(0).Name + "'");
+        set.put("FOCALDISTANCE", String.valueOf(oneRow.get(0).FocalDistance));
+        set.put("MINIMUMAPERTURE", String.valueOf(oneRow.get(0).MinimumAperture));
+        set.put("MAXIMUMAPERTURE", String.valueOf(oneRow.get(0).MaximumAperture));
+        set.put("DIAMETER", String.valueOf(oneRow.get(0).Diameter));
+        set.put("PRICE", String.valueOf(oneRow.get(0).Price));
+        set.put("RENTALPRICE", String.valueOf(oneRow.get(0).RentalPrice));
 
 
         Map<String, String> where = new HashMap<>();
-        where.put("IDOBIECTIV", oneRow.get(0).IDObiectiv + "");
+        where.put("OBJECTIVEID", oneRow.get(0).ObjectiveID + "");
 
         db.update(this.tableName, set, where);
         try{
@@ -206,7 +206,7 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
         } catch (Exception ex) {
             System.out.println("Error logging to CSV: " + ex.getMessage());
         }
-//        db.update("UPDATE " + this.tableName + " SET MARCA = '" + oneRow.get(0).Marca + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRET = " + oneRow.get(0).Pret + ", PRETINCHIRIERE = " + oneRow.get(0).PretInchiriere + ", ANFABRICATIE = " + oneRow.get(0).AnFabricatie + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
+//        db.update("UPDATE " + this.tableName + " SET BRAND = '" + oneRow.get(0).Brand + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRICE = " + oneRow.get(0).Price + ", RENTALPRICE = " + oneRow.get(0).RentalPrice + ", MANUFACTURINGYEAR = " + oneRow.get(0).ManufacturingYear + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
     }
 
     @Override
@@ -214,7 +214,7 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
 
         Map<String, String> where = new HashMap<>();
-        where.put("IDOBIECTIV", row.get(0).IDObiectiv + "");
+        where.put("OBJECTIVEID", row.get(0).ObjectiveID + "");
         db.delete(this.tableName, where);
         try{
             logger.log("ObjectiveModel delete data");
@@ -270,15 +270,15 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
 
         List<Pair<String, String>> values = new ArrayList<>();
-        values.add(new Pair<>("IDOBIECTIV", ""));
-        values.add(new Pair<>("DENUMIRE", "'" + row.Denumire + "'"));
-        values.add(new Pair<>("DISTANTAFOCALA", String.valueOf(row.DistantaFocala)));
-        values.add(new Pair<>("DIAFRAGMAMINIMA", String.valueOf(row.DiafragmaMinima)));
-        values.add(new Pair<>("DIAFRAGMAMAXIMA", String.valueOf(row.DiafragmaMaxima)));
-        values.add(new Pair<>("DIAMETRU", String.valueOf(row.Diametru)));
-        values.add(new Pair<>("PRET", String.valueOf(row.Pret)));
-        values.add(new Pair<>("PRETINCHIRIERE", String.valueOf(row.PretInchiriere)));
-        values.add(new Pair<>("IDMONTURA", String.valueOf(row.IDMontura)));
+        values.add(new Pair<>("OBJECTIVEID", ""));
+        values.add(new Pair<>("NAME", "'" + row.Name + "'"));
+        values.add(new Pair<>("FOCALDISTANCE", String.valueOf(row.FocalDistance)));
+        values.add(new Pair<>("MINIMUMAPERTURE", String.valueOf(row.MinimumAperture)));
+        values.add(new Pair<>("MAXIMUMAPERTURE", String.valueOf(row.MaximumAperture)));
+        values.add(new Pair<>("DIAMETER", String.valueOf(row.Diameter)));
+        values.add(new Pair<>("PRICE", String.valueOf(row.Price)));
+        values.add(new Pair<>("RENTALPRICE", String.valueOf(row.RentalPrice)));
+        values.add(new Pair<>("MOUNTID", String.valueOf(row.MountID)));
 
 
         db.insert(this.tableName, values);

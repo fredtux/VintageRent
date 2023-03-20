@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class ModelInit {
-    private static String[] modelNames = {"Angajati", "Inchiriere", "Administrator_Subdomenii", "Administratori", "Adrese", "Camere","Clienti", "Format", "Montura", "Obiective", "Salariu", "TipCamera", "TipClient", "Utilizatori"};
+    private static String[] modelNames = {"Employee", "Rental", "Administrator_Subdomains", "Administrators", "Address", "Camera","Clients", "Format", "Mount", "Objective", "Salary", "CameraType", "ClientType", "Users"};
 
     public static void copyResourceDirectory(Path source, Path destination) throws IOException  {
 //        Path source = Paths.get("CSV");
@@ -95,97 +95,97 @@ public class ModelInit {
             CameraModel.InnerCameraModel data = new CameraModel.InnerCameraModel();
             data.IDCamera = 1;
             data.ModelCamera = "Camera1";
-            data.IDMontura = 1;
-            data.IDFormat = 1;
-            data.PretInchiriere = 100;
-            data.Pret = 100;
-            data.AnFabricatie = 1970;
-            data.Marca = "Marca1";
-            data.IDTip = 1;
+            data.MountID = 1;
+            data.FormatID = 1;
+            data.RentalPrice = 100;
+            data.Price = 100;
+            data.ManufacturingYear = 1970;
+            data.Brand = "Brand1";
+            data.TypeID = 1;
 
             MainService.insert(cameraModel, data);
 
             data.IDCamera = 2;
             data.ModelCamera = "Camera2";
-            data.IDMontura = 2;
-            data.IDFormat = 2;
-            data.PretInchiriere = 100;
-            data.Pret = 100;
-            data.AnFabricatie = 1970;
-            data.Marca = "Marca2";
-            data.IDTip = 2;
+            data.MountID = 2;
+            data.FormatID = 2;
+            data.RentalPrice = 100;
+            data.Price = 100;
+            data.ManufacturingYear = 1970;
+            data.Brand = "Brand2";
+            data.TypeID = 2;
 
             MainService.insert(cameraModel, data);
 
             data.IDCamera = 3;
             data.ModelCamera = "Camera3";
-            data.IDMontura = 1;
-            data.IDFormat = 1;
-            data.PretInchiriere = 100;
-            data.Pret = 100;
-            data.AnFabricatie = 1970;
-            data.Marca = "Marca3";
-            data.IDTip = 3;
+            data.MountID = 1;
+            data.FormatID = 1;
+            data.RentalPrice = 100;
+            data.Price = 100;
+            data.ManufacturingYear = 1970;
+            data.Brand = "Brand3";
+            data.TypeID = 3;
 
             MainService.insert(cameraModel, data);
 
             data.IDCamera = 4;
             data.ModelCamera = "Camera4";
-            data.IDMontura = 1;
-            data.IDFormat = 3;
-            data.PretInchiriere = 100;
-            data.Pret = 100;
-            data.AnFabricatie = 1970;
-            data.Marca = "Marca4";
-            data.IDTip = 1;
+            data.MountID = 1;
+            data.FormatID = 3;
+            data.RentalPrice = 100;
+            data.Price = 100;
+            data.ManufacturingYear = 1970;
+            data.Brand = "Brand4";
+            data.TypeID = 1;
 
             MainService.insert(cameraModel, data);
 
             data.IDCamera = 5;
             data.ModelCamera = "Camera5";
-            data.IDMontura = 4;
-            data.IDFormat = 2;
-            data.PretInchiriere = 100;
-            data.Pret = 100;
-            data.AnFabricatie = 1970;
-            data.Marca = "Marca5";
-            data.IDTip = 4;
+            data.MountID = 4;
+            data.FormatID = 2;
+            data.RentalPrice = 100;
+            data.Price = 100;
+            data.ManufacturingYear = 1970;
+            data.Brand = "Brand5";
+            data.TypeID = 4;
 
             MainService.insert(cameraModel, data);
 
             data.IDCamera = 6;
             data.ModelCamera = "Camera6";
-            data.IDMontura = 2;
-            data.IDFormat = 2;
-            data.PretInchiriere = 100;
-            data.Pret = 100;
-            data.AnFabricatie = 1970;
-            data.Marca = "Marca6";
-            data.IDTip = 2;
+            data.MountID = 2;
+            data.FormatID = 2;
+            data.RentalPrice = 100;
+            data.Price = 100;
+            data.ManufacturingYear = 1970;
+            data.Brand = "Brand6";
+            data.TypeID = 2;
 
             MainService.insert(cameraModel, data);
 
             data.IDCamera = 7;
             data.ModelCamera = "Camera7";
-            data.IDMontura = 3;
-            data.IDFormat = 3;
-            data.PretInchiriere = 100;
-            data.Pret = 100;
-            data.AnFabricatie = 1970;
-            data.Marca = "Marca7";
-            data.IDTip = 3;
+            data.MountID = 3;
+            data.FormatID = 3;
+            data.RentalPrice = 100;
+            data.Price = 100;
+            data.ManufacturingYear = 1970;
+            data.Brand = "Brand7";
+            data.TypeID = 3;
 
             MainService.insert(cameraModel, data);
 
             data.IDCamera = 8;
             data.ModelCamera = "Camera8";
-            data.IDMontura = 1;
-            data.IDFormat = 1;
-            data.PretInchiriere = 100;
-            data.Pret = 100;
-            data.AnFabricatie = 1970;
-            data.Marca = "Marca8";
-            data.IDTip = 1;
+            data.MountID = 1;
+            data.FormatID = 1;
+            data.RentalPrice = 100;
+            data.Price = 100;
+            data.ManufacturingYear = 1970;
+            data.Brand = "Brand8";
+            data.TypeID = 1;
 
             MainService.insert(cameraModel, data);
         } catch (Exception e){
@@ -200,43 +200,43 @@ public class ModelInit {
             MainService.getData(cameraTypeModel);
 
             CameraTypeModel.InnerCameraTypeModel data = new CameraTypeModel.InnerCameraTypeModel();
-            data.IDTip = 1;
-            data.Denumire = "Camera1";
+            data.TypeID = 1;
+            data.Name = "Camera1";
 
             MainService.insert(cameraTypeModel, data);
 
-            data.IDTip = 2;
-            data.Denumire = "Camera2";
+            data.TypeID = 2;
+            data.Name = "Camera2";
 
             MainService.insert(cameraTypeModel, data);
 
-            data.IDTip = 3;
-            data.Denumire = "Camera3";
+            data.TypeID = 3;
+            data.Name = "Camera3";
 
             MainService.insert(cameraTypeModel, data);
 
-            data.IDTip = 4;
-            data.Denumire = "Camera4";
+            data.TypeID = 4;
+            data.Name = "Camera4";
 
             MainService.insert(cameraTypeModel, data);
 
-            data.IDTip = 5;
-            data.Denumire = "Camera5";
+            data.TypeID = 5;
+            data.Name = "Camera5";
 
             MainService.insert(cameraTypeModel, data);
 
-            data.IDTip = 6;
-            data.Denumire = "Camera6";
+            data.TypeID = 6;
+            data.Name = "Camera6";
 
             MainService.insert(cameraTypeModel, data);
 
-            data.IDTip = 7;
-            data.Denumire = "Camera7";
+            data.TypeID = 7;
+            data.Name = "Camera7";
 
             MainService.insert(cameraTypeModel, data);
 
-            data.IDTip = 8;
-            data.Denumire = "Camera8";
+            data.TypeID = 8;
+            data.Name = "Camera8";
 
             MainService.insert(cameraTypeModel, data);
         } catch (Exception e){
@@ -252,50 +252,50 @@ public class ModelInit {
 
             ClientModel.InnerClientModel data = new ClientModel.InnerClientModel();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            data.IDUtilizator = 1;
-            data.NumeClient = "ClientName1";
-            data.DataNasterii = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
+            data.UserID = 1;
+            data.SurnameClient = "ClientName1";
+            data.BirthDate = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
 
             MainService.insert(clientModel, data);
 
-            data.IDUtilizator = 2;
-            data.NumeClient = "ClientName2";
-            data.DataNasterii = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
+            data.UserID = 2;
+            data.SurnameClient = "ClientName2";
+            data.BirthDate = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
 
             MainService.insert(clientModel, data);
 
-            data.IDUtilizator = 3;
-            data.NumeClient = "ClientName3";
-            data.DataNasterii = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
+            data.UserID = 3;
+            data.SurnameClient = "ClientName3";
+            data.BirthDate = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
 
             MainService.insert(clientModel, data);
 
-            data.IDUtilizator = 4;
-            data.NumeClient = "ClientName4";
-            data.DataNasterii = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
+            data.UserID = 4;
+            data.SurnameClient = "ClientName4";
+            data.BirthDate = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
 
             MainService.insert(clientModel, data);
 
-            data.IDUtilizator = 5;
-            data.NumeClient = "ClientName5";
-            data.DataNasterii = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
+            data.UserID = 5;
+            data.SurnameClient = "ClientName5";
+            data.BirthDate = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
 
             MainService.insert(clientModel, data);
 
-            data.IDUtilizator = 6;
-            data.NumeClient = "ClientName6";
-            data.DataNasterii = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
+            data.UserID = 6;
+            data.SurnameClient = "ClientName6";
+            data.BirthDate = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
 
             MainService.insert(clientModel, data);
-            data.IDUtilizator = 7;
-            data.NumeClient = "ClientName7";
-            data.DataNasterii = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
+            data.UserID = 7;
+            data.SurnameClient = "ClientName7";
+            data.BirthDate = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
 
             MainService.insert(clientModel, data);
 
-            data.IDUtilizator = 8;
-            data.NumeClient = "ClientName8";
-            data.DataNasterii = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
+            data.UserID = 8;
+            data.SurnameClient = "ClientName8";
+            data.BirthDate = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
 
             MainService.insert(clientModel, data);
         } catch (Exception e){
@@ -310,50 +310,50 @@ public class ModelInit {
             MainService.getData(clientTypeModel);
 
             ClientTypeModel.InnerClientTypeModel data = new ClientTypeModel.InnerClientTypeModel();
-            data.IDTip = 1;
-            data.Denumire = "ClientType1";
+            data.TypeID = 1;
+            data.Name = "ClientType1";
             data.Discount = 0.0;
 
             MainService.insert(clientTypeModel, data);
 
-            data.IDTip = 2;
-            data.Denumire = "ClientType2";
+            data.TypeID = 2;
+            data.Name = "ClientType2";
             data.Discount = 0.0;
 
             MainService.insert(clientTypeModel, data);
 
-            data.IDTip = 3;
-            data.Denumire = "ClientType3";
+            data.TypeID = 3;
+            data.Name = "ClientType3";
             data.Discount = 0.0;
 
             MainService.insert(clientTypeModel, data);
 
-            data.IDTip = 4;
-            data.Denumire = "ClientType4";
+            data.TypeID = 4;
+            data.Name = "ClientType4";
             data.Discount = 0.0;
 
             MainService.insert(clientTypeModel, data);
 
-            data.IDTip = 5;
-            data.Denumire = "ClientType5";
+            data.TypeID = 5;
+            data.Name = "ClientType5";
             data.Discount = 0.0;
 
             MainService.insert(clientTypeModel, data);
 
-            data.IDTip = 6;
-            data.Denumire = "ClientType6";
+            data.TypeID = 6;
+            data.Name = "ClientType6";
             data.Discount = 0.0;
 
             MainService.insert(clientTypeModel, data);
 
-            data.IDTip = 7;
-            data.Denumire = "ClientType7";
+            data.TypeID = 7;
+            data.Name = "ClientType7";
             data.Discount = 0.0;
 
             MainService.insert(clientTypeModel, data);
 
-            data.IDTip = 8;
-            data.Denumire = "ClientType8";
+            data.TypeID = 8;
+            data.Name = "ClientType8";
             data.Discount = 0.0;
 
             MainService.insert(clientTypeModel, data);
@@ -370,75 +370,75 @@ public class ModelInit {
 
             EmployeeModel.InnerEmployeeModel data = new EmployeeModel.InnerEmployeeModel();
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            data.IDUtilizator = 1;
-            data.DataNasterii = LocalDateTime.parse("2000-01-01 00:00:01", dtf);
-            data.DataAngajarii = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
-            data.IDSalariu = 1;
+            data.UserID = 1;
+            data.BirthDate = LocalDateTime.parse("2000-01-01 00:00:01", dtf);
+            data.HireDate = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
+            data.SalaryID = 1;
             data.IDManager = 1;
-            data.NumeAngajat = "Test";
+            data.SurnameAngajat = "Test";
 
             MainService.insert(employeeModel, data);
 
-            data.IDUtilizator = 2;
-            data.DataNasterii = LocalDateTime.parse("2000-01-01 00:00:01", dtf);
-            data.DataAngajarii = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
-            data.IDSalariu = 2;
+            data.UserID = 2;
+            data.BirthDate = LocalDateTime.parse("2000-01-01 00:00:01", dtf);
+            data.HireDate = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
+            data.SalaryID = 2;
             data.IDManager = 1;
-            data.NumeAngajat = "Test";
+            data.SurnameAngajat = "Test";
 
             MainService.insert(employeeModel, data);
 
-            data.IDUtilizator = 3;
-            data.DataNasterii = LocalDateTime.parse("2000-01-01 00:00:01", dtf);
-            data.DataAngajarii = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
-            data.IDSalariu = 2;
+            data.UserID = 3;
+            data.BirthDate = LocalDateTime.parse("2000-01-01 00:00:01", dtf);
+            data.HireDate = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
+            data.SalaryID = 2;
             data.IDManager = 1;
-            data.NumeAngajat = "Test";
+            data.SurnameAngajat = "Test";
 
             MainService.insert(employeeModel, data);
 
-            data.IDUtilizator = 4;
-            data.DataNasterii = LocalDateTime.parse("2000-01-01 00:00:01", dtf);
-            data.DataAngajarii = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
-            data.IDSalariu = 3;
+            data.UserID = 4;
+            data.BirthDate = LocalDateTime.parse("2000-01-01 00:00:01", dtf);
+            data.HireDate = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
+            data.SalaryID = 3;
             data.IDManager = 2;
-            data.NumeAngajat = "Test";
+            data.SurnameAngajat = "Test";
 
             MainService.insert(employeeModel, data);
 
-            data.IDUtilizator = 5;
-            data.DataNasterii = LocalDateTime.parse("2000-01-01 00:00:01", dtf);
-            data.DataAngajarii = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
-            data.IDSalariu = 4;
+            data.UserID = 5;
+            data.BirthDate = LocalDateTime.parse("2000-01-01 00:00:01", dtf);
+            data.HireDate = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
+            data.SalaryID = 4;
             data.IDManager = 4;
-            data.NumeAngajat = "Test";
+            data.SurnameAngajat = "Test";
 
             MainService.insert(employeeModel, data);
 
-            data.IDUtilizator = 6;
-            data.DataNasterii = LocalDateTime.parse("2000-01-01 00:00:01", dtf);
-            data.DataAngajarii = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
-            data.IDSalariu = 2;
+            data.UserID = 6;
+            data.BirthDate = LocalDateTime.parse("2000-01-01 00:00:01", dtf);
+            data.HireDate = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
+            data.SalaryID = 2;
             data.IDManager = 2;
-            data.NumeAngajat = "Test";
+            data.SurnameAngajat = "Test";
 
             MainService.insert(employeeModel, data);
 
-            data.IDUtilizator = 7;
-            data.DataNasterii = LocalDateTime.parse("2000-01-01 00:00:01", dtf);
-            data.DataAngajarii = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
-            data.IDSalariu = 2;
+            data.UserID = 7;
+            data.BirthDate = LocalDateTime.parse("2000-01-01 00:00:01", dtf);
+            data.HireDate = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
+            data.SalaryID = 2;
             data.IDManager = 2;
-            data.NumeAngajat = "Test";
+            data.SurnameAngajat = "Test";
 
             MainService.insert(employeeModel, data);
 
-            data.IDUtilizator = 8;
-            data.DataNasterii = LocalDateTime.parse("2000-01-01 00:00:01", dtf);
-            data.DataAngajarii = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
-            data.IDSalariu = 5;
+            data.UserID = 8;
+            data.BirthDate = LocalDateTime.parse("2000-01-01 00:00:01", dtf);
+            data.HireDate = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
+            data.SalaryID = 5;
             data.IDManager = 5;
-            data.NumeAngajat = "Test";
+            data.SurnameAngajat = "Test";
 
             MainService.insert(employeeModel, data);
         } catch (Exception e){
@@ -453,51 +453,51 @@ public class ModelInit {
             MainService.getData(formatModel);
 
             FormatModel.InnerFormatModel data = new FormatModel.InnerFormatModel();
-            data.IDFormat = 1;
-            data.Denumire = "Format1";
-            data.LatimeFilm = "Latime1";
+            data.FormatID = 1;
+            data.Name = "Format1";
+            data.FilmWidth = "Latime1";
 
             MainService.insert(formatModel, data);
 
-            data.IDFormat = 2;
-            data.Denumire = "Format2";
-            data.LatimeFilm = "Latime2";
+            data.FormatID = 2;
+            data.Name = "Format2";
+            data.FilmWidth = "Latime2";
 
             MainService.insert(formatModel, data);
 
-            data.IDFormat = 3;
-            data.Denumire = "Format3";
-            data.LatimeFilm = "Latime3";
+            data.FormatID = 3;
+            data.Name = "Format3";
+            data.FilmWidth = "Latime3";
 
             MainService.insert(formatModel, data);
 
-            data.IDFormat = 4;
-            data.Denumire = "Format4";
-            data.LatimeFilm = "Latime4";
+            data.FormatID = 4;
+            data.Name = "Format4";
+            data.FilmWidth = "Latime4";
 
             MainService.insert(formatModel, data);
 
-            data.IDFormat = 5;
-            data.Denumire = "Format5";
-            data.LatimeFilm = "Latime5";
+            data.FormatID = 5;
+            data.Name = "Format5";
+            data.FilmWidth = "Latime5";
 
             MainService.insert(formatModel, data);
 
-            data.IDFormat = 6;
-            data.Denumire = "Format6";
-            data.LatimeFilm = "Latime6";
+            data.FormatID = 6;
+            data.Name = "Format6";
+            data.FilmWidth = "Latime6";
 
             MainService.insert(formatModel, data);
 
-            data.IDFormat = 7;
-            data.Denumire = "Format7";
-            data.LatimeFilm = "Latime7";
+            data.FormatID = 7;
+            data.Name = "Format7";
+            data.FilmWidth = "Latime7";
 
             MainService.insert(formatModel, data);
 
-            data.IDFormat = 8;
-            data.Denumire = "Format8";
-            data.LatimeFilm = "Latime8";
+            data.FormatID = 8;
+            data.Name = "Format8";
+            data.FilmWidth = "Latime8";
 
             MainService.insert(formatModel, data);
         } catch (Exception e){
@@ -512,43 +512,43 @@ public class ModelInit {
             MainService.getData(mountModel);
 
             MountModel.InnerMountModel data = new MountModel.InnerMountModel();
-            data.IDMontura = 1;
-            data.Denumire = "Mount1";
+            data.MountID = 1;
+            data.Name = "Mount1";
 
             MainService.insert(mountModel, data);
 
-            data.IDMontura = 2;
-            data.Denumire = "Mount2";
+            data.MountID = 2;
+            data.Name = "Mount2";
 
             MainService.insert(mountModel, data);
 
-            data.IDMontura = 3;
-            data.Denumire = "Mount3";
+            data.MountID = 3;
+            data.Name = "Mount3";
 
             MainService.insert(mountModel, data);
 
-            data.IDMontura = 4;
-            data.Denumire = "Mount4";
+            data.MountID = 4;
+            data.Name = "Mount4";
 
             MainService.insert(mountModel, data);
 
-            data.IDMontura = 5;
-            data.Denumire = "Mount5";
+            data.MountID = 5;
+            data.Name = "Mount5";
 
             MainService.insert(mountModel, data);
 
-            data.IDMontura = 6;
-            data.Denumire = "Mount6";
+            data.MountID = 6;
+            data.Name = "Mount6";
 
             MainService.insert(mountModel, data);
 
-            data.IDMontura = 7;
-            data.Denumire = "Mount7";
+            data.MountID = 7;
+            data.Name = "Mount7";
 
             MainService.insert(mountModel, data);
 
-            data.IDMontura = 8;
-            data.Denumire = "Mount8";
+            data.MountID = 8;
+            data.Name = "Mount8";
 
             MainService.insert(mountModel, data);
         } catch (Exception e){
@@ -563,91 +563,91 @@ public class ModelInit {
             MainService.getData(mobjectiveModel);
 
             ObjectiveModel.InnerObjectiveModel data = new ObjectiveModel.InnerObjectiveModel();
-            data.IDObiectiv = 1;
-            data.PretInchiriere = 100;
-            data.Pret = 100;
-            data.Denumire = "Objective1";
-            data.DiafragmaMaxima = 0.0;
-            data.DiafragmaMinima = 0.0;
-            data.DistantaFocala = 100;
-            data.Diametru = 100;
+            data.ObjectiveID = 1;
+            data.RentalPrice = 100;
+            data.Price = 100;
+            data.Name = "Objective1";
+            data.MaximumAperture = 0.0;
+            data.MinimumAperture = 0.0;
+            data.FocalDistance = 100;
+            data.Diameter = 100;
 
             MainService.insert(mobjectiveModel, data);
 
-            data.IDObiectiv = 2;
-            data.PretInchiriere = 100;
-            data.Pret = 100;
-            data.Denumire = "Objective2";
-            data.DiafragmaMaxima = 0.0;
-            data.DiafragmaMinima = 0.0;
-            data.DistantaFocala = 100;
-            data.Diametru = 100;
+            data.ObjectiveID = 2;
+            data.RentalPrice = 100;
+            data.Price = 100;
+            data.Name = "Objective2";
+            data.MaximumAperture = 0.0;
+            data.MinimumAperture = 0.0;
+            data.FocalDistance = 100;
+            data.Diameter = 100;
 
             MainService.insert(mobjectiveModel, data);
 
-            data.IDObiectiv = 3;
-            data.PretInchiriere = 100;
-            data.Pret = 100;
-            data.Denumire = "Objective3";
-            data.DiafragmaMaxima = 0.0;
-            data.DiafragmaMinima = 0.0;
-            data.DistantaFocala = 100;
-            data.Diametru = 100;
+            data.ObjectiveID = 3;
+            data.RentalPrice = 100;
+            data.Price = 100;
+            data.Name = "Objective3";
+            data.MaximumAperture = 0.0;
+            data.MinimumAperture = 0.0;
+            data.FocalDistance = 100;
+            data.Diameter = 100;
 
             MainService.insert(mobjectiveModel, data);
 
-            data.IDObiectiv = 4;
-            data.PretInchiriere = 100;
-            data.Pret = 100;
-            data.Denumire = "Objective4";
-            data.DiafragmaMaxima = 0.0;
-            data.DiafragmaMinima = 0.0;
-            data.DistantaFocala = 100;
-            data.Diametru = 100;
+            data.ObjectiveID = 4;
+            data.RentalPrice = 100;
+            data.Price = 100;
+            data.Name = "Objective4";
+            data.MaximumAperture = 0.0;
+            data.MinimumAperture = 0.0;
+            data.FocalDistance = 100;
+            data.Diameter = 100;
 
             MainService.insert(mobjectiveModel, data);
 
-            data.IDObiectiv = 5;
-            data.PretInchiriere = 100;
-            data.Pret = 100;
-            data.Denumire = "Objective5";
-            data.DiafragmaMaxima = 0.0;
-            data.DiafragmaMinima = 0.0;
-            data.DistantaFocala = 100;
-            data.Diametru = 100;
+            data.ObjectiveID = 5;
+            data.RentalPrice = 100;
+            data.Price = 100;
+            data.Name = "Objective5";
+            data.MaximumAperture = 0.0;
+            data.MinimumAperture = 0.0;
+            data.FocalDistance = 100;
+            data.Diameter = 100;
 
             MainService.insert(mobjectiveModel, data);
 
-            data.IDObiectiv = 6;
-            data.PretInchiriere = 100;
-            data.Pret = 100;
-            data.Denumire = "Objective6";
-            data.DiafragmaMaxima = 0.0;
-            data.DiafragmaMinima = 0.0;
-            data.DistantaFocala = 100;
-            data.Diametru = 100;
+            data.ObjectiveID = 6;
+            data.RentalPrice = 100;
+            data.Price = 100;
+            data.Name = "Objective6";
+            data.MaximumAperture = 0.0;
+            data.MinimumAperture = 0.0;
+            data.FocalDistance = 100;
+            data.Diameter = 100;
 
             MainService.insert(mobjectiveModel, data);
 
-            data.IDObiectiv = 7;
-            data.PretInchiriere = 100;
-            data.Pret = 100;
-            data.Denumire = "Objective7";
-            data.DiafragmaMaxima = 0.0;
-            data.DiafragmaMinima = 0.0;
-            data.DistantaFocala = 100;
-            data.Diametru = 100;
+            data.ObjectiveID = 7;
+            data.RentalPrice = 100;
+            data.Price = 100;
+            data.Name = "Objective7";
+            data.MaximumAperture = 0.0;
+            data.MinimumAperture = 0.0;
+            data.FocalDistance = 100;
+            data.Diameter = 100;
 
             MainService.insert(mobjectiveModel, data);
 
-            data.IDObiectiv = 8;
-            data.PretInchiriere = 100;
-            data.Pret = 100;
-            data.Denumire = "Objective8";
-            data.DiafragmaMaxima = 0.0;
-            data.DiafragmaMinima = 0.0;
-            data.DistantaFocala = 100;
-            data.Diametru = 100;
+            data.ObjectiveID = 8;
+            data.RentalPrice = 100;
+            data.Price = 100;
+            data.Name = "Objective8";
+            data.MaximumAperture = 0.0;
+            data.MinimumAperture = 0.0;
+            data.FocalDistance = 100;
+            data.Diameter = 100;
 
             MainService.insert(mobjectiveModel, data);
         } catch (Exception e){
@@ -663,91 +663,91 @@ public class ModelInit {
 
             RentModel.InnerRentModel data = new RentModel.InnerRentModel();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            data.DATA_INCHIRIERE = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
-            data.DURATA_IN_ZILE = 1;
+            data.RENT_DATE = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
+            data.DURATION_IN_DAYS = 1;
             data.IDANGAJAT = 1;
             data.IDCLIENT = 1;
-            data.IDOBIECTIV = 1;
-            data.ESTE_RETURNAT = false;
+            data.OBJECTIVEID = 1;
+            data.IS_RETURNED = false;
             data.IDCAMERA = 1;
-            data.PENALIZARE = 0;
+            data.PENALTYFEE = 0;
 
             MainService.insert(mrentModel, data);
 
-            data.DATA_INCHIRIERE = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
-            data.DURATA_IN_ZILE = 2;
+            data.RENT_DATE = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
+            data.DURATION_IN_DAYS = 2;
             data.IDANGAJAT = 2;
             data.IDCLIENT = 2;
-            data.IDOBIECTIV = 2;
-            data.ESTE_RETURNAT = false;
+            data.OBJECTIVEID = 2;
+            data.IS_RETURNED = false;
             data.IDCAMERA = 2;
-            data.PENALIZARE = 0;
+            data.PENALTYFEE = 0;
 
             MainService.insert(mrentModel, data);
 
-            data.DATA_INCHIRIERE = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
-            data.DURATA_IN_ZILE = 1;
+            data.RENT_DATE = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
+            data.DURATION_IN_DAYS = 1;
             data.IDANGAJAT = 1;
             data.IDCLIENT = 2;
-            data.IDOBIECTIV = 2;
-            data.ESTE_RETURNAT = false;
+            data.OBJECTIVEID = 2;
+            data.IS_RETURNED = false;
             data.IDCAMERA = 2;
-            data.PENALIZARE = 0;
+            data.PENALTYFEE = 0;
 
             MainService.insert(mrentModel, data);
 
-            data.DATA_INCHIRIERE = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
-            data.DURATA_IN_ZILE = 1;
+            data.RENT_DATE = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
+            data.DURATION_IN_DAYS = 1;
             data.IDANGAJAT = 3;
             data.IDCLIENT = 3;
-            data.IDOBIECTIV = 3;
-            data.ESTE_RETURNAT = false;
+            data.OBJECTIVEID = 3;
+            data.IS_RETURNED = false;
             data.IDCAMERA = 3;
-            data.PENALIZARE = 0;
+            data.PENALTYFEE = 0;
 
             MainService.insert(mrentModel, data);
 
-            data.DATA_INCHIRIERE = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
-            data.DURATA_IN_ZILE = 1;
+            data.RENT_DATE = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
+            data.DURATION_IN_DAYS = 1;
             data.IDANGAJAT = 1;
             data.IDCLIENT = 1;
-            data.IDOBIECTIV = 1;
-            data.ESTE_RETURNAT = false;
+            data.OBJECTIVEID = 1;
+            data.IS_RETURNED = false;
             data.IDCAMERA = 1;
-            data.PENALIZARE = 0;
+            data.PENALTYFEE = 0;
 
             MainService.insert(mrentModel, data);
 
-            data.DATA_INCHIRIERE = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
-            data.DURATA_IN_ZILE = 1;
+            data.RENT_DATE = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
+            data.DURATION_IN_DAYS = 1;
             data.IDANGAJAT = 2;
             data.IDCLIENT = 2;
-            data.IDOBIECTIV = 2;
-            data.ESTE_RETURNAT = false;
+            data.OBJECTIVEID = 2;
+            data.IS_RETURNED = false;
             data.IDCAMERA = 2;
-            data.PENALIZARE = 0;
+            data.PENALTYFEE = 0;
 
             MainService.insert(mrentModel, data);
 
-            data.DATA_INCHIRIERE = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
-            data.DURATA_IN_ZILE = 1;
+            data.RENT_DATE = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
+            data.DURATION_IN_DAYS = 1;
             data.IDANGAJAT = 3;
             data.IDCLIENT = 3;
-            data.IDOBIECTIV = 3;
-            data.ESTE_RETURNAT = false;
+            data.OBJECTIVEID = 3;
+            data.IS_RETURNED = false;
             data.IDCAMERA = 3;
-            data.PENALIZARE = 0;
+            data.PENALTYFEE = 0;
 
             MainService.insert(mrentModel, data);
 
-            data.DATA_INCHIRIERE = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
-            data.DURATA_IN_ZILE = 1;
+            data.RENT_DATE = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
+            data.DURATION_IN_DAYS = 1;
             data.IDANGAJAT = 4;
             data.IDCLIENT = 4;
-            data.IDOBIECTIV = 4;
-            data.ESTE_RETURNAT = false;
+            data.OBJECTIVEID = 4;
+            data.IS_RETURNED = false;
             data.IDCAMERA = 4;
-            data.PENALIZARE = 0;
+            data.PENALTYFEE = 0;
 
             MainService.insert(mrentModel, data);
         } catch (Exception e){
@@ -762,50 +762,50 @@ public class ModelInit {
             MainService.getData(msalaryModel);
 
             SalaryModel.InnerSalaryModel data = new SalaryModel.InnerSalaryModel();
-            data.IDSalariu = 0;
-            data.Salariu = 100;
+            data.SalaryID = 0;
+            data.Salary = 100;
             data.Bonus = 100;
 
             MainService.insert(msalaryModel, data);
 
-            data.IDSalariu = 0;
-            data.Salariu = 200;
+            data.SalaryID = 0;
+            data.Salary = 200;
             data.Bonus = 200;
 
             MainService.insert(msalaryModel, data);
 
-            data.IDSalariu = 0;
-            data.Salariu = 300;
+            data.SalaryID = 0;
+            data.Salary = 300;
             data.Bonus = 300;
 
             MainService.insert(msalaryModel, data);
 
-            data.IDSalariu = 0;
-            data.Salariu = 400;
+            data.SalaryID = 0;
+            data.Salary = 400;
             data.Bonus = 400;
 
             MainService.insert(msalaryModel, data);
 
-            data.IDSalariu = 0;
-            data.Salariu = 500;
+            data.SalaryID = 0;
+            data.Salary = 500;
             data.Bonus = 500;
 
             MainService.insert(msalaryModel, data);
 
-            data.IDSalariu = 0;
-            data.Salariu = 600;
+            data.SalaryID = 0;
+            data.Salary = 600;
             data.Bonus = 600;
 
             MainService.insert(msalaryModel, data);
 
-            data.IDSalariu = 0;
-            data.Salariu = 700;
+            data.SalaryID = 0;
+            data.Salary = 700;
             data.Bonus = 700;
 
             MainService.insert(msalaryModel, data);
 
-            data.IDSalariu = 0;
-            data.Salariu = 800;
+            data.SalaryID = 0;
+            data.Salary = 800;
             data.Bonus = 800;
 
             MainService.insert(msalaryModel, data);
@@ -821,89 +821,89 @@ public class ModelInit {
             MainService.getData(muserModel);
 
             UserModel.InnerUserModel data = new UserModel.InnerUserModel();
-            data.IDUtilizator = 0;
-            data.Parola = "123";
-            data.NumeUtilizator = "user1";
-            data.Prenume = "John1";
+            data.UserID = 0;
+            data.Password = "123";
+            data.UserName = "user1";
+            data.Firstname = "John1";
             data.CNP = "123";
             data.Email = "";
-            data.Nume = "Name1";
+            data.Surname = "Name1";
 
             MainService.insert(muserModel, data);
 
-            data.IDUtilizator = 0;
-            data.Parola = "123";
-            data.NumeUtilizator = "user2";
-            data.Prenume = "John2";
+            data.UserID = 0;
+            data.Password = "123";
+            data.UserName = "user2";
+            data.Firstname = "John2";
             data.CNP = "123";
             data.Email = "";
-            data.Nume = "Name2";
-
-
-            MainService.insert(muserModel, data);
-
-            data.IDUtilizator = 0;
-            data.Parola = "123";
-            data.NumeUtilizator = "user3";
-            data.Prenume = "John3";
-            data.CNP = "123";
-            data.Email = "";
-            data.Nume = "Name3";
+            data.Surname = "Name2";
 
 
             MainService.insert(muserModel, data);
 
-            data.IDUtilizator = 0;
-            data.Parola = "123";
-            data.NumeUtilizator = "user4";
-            data.Prenume = "John4";
+            data.UserID = 0;
+            data.Password = "123";
+            data.UserName = "user3";
+            data.Firstname = "John3";
             data.CNP = "123";
             data.Email = "";
-            data.Nume = "Name4";
+            data.Surname = "Name3";
 
 
             MainService.insert(muserModel, data);
 
-            data.IDUtilizator = 0;
-            data.Parola = "123";
-            data.NumeUtilizator = "user5";
-            data.Prenume = "John5";
+            data.UserID = 0;
+            data.Password = "123";
+            data.UserName = "user4";
+            data.Firstname = "John4";
             data.CNP = "123";
             data.Email = "";
-            data.Nume = "Name5";
+            data.Surname = "Name4";
 
 
             MainService.insert(muserModel, data);
 
-            data.IDUtilizator = 0;
-            data.Parola = "123";
-            data.NumeUtilizator = "user6";
-            data.Prenume = "John6";
+            data.UserID = 0;
+            data.Password = "123";
+            data.UserName = "user5";
+            data.Firstname = "John5";
             data.CNP = "123";
             data.Email = "";
-            data.Nume = "Name6";
+            data.Surname = "Name5";
 
 
             MainService.insert(muserModel, data);
 
-            data.IDUtilizator = 0;
-            data.Parola = "123";
-            data.NumeUtilizator = "user7";
-            data.Prenume = "John7";
+            data.UserID = 0;
+            data.Password = "123";
+            data.UserName = "user6";
+            data.Firstname = "John6";
             data.CNP = "123";
             data.Email = "";
-            data.Nume = "Name7";
+            data.Surname = "Name6";
 
 
             MainService.insert(muserModel, data);
 
-            data.IDUtilizator = 0;
-            data.Parola = "123";
-            data.NumeUtilizator = "user8";
-            data.Prenume = "John8";
+            data.UserID = 0;
+            data.Password = "123";
+            data.UserName = "user7";
+            data.Firstname = "John7";
             data.CNP = "123";
             data.Email = "";
-            data.Nume = "Name8";
+            data.Surname = "Name7";
+
+
+            MainService.insert(muserModel, data);
+
+            data.UserID = 0;
+            data.Password = "123";
+            data.UserName = "user8";
+            data.Firstname = "John8";
+            data.CNP = "123";
+            data.Email = "";
+            data.Surname = "Name8";
 
 
             MainService.insert(muserModel, data);

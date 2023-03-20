@@ -13,13 +13,13 @@ import java.util.Map;
 
 public class FormatModel extends Model implements LinkModelToDatabase<ModelList<FormatModel.InnerFormatModel>, FormatModel.InnerFormatModel> {
     public static class InnerFormatModel extends AbstractInnerModel implements Comparable<InnerFormatModel> {
-        public int IDFormat;
-        public String Denumire;
-        public String LatimeFilm;
+        public int FormatID;
+        public String Name;
+        public String FilmWidth;
 
         @Override
         public int compareTo(InnerFormatModel o) {
-            return this.IDFormat - o.IDFormat;
+            return this.FormatID - o.FormatID;
         }
     }
     private String tableName = "FORMAT";
@@ -51,11 +51,11 @@ public class FormatModel extends Model implements LinkModelToDatabase<ModelList<
     }
 
     public DefaultTableModel getTableModel() {
-        String[] columns = {"IDFormat", "Denumire", "LatimeFilm"};
+        String[] columns = {"FormatID", "Name", "FilmWidth"};
 
         DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
         for(InnerFormatModel model : this.modelList.getList()){
-            Object[] obj = {model.IDFormat, model.Denumire, model.LatimeFilm};
+            Object[] obj = {model.FormatID, model.Name, model.FilmWidth};
             tableModel.addRow(obj);
         }
 
@@ -96,9 +96,9 @@ public class FormatModel extends Model implements LinkModelToDatabase<ModelList<
 
         while(rs.next()){
             InnerFormatModel model = new InnerFormatModel();
-            model.IDFormat = rs.getInt("IDFormat");
-            model.Denumire = rs.getString("Denumire");
-            model.LatimeFilm = rs.getString("LatimeFilm");
+            model.FormatID = rs.getInt("FormatID");
+            model.Name = rs.getString("Name");
+            model.FilmWidth = rs.getString("FilmWidth");
 
             this.modelList.add(model);
         }
@@ -126,9 +126,9 @@ public class FormatModel extends Model implements LinkModelToDatabase<ModelList<
         this.modelList = new ModelList<>(true);
         while(formats.next()) {
             InnerFormatModel model = new InnerFormatModel();
-            model.IDFormat = formats.getInt("IDFORMAT");
-            model.Denumire = formats.getString("DENUMIRE");
-            model.LatimeFilm = formats.getString("LATIMEFILM");
+            model.FormatID = formats.getInt("FORMATID");
+            model.Name = formats.getString("NAME");
+            model.FilmWidth = formats.getString("FILMWIDTH");
 
             this.modelList.add(model);
         }
@@ -146,17 +146,17 @@ public class FormatModel extends Model implements LinkModelToDatabase<ModelList<
     public void updateData(ModelList<InnerFormatModel> oneRow) throws Exception {
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         Map<String, String> set = new HashMap<>();
-        set.put("DENUMIRE", "'" + oneRow.get(0).Denumire + "'");
-        set.put("LATIMEFILM", "'" + oneRow.get(0).LatimeFilm + "'");
+        set.put("NAME", "'" + oneRow.get(0).Name + "'");
+        set.put("FILMWIDTH", "'" + oneRow.get(0).FilmWidth + "'");
         Map<String, String> where = new HashMap<>();
-        where.put("IDFORMAT", String.valueOf(oneRow.get(0).IDFormat));
+        where.put("FORMATID", String.valueOf(oneRow.get(0).FormatID));
         db.update(this.tableName, set, where);
         try{
             logger.log("FormatModel update data");
         } catch (Exception ex) {
             System.out.println("Error logging to CSV: " + ex.getMessage());
         }
-//        db.update("UPDATE " + this.tableName + " SET MARCA = '" + oneRow.get(0).Marca + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRET = " + oneRow.get(0).Pret + ", PRETINCHIRIERE = " + oneRow.get(0).PretInchiriere + ", ANFABRICATIE = " + oneRow.get(0).AnFabricatie + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
+//        db.update("UPDATE " + this.tableName + " SET BRAND = '" + oneRow.get(0).Brand + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRICE = " + oneRow.get(0).Price + ", RENTALPRICE = " + oneRow.get(0).RentalPrice + ", MANUFACTURINGYEAR = " + oneRow.get(0).ManufacturingYear + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
     }
 
     @Override
@@ -164,7 +164,7 @@ public class FormatModel extends Model implements LinkModelToDatabase<ModelList<
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
 
         Map<String, String> where = new HashMap<>();
-        where.put("IDFORMAT", row.get(0).IDFormat + "");
+        where.put("FORMATID", row.get(0).FormatID + "");
         db.delete(this.tableName, where);
         try{
             logger.log("FormatModel delete data");
@@ -220,9 +220,9 @@ public class FormatModel extends Model implements LinkModelToDatabase<ModelList<
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
 
         List<Pair<String, String>> values = new ArrayList<>();
-        values.add(new Pair<>("IDFORMAT", ""));
-        values.add(new Pair<>("DENUMIRE", "'" + row.Denumire + "'"));
-        values.add(new Pair<>("LATIMEFILM", "'" + row.LatimeFilm + "'"));
+        values.add(new Pair<>("FORMATID", ""));
+        values.add(new Pair<>("NAME", "'" + row.Name + "'"));
+        values.add(new Pair<>("FILMWIDTH", "'" + row.FilmWidth + "'"));
 
         db.insert(this.tableName, values);
 
