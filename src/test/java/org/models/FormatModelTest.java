@@ -93,10 +93,10 @@ public class FormatModelTest {
             MainService.getData(formatModel);
 
             ModelList<FormatModel.InnerFormatModel> modelList = formatModel.getModelList();
-            modelList.sort((o1, o2) -> o2.IDFormat - o1.IDFormat);
+            modelList.sort((o1, o2) -> o2.FormatID - o1.FormatID);
             FormatModel.InnerFormatModel data = modelList.getList().get(0);
 
-            data.Denumire = "Test2";
+            data.Name = "Test2";
 
             List<FormatModel.InnerFormatModel> list = new ArrayList<>();
             list.add(data);
@@ -116,18 +116,18 @@ public class FormatModelTest {
             MainService.getData(formatModel);
 
             FormatModel.InnerFormatModel data = new FormatModel.InnerFormatModel();
-            data.IDFormat = 0;
-            data.Denumire = "Test";
-            data.LatimeFilm = "Test";
+            data.FormatID = 0;
+            data.Name = "Test";
+            data.FilmWidth = "Test";
 
             MainService.insert(formatModel, data);
 
             MainService.getData(formatModel);
             ModelList<FormatModel.InnerFormatModel> modelList = MainService.getModelList(formatModel);
-            modelList.sort((o1, o2) -> o2.IDFormat - o1.IDFormat);
+            modelList.sort((o1, o2) -> o2.FormatID - o1.FormatID);
             data = modelList.getList().get(0);
 
-            result.add(data.IDFormat);
+            result.add(data.FormatID);
 
             return result;
         } catch (Exception e) {
@@ -144,7 +144,7 @@ public class FormatModelTest {
             MainService.getData(formatModel);
 
             ModelList<FormatModel.InnerFormatModel> modelList = formatModel.getModelList();
-            modelList.sort((o1, o2) -> o2.IDFormat - o1.IDFormat);
+            modelList.sort((o1, o2) -> o2.FormatID - o1.FormatID);
             FormatModel.InnerFormatModel data = modelList.getList().get(0);
 
             List<FormatModel.InnerFormatModel> list = new ArrayList<>();

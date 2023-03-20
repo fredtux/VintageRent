@@ -93,10 +93,10 @@ public class SalaryModelTest {
             MainService.getData(msalaryModel);
 
             ModelList<SalaryModel.InnerSalaryModel> modelList = msalaryModel.getModelList();
-            modelList.sort((o1, o2) -> o2.IDSalariu - o1.IDSalariu);
+            modelList.sort((o1, o2) -> o2.SalaryID - o1.SalaryID);
             SalaryModel.InnerSalaryModel data = modelList.getList().get(0);
 
-            ++data.Salariu;
+            ++data.Salary;
 
             List<SalaryModel.InnerSalaryModel> list = new ArrayList<>();
             list.add(data);
@@ -116,18 +116,18 @@ public class SalaryModelTest {
             MainService.getData(msalaryModel);
 
             SalaryModel.InnerSalaryModel data = new SalaryModel.InnerSalaryModel();
-            data.IDSalariu = 0;
-            data.Salariu = 100;
+            data.SalaryID = 0;
+            data.Salary = 100;
             data.Bonus = 100;
 
             MainService.insert(msalaryModel, data);
 
             MainService.getData(msalaryModel);
             ModelList<SalaryModel.InnerSalaryModel> modelList = MainService.getModelList(msalaryModel);
-            modelList.sort((o1, o2) -> o2.IDSalariu - o1.IDSalariu);
+            modelList.sort((o1, o2) -> o2.SalaryID - o1.SalaryID);
             data = modelList.getList().get(0);
 
-            result.add(data.IDSalariu);
+            result.add(data.SalaryID);
 
             return result;
         } catch (Exception e) {
@@ -144,7 +144,7 @@ public class SalaryModelTest {
             MainService.getData(msalaryModel);
 
             ModelList<SalaryModel.InnerSalaryModel> modelList = msalaryModel.getModelList();
-            modelList.sort((o1, o2) -> o2.IDSalariu - o1.IDSalariu);
+            modelList.sort((o1, o2) -> o2.SalaryID - o1.SalaryID);
             SalaryModel.InnerSalaryModel data = modelList.getList().get(0);
 
             List<SalaryModel.InnerSalaryModel> list = new ArrayList<>();

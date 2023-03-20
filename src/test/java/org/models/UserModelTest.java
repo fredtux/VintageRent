@@ -93,10 +93,10 @@ public class UserModelTest {
             MainService.getData(muserModel);
 
             ModelList<UserModel.InnerUserModel> modelList = muserModel.getModelList();
-            modelList.sort((o1, o2) -> o2.IDUtilizator - o1.IDUtilizator);
+            modelList.sort((o1, o2) -> o2.UserID - o1.UserID);
             UserModel.InnerUserModel data = modelList.getList().get(0);
 
-            data.Prenume = "Test2";
+            data.Firstname = "Test2";
 
             List<UserModel.InnerUserModel> list = new ArrayList<>();
             list.add(data);
@@ -116,10 +116,10 @@ public class UserModelTest {
             MainService.getData(muserModel);
 
             UserModel.InnerUserModel data = new UserModel.InnerUserModel();
-            data.IDUtilizator = 0;
-            data.Parola = "123";
-            data.NumeUtilizator = "Test";
-            data.Prenume = "Test";
+            data.UserID = 0;
+            data.Password = "123";
+            data.UserName = "Test";
+            data.Firstname = "Test";
             data.CNP = "123";
             data.Email = "";
 
@@ -127,10 +127,10 @@ public class UserModelTest {
 
             MainService.getData(muserModel);
             ModelList<UserModel.InnerUserModel> modelList = MainService.getModelList(muserModel);
-            modelList.sort((o1, o2) -> o2.IDUtilizator - o1.IDUtilizator);
+            modelList.sort((o1, o2) -> o2.UserID - o1.UserID);
             data = modelList.getList().get(0);
 
-            result.add(data.IDUtilizator);
+            result.add(data.UserID);
 
             return result;
         } catch (Exception e) {
@@ -147,7 +147,7 @@ public class UserModelTest {
             MainService.getData(muserModel);
 
             ModelList<UserModel.InnerUserModel> modelList = muserModel.getModelList();
-            modelList.sort((o1, o2) -> o2.IDUtilizator - o1.IDUtilizator);
+            modelList.sort((o1, o2) -> o2.UserID - o1.UserID);
             UserModel.InnerUserModel data = modelList.getList().get(0);
 
             List<UserModel.InnerUserModel> list = new ArrayList<>();

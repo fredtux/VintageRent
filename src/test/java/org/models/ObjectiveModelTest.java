@@ -93,10 +93,10 @@ public class ObjectiveModelTest {
             MainService.getData(mobjectiveModel);
 
             ModelList<ObjectiveModel.InnerObjectiveModel> modelList = mobjectiveModel.getModelList();
-            modelList.sort((o1, o2) -> o2.IDObiectiv - o1.IDObiectiv);
+            modelList.sort((o1, o2) -> o2.ObjectiveID - o1.ObjectiveID);
             ObjectiveModel.InnerObjectiveModel data = modelList.getList().get(0);
 
-            ++data.PretInchiriere;
+            ++data.RentalPrice;
 
             List<ObjectiveModel.InnerObjectiveModel> list = new ArrayList<>();
             list.add(data);
@@ -116,24 +116,24 @@ public class ObjectiveModelTest {
             MainService.getData(mobjectiveModel);
 
             ObjectiveModel.InnerObjectiveModel data = new ObjectiveModel.InnerObjectiveModel();
-            data.IDObiectiv = 0;
-            data.PretInchiriere = 100;
-            data.Pret = 100;
-            data.IDObiectiv = 1;
-            data.Denumire = "Test";
-            data.DiafragmaMaxima = 0.0;
-            data.DiafragmaMinima = 0.0;
-            data.DistantaFocala = 100;
-            data.Diametru = 100;
+            data.ObjectiveID = 0;
+            data.RentalPrice = 100;
+            data.Price = 100;
+            data.ObjectiveID = 1;
+            data.Name = "Test";
+            data.MaximumAperture = 0.0;
+            data.MinimumAperture = 0.0;
+            data.FocalDistance = 100;
+            data.Diameter = 100;
 
             MainService.insert(mobjectiveModel, data);
 
             MainService.getData(mobjectiveModel);
             ModelList<ObjectiveModel.InnerObjectiveModel> modelList = MainService.getModelList(mobjectiveModel);
-            modelList.sort((o1, o2) -> o2.IDObiectiv - o1.IDObiectiv);
+            modelList.sort((o1, o2) -> o2.ObjectiveID - o1.ObjectiveID);
             data = modelList.getList().get(0);
 
-            result.add(data.IDObiectiv);
+            result.add(data.ObjectiveID);
 
             return result;
         } catch (Exception e) {
@@ -150,7 +150,7 @@ public class ObjectiveModelTest {
             MainService.getData(mobjectiveModel);
 
             ModelList<ObjectiveModel.InnerObjectiveModel> modelList = mobjectiveModel.getModelList();
-            modelList.sort((o1, o2) -> o2.IDObiectiv - o1.IDObiectiv);
+            modelList.sort((o1, o2) -> o2.ObjectiveID - o1.ObjectiveID);
             ObjectiveModel.InnerObjectiveModel data = modelList.getList().get(0);
 
             List<ObjectiveModel.InnerObjectiveModel> list = new ArrayList<>();

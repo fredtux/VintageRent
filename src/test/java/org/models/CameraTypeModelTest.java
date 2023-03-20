@@ -93,10 +93,10 @@ public class CameraTypeModelTest {
             MainService.getData(cameraTypeModel);
 
             ModelList<CameraTypeModel.InnerCameraTypeModel> modelList = cameraTypeModel.getModelList();
-            modelList.sort((o1, o2) -> o2.IDTip - o1.IDTip);
+            modelList.sort((o1, o2) -> o2.TypeID - o1.TypeID);
             CameraTypeModel.InnerCameraTypeModel data = modelList.getList().get(0);
 
-            data.Denumire = "New Test";
+            data.Name = "New Test";
 
             List<CameraTypeModel.InnerCameraTypeModel> list = new ArrayList<>();
             list.add(data);
@@ -116,17 +116,17 @@ public class CameraTypeModelTest {
             MainService.getData(cameraTypeModel);
 
             CameraTypeModel.InnerCameraTypeModel data = new CameraTypeModel.InnerCameraTypeModel();
-            data.IDTip = 0;
-            data.Denumire = "Test";
+            data.TypeID = 0;
+            data.Name = "Test";
 
             MainService.insert(cameraTypeModel, data);
 
             MainService.getData(cameraTypeModel);
             ModelList<CameraTypeModel.InnerCameraTypeModel> modelList = MainService.getModelList(cameraTypeModel);
-            modelList.sort((o1, o2) -> o2.IDTip - o1.IDTip);
+            modelList.sort((o1, o2) -> o2.TypeID - o1.TypeID);
             data = modelList.getList().get(0);
 
-            result.add(data.IDTip);
+            result.add(data.TypeID);
 
             return result;
         } catch (Exception e) {
@@ -143,7 +143,7 @@ public class CameraTypeModelTest {
             MainService.getData(cameraTypeModel);
 
             ModelList<CameraTypeModel.InnerCameraTypeModel> modelList = cameraTypeModel.getModelList();
-            modelList.sort((o1, o2) -> o2.IDTip - o1.IDTip);
+            modelList.sort((o1, o2) -> o2.TypeID - o1.TypeID);
             CameraTypeModel.InnerCameraTypeModel data = modelList.getList().get(0);
 
             List<CameraTypeModel.InnerCameraTypeModel> list = new ArrayList<>();

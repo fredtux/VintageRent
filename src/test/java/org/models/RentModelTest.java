@@ -95,10 +95,10 @@ public class RentModelTest {
             MainService.getData(mrentModel);
 
             ModelList<RentModel.InnerRentModel> modelList = mrentModel.getModelList();
-            modelList.sort((o1, o2) -> o2.DURATA_IN_ZILE - o1.DURATA_IN_ZILE);
+            modelList.sort((o1, o2) -> o2.DURATION_IN_DAYS - o1.DURATION_IN_DAYS);
             RentModel.InnerRentModel data = modelList.getList().get(0);
 
-            ++data.DURATA_IN_ZILE;
+            ++data.DURATION_IN_DAYS;
 
             List<RentModel.InnerRentModel> list = new ArrayList<>();
             list.add(data);
@@ -119,23 +119,23 @@ public class RentModelTest {
 
             RentModel.InnerRentModel data = new RentModel.InnerRentModel();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            data.DATA_INCHIRIERE = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
-            data.DURATA_IN_ZILE = 1;
+            data.RENT_DATE = Date.valueOf(sdf.format(new java.util.Date(946684800000L)));
+            data.DURATION_IN_DAYS = 1;
             data.IDANGAJAT = 1;
             data.IDCLIENT = 1;
-            data.IDOBIECTIV = 1;
-            data.ESTE_RETURNAT = false;
+            data.OBJECTIVEID = 1;
+            data.IS_RETURNED = false;
             data.IDCAMERA = 1;
-            data.PENALIZARE = 0;
+            data.PENALTYFEE = 0;
 
             MainService.insert(mrentModel, data);
 
             MainService.getData(mrentModel);
             ModelList<RentModel.InnerRentModel> modelList = MainService.getModelList(mrentModel);
-            modelList.sort((o1, o2) -> o2.DURATA_IN_ZILE - o1.DURATA_IN_ZILE);
+            modelList.sort((o1, o2) -> o2.DURATION_IN_DAYS - o1.DURATION_IN_DAYS);
             data = modelList.getList().get(0);
 
-            result.add(data.DURATA_IN_ZILE);
+            result.add(data.DURATION_IN_DAYS);
 
             return result;
         } catch (Exception e) {
@@ -152,7 +152,7 @@ public class RentModelTest {
             MainService.getData(mrentModel);
 
             ModelList<RentModel.InnerRentModel> modelList = mrentModel.getModelList();
-            modelList.sort((o1, o2) -> o2.DURATA_IN_ZILE - o1.DURATA_IN_ZILE);
+            modelList.sort((o1, o2) -> o2.DURATION_IN_DAYS - o1.DURATION_IN_DAYS);
             RentModel.InnerRentModel data = modelList.getList().get(0);
 
             List<RentModel.InnerRentModel> list = new ArrayList<>();

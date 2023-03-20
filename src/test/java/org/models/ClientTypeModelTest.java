@@ -93,10 +93,10 @@ public class ClientTypeModelTest {
             MainService.getData(clientTypeModel);
 
             ModelList<ClientTypeModel.InnerClientTypeModel> modelList = clientTypeModel.getModelList();
-            modelList.sort((o1, o2) -> o2.IDTip - o1.IDTip);
+            modelList.sort((o1, o2) -> o2.TypeID - o1.TypeID);
             ClientTypeModel.InnerClientTypeModel data = modelList.getList().get(0);
 
-            data.Denumire = "New Test";
+            data.Name = "New Test";
 
             List<ClientTypeModel.InnerClientTypeModel> list = new ArrayList<>();
             list.add(data);
@@ -116,18 +116,18 @@ public class ClientTypeModelTest {
             MainService.getData(clientTypeModel);
 
             ClientTypeModel.InnerClientTypeModel data = new ClientTypeModel.InnerClientTypeModel();
-            data.IDTip = 0;
-            data.Denumire = "Test";
+            data.TypeID = 0;
+            data.Name = "Test";
             data.Discount = 0.0;
 
             MainService.insert(clientTypeModel, data);
 
             MainService.getData(clientTypeModel);
             ModelList<ClientTypeModel.InnerClientTypeModel> modelList = MainService.getModelList(clientTypeModel);
-            modelList.sort((o1, o2) -> o2.IDTip - o1.IDTip);
+            modelList.sort((o1, o2) -> o2.TypeID - o1.TypeID);
             data = modelList.getList().get(0);
 
-            result.add(data.IDTip);
+            result.add(data.TypeID);
 
             return result;
         } catch (Exception e) {
@@ -144,7 +144,7 @@ public class ClientTypeModelTest {
             MainService.getData(clientTypeModel);
 
             ModelList<ClientTypeModel.InnerClientTypeModel> modelList = clientTypeModel.getModelList();
-            modelList.sort((o1, o2) -> o2.IDTip - o1.IDTip);
+            modelList.sort((o1, o2) -> o2.TypeID - o1.TypeID);
             ClientTypeModel.InnerClientTypeModel data = modelList.getList().get(0);
 
             List<ClientTypeModel.InnerClientTypeModel> list = new ArrayList<>();
