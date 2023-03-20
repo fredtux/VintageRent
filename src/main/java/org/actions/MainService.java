@@ -44,7 +44,7 @@ public class MainService {
 
         List<Integer> cameraIDs = new ArrayList<>();
         for (CameraModel.InnerCameraModel cameraModel : lcamera.getList()) {
-            if (cameraModel.IDFormat == formatID)
+            if (cameraModel.FormatID == formatID)
                 cameraIDs.add(cameraModel.IDCamera);
         }
 
@@ -52,7 +52,7 @@ public class MainService {
             if (rentModel.IDCAMERA == formatID) {
                 ++totalRents;
                 clientset.add(rentModel.IDCLIENT);
-                double rentPrice = rentModel.DURATA_IN_ZILE * getCameraRentPrice(rentModel.IDCAMERA, lcamera);
+                double rentPrice = rentModel.DURATION_IN_DAYS * getCameraRentPrice(rentModel.IDCAMERA, lcamera);
 //                rentPriceQueue.add(rentPrice);
                 rentPriceMap.put(rentPrice, rentPrice);
             }
@@ -114,10 +114,10 @@ public class MainService {
                 cameraset.add(rentModel.IDCAMERA);
 
                 // Get total rent
-                totalRent += rentModel.DURATA_IN_ZILE * getCameraRentPrice(rentModel.IDCAMERA, lcamera);
+                totalRent += rentModel.DURATION_IN_DAYS * getCameraRentPrice(rentModel.IDCAMERA, lcamera);
 
                 // Get total penalty
-                totalPenalty += rentModel.PENALIZARE;
+                totalPenalty += rentModel.PENALTYFEE;
 
                 // Get average camera price
                 totalPrice += getCameraPrice(rentModel.IDCAMERA, lcamera);
@@ -142,7 +142,7 @@ public class MainService {
     private static double getCameraPrice(int cameraID, ModelList<CameraModel.InnerCameraModel> lcamera) {
         for (CameraModel.InnerCameraModel cameraModel : lcamera.getList()) {
             if (cameraModel.IDCamera == cameraID) {
-                return cameraModel.Pret;
+                return cameraModel.Price;
             }
         }
         return 0;
@@ -151,7 +151,7 @@ public class MainService {
     private static double getCameraRentPrice(int cameraID, ModelList<CameraModel.InnerCameraModel> lcamera) {
         for (CameraModel.InnerCameraModel cameraModel : lcamera.getList()) {
             if (cameraModel.IDCamera == cameraID) {
-                return cameraModel.PretInchiriere;
+                return cameraModel.RentalPrice;
             }
         }
         return 0;
