@@ -157,6 +157,8 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
 
         // Add fields to cameras
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+
         this.modelList = new ModelList<>(true);
         while(angajati.next()) {
             InnerEmployeeModel model = new InnerEmployeeModel();
@@ -164,12 +166,20 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
             try {
                 model.DataNasterii = LocalDateTime.parse(angajati.getString("DATANASTERII"), formatter);
             } catch (Exception ex){
-                model.DataNasterii = null;
+                try {
+                    model.DataNasterii = LocalDateTime.parse(angajati.getString("DATANASTERII"), formatter2);
+                } catch (Exception ex2){
+                    model.DataNasterii = null;
+                }
             }
             try {
                 model.DataAngajarii = LocalDateTime.parse(angajati.getString("DATAANGAJARII"), formatter);
             } catch (Exception ex){
-                model.DataAngajarii = null;
+                try {
+                    model.DataAngajarii = LocalDateTime.parse(angajati.getString("DATAANGAJARII"), formatter2);
+                } catch (Exception ex2){
+                    model.DataAngajarii = null;
+                }
             }
             String manager = angajati.getString("IDMANAGER");
             if(manager == null || manager == ""){
@@ -305,11 +315,15 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
             values.add(new Pair<String, String>("DATANASTERII", "TO_DATE('" + row.DataNasterii.format(dtf) + "', 'YYYY-MM-DD HH24:MI:SS')"));
         else if(databaseType == DatabaseConnection.DatabaseType.CSV){
             values.add(new Pair<String, String>("DATANASTERII", row.DataNasterii.format(dtf) + ""));
+        } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
+            values.add(new Pair<String, String>("DATANASTERII", row.DataNasterii.format(dtf) + ""));
         }
 
         if(databaseType == DatabaseConnection.DatabaseType.ORACLE)
             values.add(new Pair<String, String>("DATAANGAJARII", "TO_DATE('" + row.DataAngajarii.format(dtf) + "', 'YYYY-MM-DD HH24:MI:SS')"));
         else if(databaseType == DatabaseConnection.DatabaseType.CSV){
+            values.add(new Pair<String, String>("DATAANGAJARII", row.DataAngajarii.format(dtf) + ""));
+        } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
             values.add(new Pair<String, String>("DATAANGAJARII", row.DataAngajarii.format(dtf) + ""));
         }
 

@@ -3,6 +3,7 @@ package org.vintage;
 import com.formdev.flatlaf.FlatDarkLaf;
 import org.apache.commons.lang3.SystemUtils;
 import org.database.DatabaseConnection;
+import org.database.memory.InMemory;
 import org.database.oracle.OracleConnection;
 import org.gui.main.MainGUI;
 import org.gui.splash.Splash;
@@ -72,6 +73,13 @@ public class Main {
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
+                                }
+
+                                try{
+                                    DatabaseConnection inmem = new InMemory(ORACLE_DB_ADDR, "c##tux", "fmilove", "oracle.jdbc.driver.OracleDriver", "XE", "C##TUX", "1521");
+                                    ModelInit.inmemInit();
+                                } catch (Exception ex) {
+                                    System.out.println("Error setting up in memory data storage: " + ex.getMessage());
                                 }
                             }
                         });

@@ -218,6 +218,12 @@ public class InMemory extends DatabaseConnection {
     @Override
     public void insert(String tableName, List<Pair<String, String>> values) throws Exception {
         List<String> headers = null;
+
+        for(Pair<String, String> p: values){
+            if(p.second.length() >= 2 && p.second.substring(0,1).equals("'") && p.second.substring(p.second.length()-1).equals("'"))
+                p.second = p.second.substring(1, p.second.length()-1);
+        }
+
         if (tableName.equals("camera_type")) {
             // Get largest IDTip from cameraTypes
             int idTip = 0;
@@ -657,10 +663,9 @@ public class InMemory extends DatabaseConnection {
                             f.set(model, Boolean.parseBoolean(p.second));
                             break;
                         } else if (f.getType() == Date.class) {
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                             try {
-                                f.set(model, sdf.parse(p.second));
-                            } catch (ParseException e) {
+                                f.set(model, Date.valueOf(p.second));
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                             break;
@@ -687,7 +692,7 @@ public class InMemory extends DatabaseConnection {
             RentModel.InnerRentModel model = new RentModel.InnerRentModel();
             for (Pair<String, String> p : values) {
                 for (Field f : model.getClass().getDeclaredFields()) {
-                    if (f.getName().toLowerCase().equals(p.first.toLowerCase())) {
+                    if (f.getName().toLowerCase().replace("_", "").equals(p.first.toLowerCase())) {
                         f.setAccessible(true);
                         // Cast p.second to f.getType()
                         if (f.getType() == String.class) {
@@ -703,10 +708,9 @@ public class InMemory extends DatabaseConnection {
                             f.set(model, Boolean.parseBoolean(p.second));
                             break;
                         } else if (f.getType() == Date.class) {
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                             try {
-                                f.set(model, sdf.parse(p.second));
-                            } catch (ParseException e) {
+                                f.set(model, Date.valueOf(p.second));
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                             break;

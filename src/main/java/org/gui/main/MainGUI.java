@@ -749,6 +749,35 @@ public class MainGUI { // Singleton
         });
         datasources.add(menuItemCsv);
 
+        JMenuItem menuItemInMemory = new JMenuItem("InMemory");
+        menuItemInMemory.addActionListener(e -> {
+            try {
+                this.databaseType = DatabaseConnection.DatabaseType.INMEMORY;
+                if(this.currentTableType == TableType.CAMERA) {
+                    initCameraTable();
+                } else if(this.currentTableType == TableType.RENT) {
+                    initRentTable();
+                } else if(this.currentTableType == TableType.CAMERATYPE) {
+                    initCameraTypeTable();
+                } else if(this.currentTableType == TableType.FORMAT){
+                    initFormatTable();
+                } else if(this.currentTableType == TableType.EMPLOYEE){
+                    initEmployeeTable();
+                } else if(this.currentTableType == TableType.USER){
+                    initUserTable();
+                }
+
+                try{
+                    logger.log("Changed data source to CSV");
+                } catch (Exception ex) {
+                    System.out.println("Error logging to CSV: " + ex.getMessage());
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        datasources.add(menuItemInMemory);
+
         JMenu reports = new JMenu("Reports");
         menuBar.add(reports);
 
