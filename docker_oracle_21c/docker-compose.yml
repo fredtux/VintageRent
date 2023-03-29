@@ -10,7 +10,7 @@ services:
             - ORACLE_PWD=fmilove
             - ENABLE_ARCHIVELOG=true
             - ENABLE_TCPS=true
-        image: container-registry.oracle.com/database/express:latest
+        image: fredtux/dockerpao:latest
         networks:
           static-network:
             ipv4_address: 172.21.128.2

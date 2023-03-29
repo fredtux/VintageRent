@@ -6,29 +6,6 @@ Pentru conexiunea cu baza de date, va trebui sa intrati in folderul **docker_ora
 docker-compose up
 ```
 
-Apoi va conectati pe Linux cu:
-- host: 172.21.128.2
-- port: 1521
-- SID: XE
-- user: SYSTEM
-- parola: fmilove
-
-Sau pe Windows cu:
-- host: 0.0.0.0
-- port: 1521
-- SID: XE
-- user: SYSTEM
-- parola: fmilove
-
-Dupa aceea rulati comenzile urmatoare pentru a crea userul folosit de program:
-```sql
-CREATE USER C##TUX IDENTIFIED BY "fmilove";
-```
-si
-```sql
-GRANT ALL PRIVILEGES TO C##TUX;
-```
-
 Aceste instructiuni creaza user-ul, baza de date fiind creata de aplicatie.
 
 ## Documentatie

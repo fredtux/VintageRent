@@ -30,7 +30,7 @@ public class InMemory extends DatabaseConnection {
     private ModelList<ObjectiveModel.InnerObjectiveModel> objectives = null;
     private ModelList<RentModel.InnerRentModel> rents = null;
 
-    public InMemory(String url, String username, String password, String driver, String database, String schema, String port) {
+    public InMemory() {
         if (instance != null)
             throw new RuntimeException("OracleConnection is a singleton class. Use getInstance() instead.");
         else {
