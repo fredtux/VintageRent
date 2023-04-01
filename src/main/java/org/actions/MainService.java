@@ -196,4 +196,8 @@ public class MainService {
         }
         return attributes;
     }
+
+    public static void getFilteredData(LinkModelToDatabase model, String comparator, String value, String column) throws Exception {
+        model.getFilteredData(comparator, value, column);
+    }
 }

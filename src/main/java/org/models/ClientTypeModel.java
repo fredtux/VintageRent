@@ -4,14 +4,17 @@ import org.database.DatabaseConnection;
 import org.database.csv.CsvConnection;
 
 import javax.swing.table.DefaultTableModel;
+import java.lang.reflect.Field;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public class ClientTypeModel extends Model implements LinkModelToDatabase<ModelList<ClientTypeModel.InnerClientTypeModel>, ClientTypeModel.InnerClientTypeModel> {
     public static class InnerClientTypeModel extends AbstractInnerModel implements Comparable<InnerClientTypeModel> {
@@ -104,6 +107,89 @@ public class ClientTypeModel extends Model implements LinkModelToDatabase<ModelL
 
             this.modelList.add(model);
         }
+    }
+
+    public void getFilteredData(String comparator, String value, String column) throws Exception{
+        this.getData();
+
+        Predicate<ClientTypeModel.InnerClientTypeModel> predicate =  null;
+
+        switch (column) {
+            case "Name":
+                predicate = (ClientTypeModel.InnerClientTypeModel model) -> {
+                    try {
+                        Field field = model.getClass().getDeclaredField(column);
+                        field.setAccessible(true);
+                        String fieldValue = (String) field.get(model);
+                        if(comparator == "==")
+                            return fieldValue.equals(value);
+                        else if(comparator == "!=")
+                            return !fieldValue.equals(value);
+                        else if(comparator == "<")
+                            return fieldValue.compareTo(value) < 0;
+                        else if(comparator == ">")
+                            return fieldValue.compareTo(value) > 0;
+                        else if(comparator == "<=")
+                            return fieldValue.compareTo(value) <= 0;
+                        else if(comparator == ">=")
+                            return fieldValue.compareTo(value) >= 0;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                };
+                break;
+            case "TypeID":
+                predicate = (ClientTypeModel.InnerClientTypeModel model) -> {
+                    try {
+                        Field field = model.getClass().getDeclaredField(column);
+                        field.setAccessible(true);
+                        int fieldValue = (int) field.get(model);
+                        if(comparator == "==")
+                            return fieldValue == Integer.parseInt(value);
+                        else if(comparator == "!=")
+                            return fieldValue != Integer.parseInt(value);
+                        else if(comparator == "<")
+                            return fieldValue < Integer.parseInt(value);
+                        else if(comparator == ">")
+                            return fieldValue > Integer.parseInt(value);
+                        else if(comparator == "<=")
+                            return fieldValue <= Integer.parseInt(value);
+                        else if(comparator == ">=")
+                            return fieldValue >= Integer.parseInt(value);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                };
+                break;
+            case "Discount":
+                predicate = (ClientTypeModel.InnerClientTypeModel model) -> {
+                    try {
+                        Field field = model.getClass().getDeclaredField(column);
+                        field.setAccessible(true);
+                        double fieldValue = (double) field.get(model);
+                        if(comparator == "==")
+                            return fieldValue == Double.parseDouble(value);
+                        else if(comparator == "!=")
+                            return fieldValue != Double.parseDouble(value);
+                        else if(comparator == "<")
+                            return fieldValue < Double.parseDouble(value);
+                        else if(comparator == ">")
+                            return fieldValue > Double.parseDouble(value);
+                        else if(comparator == "<=")
+                            return fieldValue <= Double.parseDouble(value);
+                        else if(comparator == ">=")
+                            return fieldValue >= Double.parseDouble(value);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                };
+                break;
+        }
+
+        this.modelList = this.modelList.filter(predicate, value);
     }
 
     @Override
