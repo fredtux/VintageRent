@@ -1214,7 +1214,7 @@ public class MainGUI { // Singleton
         irm.SubdomainID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
 
         modelList.add(irm);
-        rm.deleteRow(modelList);
+        MainService.delete(rm, modelList);
 
         dtm.removeRow(row);
     }
@@ -1228,7 +1228,7 @@ public class MainGUI { // Singleton
         irm.UserID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
 
         modelList.add(irm);
-        rm.deleteRow(modelList);
+        MainService.delete(rm, modelList);
 
         dtm.removeRow(row);
     }
@@ -1242,7 +1242,7 @@ public class MainGUI { // Singleton
         irm.SalaryID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
 
         modelList.add(irm);
-        rm.deleteRow(modelList);
+        MainService.delete(rm, modelList);
 
         dtm.removeRow(row);
     }
@@ -1256,7 +1256,7 @@ public class MainGUI { // Singleton
         irm.ObjectiveID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
 
         modelList.add(irm);
-        rm.deleteRow(modelList);
+        MainService.delete(rm, modelList);
 
         dtm.removeRow(row);
     }
@@ -1270,7 +1270,7 @@ public class MainGUI { // Singleton
         irm.MountID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
 
         modelList.add(irm);
-        rm.deleteRow(modelList);
+        MainService.delete(rm, modelList);
 
         dtm.removeRow(row);
     }
@@ -1284,7 +1284,7 @@ public class MainGUI { // Singleton
         irm.TypeID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
 
         modelList.add(irm);
-        rm.deleteRow(modelList);
+        MainService.delete(rm, modelList);;
 
         dtm.removeRow(row);
     }
@@ -1298,7 +1298,7 @@ public class MainGUI { // Singleton
         irm.UserID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
 
         modelList.add(irm);
-        rm.deleteRow(modelList);
+        MainService.delete(rm, modelList);
 
         dtm.removeRow(row);
     }
@@ -1312,7 +1312,7 @@ public class MainGUI { // Singleton
         irm.UserID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
 
         modelList.add(irm);
-        rm.deleteRow(modelList);
+        MainService.delete(rm, modelList);;
 
         dtm.removeRow(row);
     }
@@ -1326,7 +1326,7 @@ public class MainGUI { // Singleton
         irm.UserID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
 
         modelList.add(irm);
-        rm.deleteRow(modelList);
+        MainService.delete(rm, modelList);;
 
         dtm.removeRow(row);
     }
@@ -1339,7 +1339,7 @@ public class MainGUI { // Singleton
         irm.FormatID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
 
         modelList.add(irm);
-        rm.deleteRow(modelList);
+        MainService.delete(rm, modelList);
 
         dtm.removeRow(row);
     }
@@ -1352,7 +1352,7 @@ public class MainGUI { // Singleton
         irm.TypeID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
 
         modelList.add(irm);
-        rm.deleteRow(modelList);
+        MainService.delete(rm, modelList);
 
         dtm.removeRow(row);
     }
@@ -1366,7 +1366,7 @@ public class MainGUI { // Singleton
         irm.IDCamera = Integer.parseInt(dtm.getValueAt(row, 0).toString());
 
         modelList.add(irm);
-        rm.deleteRow(modelList);
+        MainService.delete(rm, modelList);
 
         dtm.removeRow(row);
     }
@@ -1387,7 +1387,7 @@ public class MainGUI { // Singleton
         irm.IDANGAJAT = Integer.parseInt(dtm.getValueAt(row, 7).toString());
 
         modelList.add(irm);
-        rm.deleteRow(modelList);
+        MainService.delete(rm, modelList);
 
         dtm.removeRow(row);
     }
