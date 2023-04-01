@@ -1,5 +1,6 @@
 package org.gui.tables;
 
+import org.actions.MainService;
 import org.gui.custom.ComboItem;
 import org.gui.main.MainGUI;
 import org.jdatepicker.impl.JDatePanelImpl;
@@ -88,7 +89,7 @@ public class ClientTypeAdd {
             clientType.Discount = Double.parseDouble(txtDiscount.getText());
 
             try {
-                clientTypeModel.insertRow(clientType);
+                MainService.insert(clientTypeModel, clientType);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }

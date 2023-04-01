@@ -1,5 +1,6 @@
 package org.gui.tables;
 
+import org.actions.MainService;
 import org.gui.custom.ComboItem;
 import org.gui.main.MainGUI;
 import org.jdatepicker.impl.JDatePanelImpl;
@@ -80,7 +81,7 @@ public class FormatAdd {
             format.Name = txtName.getText();
             format.FilmWidth = txtFilmWidth.getText();
             try {
-                formatModel.insertRow(format);
+                MainService.insert(formatModel, format);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }

@@ -1,5 +1,6 @@
 package org.gui.tables;
 
+import org.actions.MainService;
 import org.gui.custom.ComboItem;
 import org.gui.main.MainGUI;
 import org.jdatepicker.impl.JDatePanelImpl;
@@ -58,10 +59,14 @@ public class AdministratorSubdomainAdd {
         c3.gridx = 1;
         JComboBox cmbName = new JComboBox();
         UserModel userModel = UserModel.getInstance();
-        userModel.setDatabaseType(caller.getDatabaseType());
+        try {
+            MainService.setDatabaseType(userModel, caller.getDatabaseType());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         ModelList<UserModel.InnerUserModel> listUsers = null;
         try {
-            listUsers = userModel.getData();
+            listUsers = MainService.getData(userModel);
         } catch (Exception e) {
             listUsers = new ModelList<>();
         }
@@ -80,10 +85,14 @@ public class AdministratorSubdomainAdd {
         c3.gridx = 1;
         JComboBox cmbSubdomain = new JComboBox();
         SubdomainModel subdomainModel = SubdomainModel.getInstance();
-        subdomainModel.setDatabaseType(caller.getDatabaseType());
+        try {
+            MainService.setDatabaseType(subdomainModel, caller.getDatabaseType());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         ModelList<SubdomainModel.InnerSubdomainModel> listSubdomains = null;
         try {
-            listSubdomains = subdomainModel.getData();
+            listSubdomains = MainService.getData(subdomainModel);
         } catch (Exception e) {
             listSubdomains = new ModelList<>();
         }
@@ -100,7 +109,7 @@ public class AdministratorSubdomainAdd {
             administratorsubdomain.IDAdministrator = Integer.parseInt(((ComboItem) cmbName.getSelectedItem()).getValue());
             administratorsubdomain.SubdomainID = Integer.parseInt(((ComboItem) cmbSubdomain.getSelectedItem()).getValue());
             try {
-                administratorSubdomainModel.insertRow(administratorsubdomain);
+                MainService.insert(administratorSubdomainModel, administratorsubdomain);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }

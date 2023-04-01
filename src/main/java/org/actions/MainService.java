@@ -161,8 +161,8 @@ public class MainService {
     /**
      * CRUDS
      */
-    public static void getData(LinkModelToDatabase model) throws Exception {
-        model.getData();
+    public static ModelList getData(LinkModelToDatabase model) throws Exception {
+        return model.getData();
     }
 
     public static ModelList getModelList(Model model) throws Exception {

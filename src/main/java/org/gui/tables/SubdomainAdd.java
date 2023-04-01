@@ -1,5 +1,6 @@
 package org.gui.tables;
 
+import org.actions.MainService;
 import org.gui.custom.ComboItem;
 import org.gui.main.MainGUI;
 import org.jdatepicker.impl.JDatePanelImpl;
@@ -67,7 +68,7 @@ public class SubdomainAdd {
             SubdomainModel.InnerSubdomainModel subdomain = new SubdomainModel.InnerSubdomainModel();
             subdomain.Name = txtName.getText();
             try {
-                subdomainModel.insertRow(subdomain);
+                MainService.insert(subdomainModel, subdomain);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }

@@ -1,5 +1,6 @@
 package org.gui.tables;
 
+import org.actions.MainService;
 import org.gui.custom.ComboItem;
 import org.gui.main.MainGUI;
 import org.jdatepicker.impl.JDatePanelImpl;
@@ -76,7 +77,7 @@ public class MountAdd {
             mount.Name = txtTypeName.getText();
 
             try {
-                mountModel.insertRow(mount);
+                MainService.insert(mountModel, mount);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }

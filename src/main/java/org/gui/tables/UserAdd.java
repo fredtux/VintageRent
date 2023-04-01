@@ -1,5 +1,6 @@
 package org.gui.tables;
 
+import org.actions.MainService;
 import org.gui.custom.ComboItem;
 import org.gui.main.MainGUI;
 import org.jdatepicker.impl.JDatePanelImpl;
@@ -145,7 +146,7 @@ public class UserAdd {
             user.Password = txtPassword.getText();
 
             try {
-                userModel.insertRow(user);
+                MainService.insert(userModel, user);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }

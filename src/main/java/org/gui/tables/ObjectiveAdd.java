@@ -1,5 +1,6 @@
 package org.gui.tables;
 
+import org.actions.MainService;
 import org.gui.custom.ComboItem;
 import org.gui.main.MainGUI;
 import org.jdatepicker.impl.JDatePanelImpl;
@@ -134,10 +135,14 @@ public class ObjectiveAdd {
         c3.gridx = 1;
         JComboBox<ComboItem> cmbMount = new JComboBox<>();
         MountModel mountModel = MountModel.getInstance();
-        mountModel.setDatabaseType(caller.getDatabaseType());
+        try {
+            MainService.setDatabaseType(mountModel, caller.getDatabaseType());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         ModelList<MountModel.InnerMountModel> listMounts = null;
         try {
-            listMounts = mountModel.getData();
+            listMounts = MainService.getData(mountModel);
         } catch (Exception e) {
             listMounts = new ModelList<>();
         }
@@ -164,7 +169,7 @@ public class ObjectiveAdd {
             objective.MountID = Integer.parseInt(((ComboItem) cmbMount.getSelectedItem()).getValue());
 
             try {
-                objectiveModel.insertRow(objective);
+                MainService.insert(objectiveModel, objective);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }

@@ -1,5 +1,6 @@
 package org.gui.tables;
 
+import org.actions.MainService;
 import org.gui.custom.ComboItem;
 import org.gui.main.MainGUI;
 import org.jdatepicker.impl.JDatePanelImpl;
@@ -58,10 +59,14 @@ public class AdministratorAdd {
         c3.gridx = 1;
         JComboBox cmbUtilizator = new JComboBox();
         UserModel userModel = UserModel.getInstance();
-        userModel.setDatabaseType(caller.getDatabaseType());
+        try {
+            MainService.setDatabaseType(userModel, caller.getDatabaseType());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         ModelList<UserModel.InnerUserModel> listUsers = null;
         try {
-            listUsers = userModel.getData();
+            listUsers = MainService.getData(userModel);
         } catch (Exception e) {
             listUsers = new ModelList<>();
         }
@@ -89,7 +94,7 @@ public class AdministratorAdd {
             administrator.UserID = Integer.parseInt(((ComboItem) cmbUtilizator.getSelectedItem()).getValue());
             administrator.isActive = chkIsActive.isSelected();
             try {
-                administratorModel.insertRow(administrator);
+                MainService.insert(administratorModel, administrator);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }

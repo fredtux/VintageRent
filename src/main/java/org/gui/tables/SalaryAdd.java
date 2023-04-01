@@ -1,5 +1,6 @@
 package org.gui.tables;
 
+import org.actions.MainService;
 import org.gui.custom.ComboItem;
 import org.gui.main.MainGUI;
 import org.jdatepicker.impl.JDatePanelImpl;
@@ -87,7 +88,7 @@ public class SalaryAdd {
             salary.Bonus = Double.parseDouble(txtBonus.getText());
 
             try {
-                salaryModel.insertRow(salary);
+                MainService.insert(salaryModel, salary);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }

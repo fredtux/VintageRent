@@ -1,5 +1,6 @@
 package org.gui.tables;
 
+import org.actions.MainService;
 import org.gui.custom.ComboItem;
 import org.gui.main.MainGUI;
 import org.jdatepicker.impl.JDatePanelImpl;
@@ -81,7 +82,11 @@ public class ClientAdd {
         c3.gridx = 1;
         JComboBox cmbName = new JComboBox();
         UserModel userModel = UserModel.getInstance();
-        userModel.setDatabaseType(caller.getDatabaseType());
+        try {
+            MainService.setDatabaseType(userModel, caller.getDatabaseType());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         ModelList<UserModel.InnerUserModel> listUsers = null;
         try {
             listUsers = userModel.getData();
@@ -102,10 +107,14 @@ public class ClientAdd {
         c3.gridx = 1;
         JComboBox cmbType = new JComboBox();
         ClientTypeModel clientType = ClientTypeModel.getInstance();
-        clientType.setDatabaseType(caller.getDatabaseType());
+        try {
+            MainService.setDatabaseType(clientType, caller.getDatabaseType());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         ModelList<ClientTypeModel.InnerClientTypeModel> listTypes = null;
         try {
-            listTypes = clientType.getData();
+            listTypes = MainService.getData(clientType);
         } catch (Exception e) {
             listTypes = new ModelList<>();
         }
@@ -126,7 +135,7 @@ public class ClientAdd {
             client.BirthDate = Date.valueOf(JDatePickerImpl1.getModel().getValue().toString());
             client.TypeID = Integer.parseInt(((ComboItem) cmbType.getSelectedItem()).getValue());
             try {
-                clientModel.insertRow(client);
+                MainService.insert(clientModel, client);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }

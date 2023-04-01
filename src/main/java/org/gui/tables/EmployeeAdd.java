@@ -1,5 +1,6 @@
 package org.gui.tables;
 
+import org.actions.MainService;
 import org.gui.custom.ComboItem;
 import org.gui.main.MainGUI;
 import org.jdatepicker.impl.JDatePanelImpl;
@@ -106,10 +107,14 @@ public class EmployeeAdd {
         c3.gridx = 2;
         JComboBox cmbManager = new JComboBox();
         EmployeeModel managerModel = EmployeeModel.getInstance();
-        managerModel.setDatabaseType(caller.getDatabaseType());
+        try {
+            MainService.setDatabaseType(managerModel, caller.getDatabaseType());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         ModelList<EmployeeModel.InnerEmployeeModel> listManagers = null;
         try {
-            listManagers = managerModel.getData();
+            listManagers = MainService.getData(managerModel);
         } catch (Exception e) {
             listManagers = new ModelList<>();
         }
@@ -127,10 +132,14 @@ public class EmployeeAdd {
         c3.gridx = 2;
         JComboBox cmbSalary = new JComboBox();
         SalaryModel salaryModel = SalaryModel.getInstance();
-        salaryModel.setDatabaseType(caller.getDatabaseType());
+        try {
+            MainService.setDatabaseType(salaryModel, caller.getDatabaseType());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         ModelList<SalaryModel.InnerSalaryModel> listSalaries = null;
         try {
-            listSalaries = salaryModel.getData();
+            listSalaries = MainService.getData(salaryModel);
         } catch (Exception e) {
             listSalaries = new ModelList<>();
         }
@@ -148,10 +157,14 @@ public class EmployeeAdd {
         c3.gridx = 2;
         JComboBox cmbUtilizator = new JComboBox();
         UserModel userModel = UserModel.getInstance();
-        userModel.setDatabaseType(caller.getDatabaseType());
+        try {
+            MainService.setDatabaseType(userModel, caller.getDatabaseType());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         ModelList<UserModel.InnerUserModel> listUsers = null;
         try {
-            listUsers = userModel.getData();
+            listUsers = MainService.getData(userModel);
         } catch (Exception e) {
             listUsers = new ModelList<>();
         }
@@ -174,7 +187,7 @@ public class EmployeeAdd {
             employee.SalaryID = Integer.parseInt(((ComboItem) cmbSalary.getSelectedItem()).getValue());
             employee.UserID = Integer.parseInt(((ComboItem) cmbUtilizator.getSelectedItem()).getValue());
             try {
-                employeeModel.insertRow(employee);
+                MainService.insert(employeeModel, employee);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
