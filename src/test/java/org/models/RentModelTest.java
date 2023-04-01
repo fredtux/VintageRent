@@ -145,6 +145,21 @@ public class RentModelTest {
         return null;
     }
 
+    public void testFilteredData(List<Integer> id){
+        try {
+            RentModel mrentModel = RentModel.getInstance();
+            MainService.setDatabaseType(mrentModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getFilteredData(mrentModel, "==", id.get(0).toString(), "DURATION_IN_DAYS");
+
+            ModelList<RentModel.InnerRentModel> modelList = mrentModel.getModelList();
+            RentModel.InnerRentModel data = modelList.getList().get(0);
+
+            assertEquals(id.get(0), Integer.valueOf(data.DURATION_IN_DAYS));
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
     public void delete(List<Integer> id){
         try {
             RentModel mrentModel = RentModel.getInstance();
@@ -168,6 +183,7 @@ public class RentModelTest {
     public void insertUpdateDelete() {
         try {
             List<Integer> newId = this.insert();
+            this.testFilteredData(newId);
             this.update(newId);
             this.delete(newId);
         } catch (Exception e) {
@@ -179,5 +195,15 @@ public class RentModelTest {
     public void getInstance() {
         RentModel mrentModel = RentModel.getInstance();
         assertNotNull(mrentModel);
+    }
+
+    @Test
+    public void getAttributes(){
+        try {
+            List<String> attributes = MainService.getAttributes(RentModel.class);
+            assertNotNull(attributes);
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
     }
 }

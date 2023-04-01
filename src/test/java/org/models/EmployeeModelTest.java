@@ -145,6 +145,21 @@ public class EmployeeModelTest {
         return null;
     }
 
+    public void testFilteredData(List<Integer> id){
+        try {
+            EmployeeModel employeeModel = EmployeeModel.getInstance();
+            MainService.setDatabaseType(employeeModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getFilteredData(employeeModel, "==", id.get(0).toString(), "UserID");
+
+            ModelList<EmployeeModel.InnerEmployeeModel> modelList = employeeModel.getModelList();
+            EmployeeModel.InnerEmployeeModel data = modelList.getList().get(0);
+
+            assertEquals(id.get(0), Integer.valueOf(data.UserID));
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
     public void delete(List<Integer> id){
         try {
             EmployeeModel employeeModel = EmployeeModel.getInstance();
@@ -168,6 +183,7 @@ public class EmployeeModelTest {
     public void insertUpdateDelete() {
         try {
             List<Integer> newId = this.insert();
+            this.testFilteredData(newId);
             this.update(newId);
             this.delete(newId);
         } catch (Exception e) {
@@ -179,5 +195,15 @@ public class EmployeeModelTest {
     public void getInstance() {
         EmployeeModel employeeModel = EmployeeModel.getInstance();
         assertNotNull(employeeModel);
+    }
+
+    @Test
+    public void getAttributes(){
+        try {
+            List<String> attributes = MainService.getAttributes(EmployeeModel.class);
+            assertNotNull(attributes);
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
     }
 }

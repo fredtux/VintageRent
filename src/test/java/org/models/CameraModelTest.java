@@ -143,6 +143,21 @@ public class CameraModelTest {
         return null;
     }
 
+    public void testFilteredData(List<Integer> id){
+        try {
+            CameraModel cameraModel = CameraModel.getInstance();
+            MainService.setDatabaseType(cameraModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getFilteredData(cameraModel, "==", id.get(0).toString(), "IDCamera");
+
+            ModelList<CameraModel.InnerCameraModel> modelList = cameraModel.getModelList();
+            CameraModel.InnerCameraModel data = modelList.getList().get(0);
+
+            assertEquals(id.get(0), Integer.valueOf(data.IDCamera));
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
     public void delete(List<Integer> id){
         try {
             CameraModel cameraModel = CameraModel.getInstance();
@@ -166,6 +181,7 @@ public class CameraModelTest {
     public void insertUpdateDelete() {
         try {
             List<Integer> newId = this.insert();
+            this.testFilteredData(newId);
             this.update(newId);
             this.delete(newId);
         } catch (Exception e) {
@@ -177,5 +193,15 @@ public class CameraModelTest {
     public void getInstance() {
         CameraModel cameraModel = CameraModel.getInstance();
         assertNotNull(cameraModel);
+    }
+
+    @Test
+    public void getAttributes(){
+        try {
+            List<String> attributes = MainService.getAttributes(CameraModel.class);
+            assertNotNull(attributes);
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
     }
 }

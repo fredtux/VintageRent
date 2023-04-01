@@ -137,6 +137,21 @@ public class SalaryModelTest {
         return null;
     }
 
+    public void testFilteredData(List<Integer> id){
+        try {
+            SalaryModel msalaryModel = SalaryModel.getInstance();
+            MainService.setDatabaseType(msalaryModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getFilteredData(msalaryModel, "==", id.get(0).toString(), "SalaryID");
+
+            ModelList<SalaryModel.InnerSalaryModel> modelList = msalaryModel.getModelList();
+            SalaryModel.InnerSalaryModel data = modelList.getList().get(0);
+
+            assertEquals(id.get(0), Integer.valueOf(data.SalaryID));
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
     public void delete(List<Integer> id){
         try {
             SalaryModel msalaryModel = SalaryModel.getInstance();
@@ -160,6 +175,7 @@ public class SalaryModelTest {
     public void insertUpdateDelete() {
         try {
             List<Integer> newId = this.insert();
+            this.testFilteredData(newId);
             this.update(newId);
             this.delete(newId);
         } catch (Exception e) {
@@ -171,5 +187,15 @@ public class SalaryModelTest {
     public void getInstance() {
         SalaryModel msalaryModel = SalaryModel.getInstance();
         assertNotNull(msalaryModel);
+    }
+
+    @Test
+    public void getAttributes(){
+        try {
+            List<String> attributes = MainService.getAttributes(SalaryModel.class);
+            assertNotNull(attributes);
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
     }
 }

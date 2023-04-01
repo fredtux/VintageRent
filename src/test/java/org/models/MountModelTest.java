@@ -136,6 +136,21 @@ public class MountModelTest {
         return null;
     }
 
+    public void testFilteredData(List<Integer> id){
+        try {
+            MountModel mountModel = MountModel.getInstance();
+            MainService.setDatabaseType(mountModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getFilteredData(mountModel, "==", id.get(0).toString(), "MountID");
+
+            ModelList<MountModel.InnerMountModel> modelList = mountModel.getModelList();
+            MountModel.InnerMountModel data = modelList.getList().get(0);
+
+            assertEquals(id.get(0), Integer.valueOf(data.MountID));
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
     public void delete(List<Integer> id){
         try {
             MountModel mountModel = MountModel.getInstance();
@@ -159,6 +174,7 @@ public class MountModelTest {
     public void insertUpdateDelete() {
         try {
             List<Integer> newId = this.insert();
+            this.testFilteredData(newId);
             this.update(newId);
             this.delete(newId);
         } catch (Exception e) {
@@ -170,5 +186,15 @@ public class MountModelTest {
     public void getInstance() {
         MountModel mountModel = MountModel.getInstance();
         assertNotNull(mountModel);
+    }
+
+    @Test
+    public void getAttributes(){
+        try {
+            List<String> attributes = MainService.getAttributes(MountModel.class);
+            assertNotNull(attributes);
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
     }
 }
