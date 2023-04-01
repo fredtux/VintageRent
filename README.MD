@@ -1,13 +1,4 @@
 # Vintage Rent
-## !!! ATENTIE !!!
-Pentru conexiunea cu baza de date, va trebui sa intrati in folderul **docker_oracle_21c** si sa rulati
-
-```bash
-docker-compose up
-```
-
-Aceste instructiuni creaza user-ul, baza de date fiind creata de aplicatie.
-
 ## Etapa 1
 Pentru prima etapa poate fi folosita suita de unit testing definita in test.java.org.suites.AllTests
 
@@ -136,8 +127,17 @@ Clasa de serviciu este MainService. Prin ea se face CRUD, filtrare si se generea
 #### o clasa Main din care sunt făcute apeluri către servicii
 Am utilizat unit testing avand ca suita: test.java.org.suites.AllTests . Pentru acest lucru a fost nevoie de o stocare in memorie cu ajutorul: org.databases.memory.InMemory
 
+## Etapa 2
+## !!! ATENTIE !!!
+Pentru conexiunea cu baza de date, va trebui sa intrati in folderul **docker_oracle_21c** si sa rulati
+
+```bash
+docker-compose up
+```
+
 ## Documentatie
 Documentatia se gaseste in format PDF in fisierul [Documentatie.pdf](https://github.com/fredtux/VintageRent/blob/main/Documentatie.pdf)
+
 
 ## Cerinte
 ### Etapa I
