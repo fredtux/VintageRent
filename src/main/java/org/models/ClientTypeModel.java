@@ -60,7 +60,7 @@ public class ClientTypeModel extends Model implements LinkModelToDatabase<ModelL
 
         DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
         for(InnerClientTypeModel model : this.modelList.getList()){
-            Object[] obj = {model.TypeID, model.Name, model.TypeID, model.Discount};
+            Object[] obj = {model.TypeID, model.Name, model.Discount};
             tableModel.addRow(obj);
         }
 
@@ -311,7 +311,7 @@ public class ClientTypeModel extends Model implements LinkModelToDatabase<ModelL
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         List<Pair<String, String>> values = new ArrayList<>();
-        values.add(new Pair<>("TYPEID", row.TypeID + ""));
+        values.add(new Pair<>("TYPEID", ""));
         values.add(new Pair<>("NAME", "'" + row.Name + "'"));
         values.add(new Pair<>("DISCOUNT", row.Discount + ""));
 

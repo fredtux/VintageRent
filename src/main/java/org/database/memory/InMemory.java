@@ -30,6 +30,8 @@ public class InMemory extends DatabaseConnection {
     private ModelList<ObjectiveModel.InnerObjectiveModel> objectives = null;
     private ModelList<RentModel.InnerRentModel> rents = null;
 
+    private List<ModelList> modelLists = new ArrayList<>();
+
     public InMemory() {
         if (instance != null)
             throw new RuntimeException("OracleConnection is a singleton class. Use getInstance() instead.");
@@ -49,6 +51,18 @@ public class InMemory extends DatabaseConnection {
         salaries = new ModelList<>();
         objectives = new ModelList<>();
         rents = new ModelList<>();
+
+        modelLists.add(cameraTypes);
+        modelLists.add(cameras);
+        modelLists.add(formats);
+        modelLists.add(mounts);
+        modelLists.add(clients);
+        modelLists.add(clientTypes);
+        modelLists.add(users);
+        modelLists.add(employees);
+        modelLists.add(salaries);
+        modelLists.add(objectives);
+        modelLists.add(rents);
     }
 
     public static DatabaseConnection getInstance(DatabaseType t) throws RuntimeException {

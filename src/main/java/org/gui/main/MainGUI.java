@@ -45,7 +45,12 @@ public class MainGUI { // Singleton
         CAMERATYPE,
         FORMAT,
         EMPLOYEE,
-        USER
+        USER,
+        CLIENT,
+        CLIENTTYPE,
+        MOUNT,
+        OBJECTIVE,
+        SALARY
     }
 
     private TableType currentTableType = TableType.RENT;
@@ -74,6 +79,403 @@ public class MainGUI { // Singleton
             return new MainGUI();
 
         return instance;
+    }
+
+    public void initSalaryTable(String comparator, String value, String column){
+        SalaryModel salaryModel = SalaryModel.getInstance();
+        salaryModel.setDatabaseType(this.databaseType);
+        try {
+            if(comparator == null)
+                MainService.getData(salaryModel);
+            else
+                MainService.getFilteredData(salaryModel, comparator, value, column);
+            DefaultTableModel rm = salaryModel.getTableModel();
+
+            this.tblMain = new JTable();
+            this.jscrPane.setViewportView(this.tblMain);
+            this.tblMain.setModel(rm);
+            rm.fireTableDataChanged();
+
+            class TableModelEvents implements TableModelListener {
+                public boolean isCellEditable(int row, int column) {
+                    return column != 0;
+                }
+
+                public void setValueAt(String value, int row, int column) throws Exception {
+                    SalaryModel rm = SalaryModel.getInstance();
+                    ModelList<SalaryModel.InnerSalaryModel> modelList = new ModelList<>();
+                    SalaryModel.InnerSalaryModel irm = new SalaryModel.InnerSalaryModel();
+                    DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
+
+                    irm.SalaryID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+                    irm.Salary = Integer.parseInt(dtm.getValueAt(row, 1).toString());
+                    irm.Bonus = Double.parseDouble(dtm.getValueAt(row, 2).toString());
+
+
+                    switch (column) {
+                        case 1:
+                            irm.Salary = Integer.parseInt(value);
+                            break;
+                        case 2:
+                            irm.Bonus = Double.parseDouble(value);
+                            break;
+                        default:
+                            throw new Exception("Invalid column index");
+                    }
+
+                    modelList.add(irm);
+                    rm.updateData(modelList);
+                }
+
+                @Override
+                public void tableChanged(TableModelEvent e) {
+                    if (e.getType() == TableModelEvent.UPDATE) {
+                        int row = e.getFirstRow();
+                        int column = e.getColumn();
+                        try {
+                            setValueAt((String) tblMain.getValueAt(row, column), row, column);
+                        } catch (Exception ex) {
+                            System.out.println("Error in trying to update salary table: " + ex.getMessage());
+                        }
+                    }
+                }
+            }
+
+            if(comparator == null) {
+                this.tblMain.getModel().addTableModelListener(new TableModelEvents());
+                this.currentTableType = TableType.SALARY;
+
+                this.cmbColumn.removeAllItems();
+                List<String> columnNames = MainService.getAttributes(SalaryModel.InnerSalaryModel.class);
+
+                for (String columnName : columnNames) {
+                    this.cmbColumn.addItem(columnName);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error in trying to initialize salary table: " + e.getMessage());
+        }
+    }
+
+    public void initObjectiveTable(String comparator, String value, String column){
+        ObjectiveModel objectiveModel = ObjectiveModel.getInstance();
+        objectiveModel.setDatabaseType(this.databaseType);
+        try {
+            if(comparator == null)
+                MainService.getData(objectiveModel);
+            else
+                MainService.getFilteredData(objectiveModel, comparator, value, column);
+            DefaultTableModel rm = objectiveModel.getTableModel();
+
+            this.tblMain = new JTable();
+            this.jscrPane.setViewportView(this.tblMain);
+            this.tblMain.setModel(rm);
+            rm.fireTableDataChanged();
+
+            class TableModelEvents implements TableModelListener {
+                public boolean isCellEditable(int row, int column) {
+                    return column != 0;
+                }
+
+                public void setValueAt(String value, int row, int column) throws Exception {
+                    ObjectiveModel rm = ObjectiveModel.getInstance();
+                    ModelList<ObjectiveModel.InnerObjectiveModel> modelList = new ModelList<>();
+                    ObjectiveModel.InnerObjectiveModel irm = new ObjectiveModel.InnerObjectiveModel();
+                    DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
+
+                    irm.ObjectiveID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+                    irm.Name = dtm.getValueAt(row, 1).toString();
+                    irm.FocalDistance = Integer.parseInt(dtm.getValueAt(row, 2).toString());
+                    irm.MinimumAperture = Double.parseDouble(dtm.getValueAt(row, 3).toString());
+                    irm.MaximumAperture = Double.parseDouble(dtm.getValueAt(row, 4).toString());
+                    irm.Diameter = Integer.parseInt(dtm.getValueAt(row, 5).toString());
+                    irm.Price = Integer.parseInt(dtm.getValueAt(row, 6).toString());
+                    irm.RentalPrice = Integer.parseInt(dtm.getValueAt(row, 7).toString());
+
+
+                    switch (column) {
+                        case 1:
+                            irm.Name = value;
+                            break;
+                        case 2:
+                            irm.FocalDistance = Integer.parseInt(value);
+                            break;
+                        case 3:
+                            irm.MinimumAperture = Double.parseDouble(value);
+                            break;
+                        case 4:
+                            irm.MaximumAperture = Double.parseDouble(value);
+                            break;
+                        case 5:
+                            irm.Diameter = Integer.parseInt(value);
+                            break;
+                        case 6:
+                            irm.Price = Integer.parseInt(value);
+                            break;
+                        case 7:
+                            irm.RentalPrice = Integer.parseInt(value);
+                            break;
+
+                        default:
+                            throw new Exception("Invalid column index");
+                    }
+
+                    modelList.add(irm);
+                    rm.updateData(modelList);
+                }
+
+                @Override
+                public void tableChanged(TableModelEvent e) {
+                    if (e.getType() == TableModelEvent.UPDATE) {
+                        int row = e.getFirstRow();
+                        int column = e.getColumn();
+                        try {
+                            setValueAt((String) tblMain.getValueAt(row, column), row, column);
+                        } catch (Exception ex) {
+                            System.out.println("Error in trying to update objective table: " + ex.getMessage());
+                        }
+                    }
+                }
+            }
+
+            if(comparator == null) {
+                this.tblMain.getModel().addTableModelListener(new TableModelEvents());
+                this.currentTableType = TableType.OBJECTIVE;
+
+                this.cmbColumn.removeAllItems();
+                List<String> columnNames = MainService.getAttributes(ObjectiveModel.InnerObjectiveModel.class);
+
+                for (String columnName : columnNames) {
+                    this.cmbColumn.addItem(columnName);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error in trying to initialize objective table: " + e.getMessage());
+        }
+    }
+
+    public void initMountTable(String comparator, String value, String column){
+        MountModel mountModel = MountModel.getInstance();
+        mountModel.setDatabaseType(this.databaseType);
+        try {
+            if(comparator == null)
+                MainService.getData(mountModel);
+            else
+                MainService.getFilteredData(mountModel, comparator, value, column);
+            DefaultTableModel rm = mountModel.getTableModel();
+
+            this.tblMain = new JTable();
+            this.jscrPane.setViewportView(this.tblMain);
+            this.tblMain.setModel(rm);
+            rm.fireTableDataChanged();
+
+            class TableModelEvents implements TableModelListener {
+                public boolean isCellEditable(int row, int column) {
+                    return column != 0;
+                }
+
+                public void setValueAt(String value, int row, int column) throws Exception {
+                    MountModel rm = MountModel.getInstance();
+                    ModelList<MountModel.InnerMountModel> modelList = new ModelList<>();
+                    MountModel.InnerMountModel irm = new MountModel.InnerMountModel();
+                    DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
+
+                    irm.MountID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+                    irm.Name = dtm.getValueAt(row, 1).toString();
+
+
+                    switch (column) {
+                        case 1:
+                            irm.Name = value;
+                            break;
+                        default:
+                            throw new Exception("Invalid column index");
+                    }
+
+                    modelList.add(irm);
+                    rm.updateData(modelList);
+                }
+
+                @Override
+                public void tableChanged(TableModelEvent e) {
+                    if (e.getType() == TableModelEvent.UPDATE) {
+                        int row = e.getFirstRow();
+                        int column = e.getColumn();
+                        try {
+                            setValueAt((String) tblMain.getValueAt(row, column), row, column);
+                        } catch (Exception ex) {
+                            System.out.println("Error in trying to update mount table: " + ex.getMessage());
+                        }
+                    }
+                }
+            }
+
+            if(comparator == null) {
+                this.tblMain.getModel().addTableModelListener(new TableModelEvents());
+                this.currentTableType = TableType.MOUNT;
+
+                this.cmbColumn.removeAllItems();
+                List<String> columnNames = MainService.getAttributes(MountModel.InnerMountModel.class);
+
+                for (String columnName : columnNames) {
+                    this.cmbColumn.addItem(columnName);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error in trying to initialize camera table: " + e.getMessage());
+        }
+    }
+
+    public void initClientTypeTable(String comparator, String value, String column){
+        ClientTypeModel clientTypeModel = ClientTypeModel.getInstance();
+        clientTypeModel.setDatabaseType(this.databaseType);
+        try {
+            if(comparator == null)
+                MainService.getData(clientTypeModel);
+            else
+                MainService.getFilteredData(clientTypeModel, comparator, value, column);
+            DefaultTableModel rm = clientTypeModel.getTableModel();
+
+            this.tblMain = new JTable();
+            this.jscrPane.setViewportView(this.tblMain);
+            this.tblMain.setModel(rm);
+            rm.fireTableDataChanged();
+
+            class TableModelEvents implements TableModelListener {
+                public boolean isCellEditable(int row, int column) {
+                    return column != 0;
+                }
+
+                public void setValueAt(String value, int row, int column) throws Exception {
+                    ClientTypeModel rm = ClientTypeModel.getInstance();
+                    ModelList<ClientTypeModel.InnerClientTypeModel> modelList = new ModelList<>();
+                    ClientTypeModel.InnerClientTypeModel irm = new ClientTypeModel.InnerClientTypeModel();
+                    DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
+
+                    irm.TypeID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+                    irm.Name = dtm.getValueAt(row, 1).toString();
+                    irm.Discount = Double.parseDouble(dtm.getValueAt(row, 2).toString());
+
+
+                    switch (column) {
+                        case 1:
+                            irm.Name = value;
+                            break;
+                        case 2:
+                            irm.Discount = Double.parseDouble(value);
+                            break;
+                        default:
+                            throw new Exception("Invalid column index");
+                    }
+
+                    modelList.add(irm);
+                    rm.updateData(modelList);
+                }
+
+                @Override
+                public void tableChanged(TableModelEvent e) {
+                    if (e.getType() == TableModelEvent.UPDATE) {
+                        int row = e.getFirstRow();
+                        int column = e.getColumn();
+                        try {
+                            setValueAt((String) tblMain.getValueAt(row, column), row, column);
+                        } catch (Exception ex) {
+                            System.out.println("Error in trying to update client type table: " + ex.getMessage());
+                        }
+                    }
+                }
+            }
+
+            if(comparator == null) {
+                this.tblMain.getModel().addTableModelListener(new TableModelEvents());
+                this.currentTableType = TableType.CLIENTTYPE;
+
+                this.cmbColumn.removeAllItems();
+                List<String> columnNames = MainService.getAttributes(ClientTypeModel.InnerClientTypeModel.class);
+
+                for (String columnName : columnNames) {
+                    this.cmbColumn.addItem(columnName);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error in trying to initialize client type table: " + e.getMessage());
+        }
+    }
+
+    public void initClientTable(String comparator, String value, String column) {
+        ClientModel clientModel = ClientModel.getInstance();
+        clientModel.setDatabaseType(this.databaseType);
+        try {
+            if(comparator == null)
+                MainService.getData(clientModel);
+            else
+                MainService.getFilteredData(clientModel, comparator, value, column);
+            DefaultTableModel rm = clientModel.getTableModel();
+
+            this.tblMain = new JTable();
+            this.jscrPane.setViewportView(this.tblMain);
+            this.tblMain.setModel(rm);
+            rm.fireTableDataChanged();
+
+            class TableModelEvents implements TableModelListener {
+                public boolean isCellEditable(int row, int column) {
+                    return column != 0;
+                }
+
+                public void setValueAt(String value, int row, int column) throws Exception {
+                    ClientModel rm = ClientModel.getInstance();
+                    ModelList<ClientModel.InnerClientModel> modelList = new ModelList<>();
+                    ClientModel.InnerClientModel irm = new ClientModel.InnerClientModel();
+                    DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
+
+                    irm.UserID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+                    irm.BirthDate = Date.valueOf(dtm.getValueAt(row, 1).toString());
+                    irm.TypeID = Integer.parseInt(dtm.getValueAt(row, 2).toString());
+
+
+                    switch (column) {
+                        case 1:
+                            irm.BirthDate = Date.valueOf(value);
+                            break;
+                        case 2:
+                            irm.TypeID = Integer.parseInt(value);
+                            break;
+                        default:
+                            throw new Exception("Invalid column index");
+                    }
+
+                    modelList.add(irm);
+                    rm.updateData(modelList);
+                }
+
+                @Override
+                public void tableChanged(TableModelEvent e) {
+                    if (e.getType() == TableModelEvent.UPDATE) {
+                        int row = e.getFirstRow();
+                        int column = e.getColumn();
+                        try {
+                            setValueAt((String) tblMain.getValueAt(row, column), row, column);
+                        } catch (Exception ex) {
+                            System.out.println("Error in trying to update client table: " + ex.getMessage());
+                        }
+                    }
+                }
+            }
+
+            if(comparator == null) {
+                this.tblMain.getModel().addTableModelListener(new TableModelEvents());
+                this.currentTableType = TableType.CLIENT;
+
+                this.cmbColumn.removeAllItems();
+                List<String> columnNames = MainService.getAttributes(ClientModel.InnerClientModel.class);
+
+                for (String columnName : columnNames) {
+                    this.cmbColumn.addItem(columnName);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error in trying to initialize client table: " + e.getMessage());
+        }
     }
 
     public void initUserTable(String comparator, String value, String column) {
@@ -165,7 +567,7 @@ public class MainGUI { // Singleton
                 }
             }
         } catch (Exception e) {
-            System.out.println("Error in trying to initialize camera table: " + e.getMessage());
+            System.out.println("Error in trying to initialize user table: " + e.getMessage());
         }
     }
 
@@ -611,6 +1013,76 @@ public class MainGUI { // Singleton
         }
     }
 
+    private void removeRowFromSalaryModel(int row) throws Exception{
+        SalaryModel rm = SalaryModel.getInstance();
+        ModelList<SalaryModel.InnerSalaryModel> modelList = new ModelList<>();
+        SalaryModel.InnerSalaryModel irm = new SalaryModel.InnerSalaryModel();
+        DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
+
+        irm.SalaryID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+
+        modelList.add(irm);
+        rm.deleteRow(modelList);
+
+        dtm.removeRow(row);
+    }
+
+    private void removeRowFromObjectiveModel(int row) throws Exception{
+        ObjectiveModel rm = ObjectiveModel.getInstance();
+        ModelList<ObjectiveModel.InnerObjectiveModel> modelList = new ModelList<>();
+        ObjectiveModel.InnerObjectiveModel irm = new ObjectiveModel.InnerObjectiveModel();
+        DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
+
+        irm.ObjectiveID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+
+        modelList.add(irm);
+        rm.deleteRow(modelList);
+
+        dtm.removeRow(row);
+    }
+
+    private void removeRowFromMountModel(int row) throws Exception{
+        MountModel rm = MountModel.getInstance();
+        ModelList<MountModel.InnerMountModel> modelList = new ModelList<>();
+        MountModel.InnerMountModel irm = new MountModel.InnerMountModel();
+        DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
+
+        irm.MountID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+
+        modelList.add(irm);
+        rm.deleteRow(modelList);
+
+        dtm.removeRow(row);
+    }
+
+    private void removeRowFromClientTypeModel(int row) throws Exception{
+        ClientTypeModel rm = ClientTypeModel.getInstance();
+        ModelList<ClientTypeModel.InnerClientTypeModel> modelList = new ModelList<>();
+        ClientTypeModel.InnerClientTypeModel irm = new ClientTypeModel.InnerClientTypeModel();
+        DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
+
+        irm.TypeID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+
+        modelList.add(irm);
+        rm.deleteRow(modelList);
+
+        dtm.removeRow(row);
+    }
+
+    private void removeRowFromClientModel(int row) throws Exception{
+        ClientModel rm = ClientModel.getInstance();
+        ModelList<ClientModel.InnerClientModel> modelList = new ModelList<>();
+        ClientModel.InnerClientModel irm = new ClientModel.InnerClientModel();
+        DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
+
+        irm.UserID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+
+        modelList.add(irm);
+        rm.deleteRow(modelList);
+
+        dtm.removeRow(row);
+    }
+
     private void removeRowFromUserModel(int row) throws Exception{
         UserModel rm = UserModel.getInstance();
         ModelList<UserModel.InnerUserModel> modelList = new ModelList<>();
@@ -768,6 +1240,41 @@ public class MainGUI { // Singleton
         });
         crud.add(menuItemUsers);
 
+        JMenuItem menuItemClients = new JMenuItem("Clients");
+        menuItemClients.addActionListener(e -> {
+            initClientTable(null, null, null);
+            this.currentTableType = TableType.CLIENT;
+        });
+        crud.add(menuItemClients);
+
+        JMenuItem menuClientTypes = new JMenuItem("Client Types");
+        menuClientTypes.addActionListener(e -> {
+            initClientTypeTable(null, null, null);
+            this.currentTableType = TableType.CLIENTTYPE;
+        });
+        crud.add(menuClientTypes);
+
+        JMenuItem menuMounts = new JMenuItem("Mounts");
+        menuMounts.addActionListener(e -> {
+            initMountTable(null, null, null);
+            this.currentTableType = TableType.MOUNT;
+        });
+        crud.add(menuMounts);
+
+        JMenuItem menuObjectives = new JMenuItem("Objectives");
+        menuObjectives.addActionListener(e -> {
+            initObjectiveTable(null, null, null);
+            this.currentTableType = TableType.OBJECTIVE;
+        });
+        crud.add(menuObjectives);
+
+        JMenuItem menuSalaries = new JMenuItem("Salaries");
+        menuSalaries.addActionListener(e -> {
+            initSalaryTable(null, null, null);
+            this.currentTableType = TableType.SALARY;
+        });
+        crud.add(menuSalaries);
+
         JMenu datasources = new JMenu("Datasources");
         menuBar.add(datasources);
 
@@ -787,6 +1294,16 @@ public class MainGUI { // Singleton
                     initEmployeeTable(null, null, null);
                 } else if(this.currentTableType == TableType.USER){
                     initUserTable(null, null, null);
+                } else if(this.currentTableType == TableType.CLIENT){
+                    initClientTable(null, null, null);
+                } else if(this.currentTableType == TableType.CLIENTTYPE){
+                    initClientTypeTable(null, null, null);
+                } else if(this.currentTableType == TableType.MOUNT){
+                    initMountTable(null, null, null);
+                } else if(this.currentTableType == TableType.OBJECTIVE){
+                    initObjectiveTable(null, null, null);
+                } else if(this.currentTableType == TableType.SALARY){
+                    initSalaryTable(null, null, null);
                 }
 
                 try{
@@ -816,6 +1333,16 @@ public class MainGUI { // Singleton
                     initEmployeeTable(null, null, null);
                 } else if(this.currentTableType == TableType.USER){
                     initUserTable(null, null, null);
+                }else if(this.currentTableType == TableType.CLIENT){
+                    initClientTable(null, null, null);
+                } else if(this.currentTableType == TableType.CLIENTTYPE){
+                    initClientTypeTable(null, null, null);
+                } else if(this.currentTableType == TableType.MOUNT){
+                    initMountTable(null, null, null);
+                } else if(this.currentTableType == TableType.OBJECTIVE){
+                    initObjectiveTable(null, null, null);
+                } else if(this.currentTableType == TableType.SALARY){
+                    initSalaryTable(null, null, null);
                 }
 
                 try{
@@ -845,6 +1372,16 @@ public class MainGUI { // Singleton
                     initEmployeeTable(null, null, null);
                 } else if(this.currentTableType == TableType.USER){
                     initUserTable(null, null, null);
+                }else if(this.currentTableType == TableType.CLIENT){
+                    initClientTable(null, null, null);
+                } else if(this.currentTableType == TableType.CLIENTTYPE){
+                    initClientTypeTable(null, null, null);
+                } else if(this.currentTableType == TableType.MOUNT){
+                    initMountTable(null, null, null);
+                } else if(this.currentTableType == TableType.OBJECTIVE){
+                    initObjectiveTable(null, null, null);
+                } else if(this.currentTableType == TableType.SALARY){
+                    initSalaryTable(null, null, null);
                 }
 
                 try{
@@ -969,6 +1506,16 @@ public class MainGUI { // Singleton
                 this.initEmployeeTable(cmbSign.getSelectedItem().toString(), this.txtValue.getText(), this.cmbColumn.getSelectedItem().toString());
             } else if(this.currentTableType == TableType.USER){
                 this.initUserTable(cmbSign.getSelectedItem().toString(), this.txtValue.getText(), this.cmbColumn.getSelectedItem().toString());
+            } else if(this.currentTableType == TableType.CLIENT){
+                initClientTable(cmbSign.getSelectedItem().toString(), this.txtValue.getText(), this.cmbColumn.getSelectedItem().toString());
+            } else if(this.currentTableType == TableType.CLIENTTYPE){
+                initClientTypeTable(cmbSign.getSelectedItem().toString(), this.txtValue.getText(), this.cmbColumn.getSelectedItem().toString());
+            } else if(this.currentTableType == TableType.MOUNT){
+                initMountTable(cmbSign.getSelectedItem().toString(), this.txtValue.getText(), this.cmbColumn.getSelectedItem().toString());
+            } else if(this.currentTableType == TableType.OBJECTIVE){
+                initObjectiveTable(cmbSign.getSelectedItem().toString(), this.txtValue.getText(), this.cmbColumn.getSelectedItem().toString());
+            } else if(this.currentTableType == TableType.SALARY){
+                initSalaryTable(cmbSign.getSelectedItem().toString(), this.txtValue.getText(), this.cmbColumn.getSelectedItem().toString());
             }
 
         });
@@ -990,6 +1537,16 @@ public class MainGUI { // Singleton
                 this.initEmployeeTable(null, null, null);
             } else if(this.currentTableType == TableType.USER){
                 this.initUserTable(null, null, null);
+            } else if(this.currentTableType == TableType.CLIENT){
+                initClientTable(null, null, null);
+            } else if(this.currentTableType == TableType.CLIENTTYPE){
+                initClientTypeTable(null, null, null);
+            } else if(this.currentTableType == TableType.MOUNT){
+                initMountTable(null, null, null);
+            } else if(this.currentTableType == TableType.OBJECTIVE){
+                initObjectiveTable(null, null, null);
+            } else if(this.currentTableType == TableType.SALARY){
+                initSalaryTable(null, null, null);
             }
         });
 
@@ -1035,6 +1592,16 @@ public class MainGUI { // Singleton
                             removeRowFromEmployeeModel(row);
                         else if(currentTableType == TableType.USER)
                             removeRowFromUserModel(row);
+                        else if(currentTableType == TableType.CLIENT)
+                            removeRowFromClientModel(row);
+                        else if(currentTableType == TableType.CLIENTTYPE)
+                            removeRowFromClientTypeModel(row);
+                        else if(currentTableType == TableType.MOUNT)
+                            removeRowFromMountModel(row);
+                        else if(currentTableType == TableType.OBJECTIVE)
+                            removeRowFromObjectiveModel(row);
+                        else if(currentTableType == TableType.SALARY)
+                            removeRowFromSalaryModel(row);
                     } catch (SQLException ex) {
                         JDialog dialog = new JDialog();
                         dialog.setAlwaysOnTop(true);
@@ -1078,6 +1645,21 @@ public class MainGUI { // Singleton
                 } else if(currentTableType == TableType.USER){
                     UserAdd ua = UserAdd.getInstance(frame, instance);
                     ua.main();
+                } else if(currentTableType == TableType.CLIENT){
+                    ClientAdd ca = ClientAdd.getInstance(frame, instance);
+                    ca.main();
+                } else if(currentTableType == TableType.CLIENTTYPE){
+                    ClientTypeAdd cta = ClientTypeAdd.getInstance(frame, instance);
+                    cta.main();
+                } else if(currentTableType == TableType.MOUNT){
+                    MountAdd ma = MountAdd.getInstance(frame, instance);
+                    ma.main();
+                } else if(currentTableType == TableType.OBJECTIVE){
+                    ObjectiveAdd oa = ObjectiveAdd.getInstance(frame, instance);
+                    oa.main();
+                } else if(currentTableType == TableType.SALARY){
+                    SalaryAdd sa = SalaryAdd.getInstance(frame, instance);
+                    sa.main();
                 }
             }
         });

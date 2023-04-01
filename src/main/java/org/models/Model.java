@@ -4,9 +4,6 @@ import org.database.DatabaseConnection;
 import org.logger.CsvLogger;
 
 import javax.swing.table.TableModel;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class Model {
     protected static Model instance = null;
