@@ -4,6 +4,7 @@ import org.database.DatabaseConnection;
 import org.database.csv.CsvConnection;
 
 import javax.swing.table.DefaultTableModel;
+import java.lang.reflect.Field;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public class RentModel extends Model implements LinkModelToDatabase<ModelList<RentModel.InnerRentModel>, RentModel.InnerRentModel> {
     public static class InnerRentModel extends AbstractInnerModel{
@@ -118,6 +120,137 @@ public class RentModel extends Model implements LinkModelToDatabase<ModelList<Re
             model.PENALTYFEE = rs.getDouble("PENALTYFEE");
             this.modelList.add(model);
         }
+    }
+
+    public void getFilteredData(String comparator, String value, String column) throws Exception{
+        this.getData();
+
+        Predicate<RentModel.InnerRentModel> predicate =  null;
+
+        switch (column) {
+            case "NAME_CAMERA":
+                case "NAME_CLIENT":
+                case "NAME_OBIECTIV":
+                case "NAME_ANGAJAT":
+                predicate = (RentModel.InnerRentModel model) -> {
+                    try {
+                        Field field = model.getClass().getDeclaredField(column);
+                        field.setAccessible(true);
+                        String fieldValue = (String) field.get(model);
+                        if(comparator == "==")
+                            return fieldValue.equals(value);
+                        else if(comparator == "!=")
+                            return !fieldValue.equals(value);
+                        else if(comparator == "<")
+                            return fieldValue.compareTo(value) < 0;
+                        else if(comparator == ">")
+                            return fieldValue.compareTo(value) > 0;
+                        else if(comparator == "<=")
+                            return fieldValue.compareTo(value) <= 0;
+                        else if(comparator == ">=")
+                            return fieldValue.compareTo(value) >= 0;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                };
+                break;
+            case "ISRETURNED":
+                predicate = (RentModel.InnerRentModel model) -> {
+                    try {
+                        Field field = model.getClass().getDeclaredField(column);
+                        field.setAccessible(true);
+                        boolean fieldValue = (boolean) field.get(model);
+                        if(comparator == "==")
+                            return fieldValue == Boolean.parseBoolean(value);
+                        else
+                            return fieldValue != Boolean.parseBoolean(value);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                };
+                break;
+            case "RENTDATE":
+                predicate = (RentModel.InnerRentModel model) -> {
+                    try {
+                        Field field = model.getClass().getDeclaredField(column);
+                        field.setAccessible(true);
+                        Date fieldValue = (Date) field.get(model);
+                        if(comparator == "==")
+                            return fieldValue.equals(Date.valueOf(value));
+                        else if(comparator == "!=")
+                            return !fieldValue.equals(Date.valueOf(value));
+                        else if(comparator == "<")
+                            return fieldValue.compareTo(Date.valueOf(value)) < 0;
+                        else if(comparator == ">")
+                            return fieldValue.compareTo(Date.valueOf(value)) > 0;
+                        else if(comparator == "<=")
+                            return fieldValue.compareTo(Date.valueOf(value)) <= 0;
+                        else if(comparator == ">=")
+                            return fieldValue.compareTo(Date.valueOf(value)) >= 0;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                };
+                        break;
+            case "DURATION_IN_DAYS":
+            case "IDANGAJAT":
+            case "IDCAMERA":
+            case "IDCLIENT":
+            case "OBJECTIVEID":
+                predicate = (RentModel.InnerRentModel model) -> {
+                    try {
+                        Field field = model.getClass().getDeclaredField(column);
+                        field.setAccessible(true);
+                        int fieldValue = (int) field.get(model);
+                        if(comparator == "==")
+                            return fieldValue == Integer.parseInt(value);
+                        else if(comparator == "!=")
+                            return fieldValue != Integer.parseInt(value);
+                        else if(comparator == "<")
+                            return fieldValue < Integer.parseInt(value);
+                        else if(comparator == ">")
+                            return fieldValue > Integer.parseInt(value);
+                        else if(comparator == "<=")
+                            return fieldValue <= Integer.parseInt(value);
+                        else if(comparator == ">=")
+                            return fieldValue >= Integer.parseInt(value);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                };
+                break;
+
+            case "PENALTYFEE":
+                predicate = (RentModel.InnerRentModel model) -> {
+                    try {
+                        Field field = model.getClass().getDeclaredField(column);
+                        field.setAccessible(true);
+                        double fieldValue = (double) field.get(model);
+                        if(comparator == "==")
+                            return fieldValue == Double.parseDouble(value);
+                        else if(comparator == "!=")
+                            return fieldValue !=  Double.parseDouble(value);
+                        else if(comparator == "<")
+                            return fieldValue <  Double.parseDouble(value);
+                        else if(comparator == ">")
+                            return fieldValue >  Double.parseDouble(value);
+                        else if(comparator == "<=")
+                            return fieldValue <=  Double.parseDouble(value);
+                        else if(comparator == ">=")
+                            return fieldValue >=  Double.parseDouble(value);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                };
+                break;
+        }
+
+        this.modelList = this.modelList.filter(predicate, value);
     }
 
     @Override

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.lang.Comparable;
+import java.util.function.Predicate;
 
 public class ModelList <T extends Model.AbstractInnerModel>{
     private List<T> list;
@@ -129,5 +130,14 @@ public class ModelList <T extends Model.AbstractInnerModel>{
         list.sort(c);
     }
 
+    public ModelList<T> filter(Predicate filter, String value) {
+        List<T> filteredList = new ArrayList<T>();
+        for (T item : list) {
+            if (filter.test(item)) {
+                filteredList.add(item);
+            }
+        }
+        return new ModelList<T>(filteredList);
+    }
 
 }

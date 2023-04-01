@@ -252,7 +252,7 @@ public class EmployeeAdd {
     public void closeFrame(JFrame frame, boolean initParent) {
         frame.dispose();
         if(initParent)
-            this.caller.initEmployeeTable();
+            this.caller.initEmployeeTable(null, null, null);
         this.parentFrame.setEnabled(true);
         this.parentFrame.setFocusable(true);
         this.parentFrame.setVisible(true);

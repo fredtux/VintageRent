@@ -178,7 +178,7 @@ public class UserAdd {
     public void closeFrame(JFrame frame, boolean initParent) {
         frame.dispose();
         if(initParent)
-            this.caller.initUserTable();
+            this.caller.initUserTable(null, null, null);
         this.parentFrame.setEnabled(true);
         this.parentFrame.setFocusable(true);
         this.parentFrame.setVisible(true);

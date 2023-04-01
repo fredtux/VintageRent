@@ -5,6 +5,7 @@ import org.logger.CsvLogger;
 import org.models.*;
 
 import javax.swing.table.TableModel;
+import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.sql.Date;
@@ -186,5 +187,13 @@ public class MainService {
 
     public static void update(LinkModelToDatabase model, ModelList innerModelList) throws Exception {
         model.updateData(innerModelList);
+    }
+
+    public static List<String> getAttributes(Class model) throws Exception {
+        List<String> attributes = new ArrayList<>();
+        for (Field field : model.getDeclaredFields()) {
+            attributes.add(field.getName());
+        }
+        return attributes;
     }
 }

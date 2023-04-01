@@ -1,5 +1,6 @@
 package org.gui.main;
 
+import org.actions.MainService;
 import org.database.DatabaseConnection;
 import org.gui.logs.LogGUI;
 import org.gui.tables.*;
@@ -17,6 +18,7 @@ import java.awt.event.WindowEvent;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.List;
 import javax.swing.event.*;
 import javax.swing.table.TableRowSorter;
 
@@ -28,6 +30,10 @@ public class MainGUI { // Singleton
     private JTable tblMain;
     private JButton btnRemove;
     private JButton btnAdd;
+    private JComboBox cmbColumn;
+    private JTextField txtValue;
+    private JButton btnFilter;
+    private JButton btnReset;
 
     public Component getBtnAdd() {
         return this.btnAdd;
@@ -70,11 +76,14 @@ public class MainGUI { // Singleton
         return instance;
     }
 
-    public void initUserTable() {
+    public void initUserTable(String comparator, String value, String column) {
         UserModel userModel = UserModel.getInstance();
         userModel.setDatabaseType(this.databaseType);
         try {
-            userModel.getData();
+            if(comparator == null)
+                userModel.getData();
+            else
+                userModel.getFilteredData(comparator, value, column);
             DefaultTableModel rm = userModel.getTableModel();
 
             this.tblMain = new JTable();
@@ -144,18 +153,30 @@ public class MainGUI { // Singleton
                 }
             }
 
-            this.tblMain.getModel().addTableModelListener(new TableModelEvents());
-            this.currentTableType = TableType.USER;
+            if(comparator == null) {
+                this.tblMain.getModel().addTableModelListener(new TableModelEvents());
+                this.currentTableType = TableType.USER;
+
+                this.cmbColumn.removeAllItems();
+                List<String> columnNames = MainService.getAttributes(UserModel.InnerUserModel.class);
+
+                for (String columnName : columnNames) {
+                    this.cmbColumn.addItem(columnName);
+                }
+            }
         } catch (Exception e) {
             System.out.println("Error in trying to initialize camera table: " + e.getMessage());
         }
     }
 
-    public void initEmployeeTable() {
+    public void initEmployeeTable(String comparator, String value, String column) {
         EmployeeModel employeeModel = EmployeeModel.getInstance();
         employeeModel.setDatabaseType(this.databaseType);
         try {
-            employeeModel.getData();
+            if(comparator == null)
+                employeeModel.getData();
+            else
+                employeeModel.getFilteredData(comparator, value, column);
             DefaultTableModel rm = employeeModel.getTableModel();
 
             this.tblMain = new JTable();
@@ -218,15 +239,27 @@ public class MainGUI { // Singleton
 
             this.tblMain.getModel().addTableModelListener(new TableModelEvents());
             this.currentTableType = TableType.EMPLOYEE;
+
+            if(comparator == null) {
+                this.cmbColumn.removeAllItems();
+                List<String> columnNames = MainService.getAttributes(EmployeeModel.InnerEmployeeModel.class);
+
+                for (String columnName : columnNames) {
+                    this.cmbColumn.addItem(columnName);
+                }
+            }
         } catch (Exception e) {
             System.out.println("Error in trying to initialize camera table: " + e.getMessage());
         }
     }
-    public void initFormatTable() {
+    public void initFormatTable(String comparator, String value, String column) {
         FormatModel formatModel = FormatModel.getInstance();
         formatModel.setDatabaseType(this.databaseType);
         try {
-            formatModel.getData();
+            if(comparator == null)
+                formatModel.getData();
+            else
+                formatModel.getFilteredData(comparator, value, column);
             DefaultTableModel rm = formatModel.getTableModel();
 
             this.tblMain = new JTable();
@@ -280,16 +313,30 @@ public class MainGUI { // Singleton
 
             this.tblMain.getModel().addTableModelListener(new TableModelEvents());
             this.currentTableType = TableType.FORMAT;
+
+            if(comparator == null) {
+                this.cmbColumn.removeAllItems();
+                List<String> columnNames = MainService.getAttributes(FormatModel.InnerFormatModel.class);
+
+                for (String columnName : columnNames) {
+                    this.cmbColumn.addItem(columnName);
+                }
+            }
         } catch (Exception e) {
             System.out.println("Error in trying to initialize camera table: " + e.getMessage());
         }
     }
 
-    public void initCameraTable() {
+
+    public void initCameraTable(String comparator, String value, String column) {
         CameraModel cameraModel = CameraModel.getInstance();
         cameraModel.setDatabaseType(this.databaseType);
         try {
-            cameraModel.getData();
+            if(comparator == null)
+                cameraModel.getData();
+            else
+                cameraModel.getFilteredData(comparator, value, column);
+
             DefaultTableModel rm = cameraModel.getTableModel();
 
             this.tblMain = new JTable();
@@ -374,16 +421,28 @@ public class MainGUI { // Singleton
 
             this.tblMain.getModel().addTableModelListener(new TableModelEvents());
             this.currentTableType = TableType.CAMERA;
+
+            if(comparator == null) {
+                this.cmbColumn.removeAllItems();
+                List<String> columnNames = MainService.getAttributes(CameraModel.InnerCameraModel.class);
+
+                for (String columnName : columnNames) {
+                    this.cmbColumn.addItem(columnName);
+                }
+            }
         } catch (Exception e) {
             System.out.println("Error in trying to initialize camera table: " + e.getMessage());
         }
     }
 
-    public void initRentTable() {
+    public void initRentTable(String comparator, String value, String column) {
         RentModel rentModel = RentModel.getInstance();
         rentModel.setDatabaseType(this.databaseType);
         try {
-            rentModel.getData();
+            if(comparator == null)
+                rentModel.getData();
+            else
+                rentModel.getFilteredData(comparator, value, column);
             DefaultTableModel rm = rentModel.getTableModel();
             this.tblMain = new JTable();
             this.jscrPane.setViewportView(this.tblMain);
@@ -463,16 +522,28 @@ public class MainGUI { // Singleton
 
             this.tblMain.getModel().addTableModelListener(new TableModelEvents());
             this.currentTableType = TableType.RENT;
+
+            if(comparator == null) {
+                this.cmbColumn.removeAllItems();
+                List<String> columnNames = MainService.getAttributes(RentModel.InnerRentModel.class);
+
+                for (String columnName : columnNames) {
+                    this.cmbColumn.addItem(columnName);
+                }
+            }
         } catch (Exception e) {
             System.out.println("Error in trying to initialize rent table: " + e.getMessage());
         }
     }
 
-    public void initCameraTypeTable() {
+    public void initCameraTypeTable(String comparator, String value, String column) {
         CameraTypeModel cameraType = CameraTypeModel.getInstance();
         cameraType.setDatabaseType(this.databaseType);
         try {
-            cameraType.getData();
+            if(comparator == null)
+                cameraType.getData();
+            else
+                cameraType.getFilteredData(comparator, value, column);
             DefaultTableModel rm = cameraType.getTableModel();
             this.tblMain = new JTable();
             this.jscrPane.setViewportView(this.tblMain);
@@ -526,6 +597,15 @@ public class MainGUI { // Singleton
 
             this.tblMain.getModel().addTableModelListener(new TableModelEvents());
             this.currentTableType = TableType.CAMERATYPE;
+
+            if(comparator == null) {
+                this.cmbColumn.removeAllItems();
+                List<String> columnNames = MainService.getAttributes(CameraTypeModel.InnerCameraTypeModel.class);
+
+                for (String columnName : columnNames) {
+                    this.cmbColumn.addItem(columnName);
+                }
+            }
         } catch (Exception e) {
             System.out.println("Error in trying to initialize camera type table: " + e.getMessage());
         }
@@ -650,40 +730,40 @@ public class MainGUI { // Singleton
         menuBar.add(crud);
         JMenuItem menuItemRent = new JMenuItem("Rent");
         menuItemRent.addActionListener(e -> {
-            initRentTable();
+            initRentTable(null, null, null);
             this.currentTableType = TableType.RENT;
         });
         crud.add(menuItemRent);
         JMenuItem menuItemCamera = new JMenuItem("Camera");
         menuItemCamera.addActionListener(e -> {
-            initCameraTable();
+            initCameraTable(null, null, null);
             this.currentTableType = TableType.CAMERA;
         });
         crud.add(menuItemCamera);
         JMenuItem menuItemCameraType = new JMenuItem("Camera Type");
         menuItemCameraType.addActionListener(e -> {
-            initCameraTypeTable();
+            initCameraTypeTable(null, null, null);
             this.currentTableType = TableType.CAMERATYPE;
         });
         crud.add(menuItemCameraType);
 
         JMenuItem menuItemFormat = new JMenuItem("Camera Format");
         menuItemFormat.addActionListener(e -> {
-            initFormatTable();
+            initFormatTable(null, null, null);
             this.currentTableType = TableType.FORMAT;
         });
         crud.add(menuItemFormat);
 
         JMenuItem menuItemEmployees = new JMenuItem("Employees");
         menuItemEmployees.addActionListener(e -> {
-            initEmployeeTable();
+            initEmployeeTable(null, null, null);
             this.currentTableType = TableType.EMPLOYEE;
         });
         crud.add(menuItemEmployees);
 
         JMenuItem menuItemUsers = new JMenuItem("Users");
         menuItemUsers.addActionListener(e -> {
-            initUserTable();
+            initUserTable(null, null, null);
             this.currentTableType = TableType.USER;
         });
         crud.add(menuItemUsers);
@@ -696,17 +776,17 @@ public class MainGUI { // Singleton
             try {
                 this.databaseType = DatabaseConnection.DatabaseType.ORACLE;
                 if(this.currentTableType == TableType.CAMERA) {
-                    initCameraTable();
+                    initCameraTable(null, null, null);
                 } else if(this.currentTableType == TableType.RENT) {
-                    initRentTable();
+                    initRentTable(null, null, null);
                 } else if(this.currentTableType == TableType.CAMERATYPE) {
-                    initCameraTypeTable();
+                    initCameraTypeTable(null, null, null);
                 } else if(this.currentTableType == TableType.FORMAT){
-                    initFormatTable();
+                    initFormatTable(null, null, null);
                 } else if(this.currentTableType == TableType.EMPLOYEE){
-                    initEmployeeTable();
+                    initEmployeeTable(null, null, null);
                 } else if(this.currentTableType == TableType.USER){
-                    initUserTable();
+                    initUserTable(null, null, null);
                 }
 
                 try{
@@ -725,17 +805,17 @@ public class MainGUI { // Singleton
             try {
                 this.databaseType = DatabaseConnection.DatabaseType.CSV;
                 if(this.currentTableType == TableType.CAMERA) {
-                    initCameraTable();
+                    initCameraTable(null, null, null);
                 } else if(this.currentTableType == TableType.RENT) {
-                    initRentTable();
+                    initRentTable(null, null, null);
                 } else if(this.currentTableType == TableType.CAMERATYPE) {
-                    initCameraTypeTable();
+                    initCameraTypeTable(null, null, null);
                 } else if(this.currentTableType == TableType.FORMAT){
-                    initFormatTable();
+                    initFormatTable(null, null, null);
                 } else if(this.currentTableType == TableType.EMPLOYEE){
-                    initEmployeeTable();
+                    initEmployeeTable(null, null, null);
                 } else if(this.currentTableType == TableType.USER){
-                    initUserTable();
+                    initUserTable(null, null, null);
                 }
 
                 try{
@@ -754,17 +834,17 @@ public class MainGUI { // Singleton
             try {
                 this.databaseType = DatabaseConnection.DatabaseType.INMEMORY;
                 if(this.currentTableType == TableType.CAMERA) {
-                    initCameraTable();
+                    initCameraTable(null, null, null);
                 } else if(this.currentTableType == TableType.RENT) {
-                    initRentTable();
+                    initRentTable(null, null, null);
                 } else if(this.currentTableType == TableType.CAMERATYPE) {
-                    initCameraTypeTable();
+                    initCameraTypeTable(null, null, null);
                 } else if(this.currentTableType == TableType.FORMAT){
-                    initFormatTable();
+                    initFormatTable(null, null, null);
                 } else if(this.currentTableType == TableType.EMPLOYEE){
-                    initEmployeeTable();
+                    initEmployeeTable(null, null, null);
                 } else if(this.currentTableType == TableType.USER){
-                    initUserTable();
+                    initUserTable(null, null, null);
                 }
 
                 try{
@@ -839,25 +919,98 @@ public class MainGUI { // Singleton
 
         frame.setJMenuBar(menuBar);
 
-//        this.jscrPane.setViewportView(this.tblMain);
+        this.panel1 = new JPanel(new GridBagLayout());
 
-        this.jscrPane = new JScrollPane();
 
         GridBagConstraints c2 = new GridBagConstraints();
         c2.gridx = 0;
         c2.gridy = 0;
-        c2.gridwidth = 3;
+        c2.gridwidth = 1;
+        c2.gridheight = 1;
+        c2.weightx = 1;
+        c2.weighty = 0.1;
+        c2.anchor = GridBagConstraints.NORTH;
+        c2.fill = GridBagConstraints.BOTH;
+
+        this.cmbColumn = new JComboBox();
+        this.panel1.add(cmbColumn, c2);
+
+
+        c2.gridx = 1;
+        JComboBox cmbSign = new JComboBox();
+        cmbSign.addItem("==");
+        cmbSign.addItem(">");
+        cmbSign.addItem("<");
+        cmbSign.addItem(">=");
+        cmbSign.addItem("<=");
+        cmbSign.addItem("!=");
+        this.panel1.add(cmbSign, c2);
+
+        c2.gridx = 2;
+        c2.gridwidth = 2;
+        this.txtValue = new JTextField();
+        this.panel1.add(txtValue, c2);
+
+        c2.gridx = 4;
+        c2.gridwidth = 1;
+        this.btnFilter = new JButton("Filter");
+        this.panel1.add(btnFilter, c2);
+
+        this.btnFilter.addActionListener(e -> {
+            if(this.currentTableType == TableType.CAMERA) {
+                this.initCameraTable(cmbSign.getSelectedItem().toString(), this.txtValue.getText(), this.cmbColumn.getSelectedItem().toString());
+            } else if(this.currentTableType == TableType.CAMERATYPE){
+                this.initCameraTypeTable(cmbSign.getSelectedItem().toString(), this.txtValue.getText(), this.cmbColumn.getSelectedItem().toString());
+            } else if(this.currentTableType == TableType.RENT){
+                this.initRentTable(cmbSign.getSelectedItem().toString(), this.txtValue.getText(), this.cmbColumn.getSelectedItem().toString());
+            } else if (this.currentTableType == TableType.FORMAT){
+                this.initFormatTable(cmbSign.getSelectedItem().toString(), this.txtValue.getText(), this.cmbColumn.getSelectedItem().toString());
+            } else if (this.currentTableType == TableType.EMPLOYEE){
+                this.initEmployeeTable(cmbSign.getSelectedItem().toString(), this.txtValue.getText(), this.cmbColumn.getSelectedItem().toString());
+            } else if(this.currentTableType == TableType.USER){
+                this.initUserTable(cmbSign.getSelectedItem().toString(), this.txtValue.getText(), this.cmbColumn.getSelectedItem().toString());
+            }
+
+        });
+
+        c2.gridx = 5;
+        this.btnReset = new JButton("Reset");
+        this.panel1.add(btnReset, c2);
+
+        this.btnReset.addActionListener(e -> {
+            if(this.currentTableType == TableType.CAMERA) {
+                this.initCameraTable(null, null, null);
+            } else if(this.currentTableType == TableType.CAMERATYPE){
+                this.initCameraTypeTable(null, null, null);
+            } else if(this.currentTableType == TableType.RENT){
+                this.initRentTable(null, null, null);
+            } else if (this.currentTableType == TableType.FORMAT){
+                this.initFormatTable(null, null, null);
+            } else if (this.currentTableType == TableType.EMPLOYEE){
+                this.initEmployeeTable(null, null, null);
+            } else if(this.currentTableType == TableType.USER){
+                this.initUserTable(null, null, null);
+            }
+        });
+
+//        this.jscrPane.setViewportView(this.tblMain);
+
+        this.jscrPane = new JScrollPane();
+
+
+        c2.gridx = 0;
+        c2.gridy = 1;
+        c2.gridwidth = 6;
         c2.gridheight = 3;
         c2.weightx = 1;
         c2.weighty = 0.1;
         c2.anchor = GridBagConstraints.NORTH;
         c2.fill = GridBagConstraints.BOTH;
-        this.panel1 = new JPanel(new GridBagLayout());
         this.panel1.add(this.jscrPane, c2);
 
         c2.gridx = 0;
-        c2.gridy = 3;
-        c2.gridwidth = 1;
+        c2.gridy = 4;
+        c2.gridwidth = 3;
         c2.gridheight = 1;
         c2.weightx = 1;
         c2.weighty = 0.1;
@@ -896,8 +1049,8 @@ public class MainGUI { // Singleton
         });
         this.panel1.add(this.btnRemove, c2);
 
-        c2.gridx = 1;
-        c2.gridwidth = 1;
+        c2.gridx = 3;
+        c2.gridwidth = 3;
         c2.gridheight = 1;
         c2.weightx = 1;
         c2.weighty = 0.1;
@@ -956,12 +1109,14 @@ public class MainGUI { // Singleton
         frame.setVisible(true);
 
         if(this.currentTableType == TableType.CAMERA) {
-            initCameraTable();
+            initCameraTable(null, null, null);
         } else if(this.currentTableType == TableType.RENT) {
-            initRentTable();
+            initRentTable(null, null, null);
         }
 
     }
+
+
 
 
 }

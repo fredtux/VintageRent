@@ -293,7 +293,7 @@ public class RentAdd {
     public void closeFrame(JFrame frame, boolean initParent) {
         frame.dispose();
         if(initParent)
-            this.caller.initRentTable();
+            this.caller.initRentTable(null, null, null);
         this.parentFrame.setEnabled(true);
         this.parentFrame.setFocusable(true);
         this.parentFrame.setVisible(true);

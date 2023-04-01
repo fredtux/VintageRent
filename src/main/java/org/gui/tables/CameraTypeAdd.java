@@ -112,7 +112,7 @@ public class CameraTypeAdd {
     public void closeFrame(JFrame frame, boolean initParent) {
         frame.dispose();
         if(initParent)
-            this.caller.initCameraTypeTable();
+            this.caller.initCameraTypeTable(null, null, null);
         this.parentFrame.setEnabled(true);
         this.parentFrame.setFocusable(true);
         this.parentFrame.setVisible(true);

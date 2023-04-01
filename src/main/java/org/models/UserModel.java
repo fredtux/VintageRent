@@ -4,16 +4,19 @@ import org.database.DatabaseConnection;
 import org.database.csv.CsvConnection;
 
 import javax.swing.table.DefaultTableModel;
+import java.lang.reflect.Field;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public class UserModel extends Model implements LinkModelToDatabase<ModelList<UserModel.InnerUserModel>, UserModel.InnerUserModel> {
     public static class InnerUserModel extends AbstractInnerModel implements Comparable<InnerUserModel> {
@@ -114,6 +117,70 @@ public class UserModel extends Model implements LinkModelToDatabase<ModelList<Us
 
             this.modelList.add(model);
         }
+    }
+
+    public void getFilteredData(String comparator, String value, String column) throws Exception{
+        this.getData();
+
+        Predicate<UserModel.InnerUserModel> predicate =  null;
+
+        switch (column) {
+            case "Username":
+            case "Password":
+            case "Surname":
+            case "Firstname":
+            case "CNP":
+            case "Email":
+                predicate = (UserModel.InnerUserModel model) -> {
+                    try {
+                        Field field = model.getClass().getDeclaredField(column);
+                        field.setAccessible(true);
+                        String fieldValue = (String) field.get(model);
+                        if(comparator == "==")
+                            return fieldValue.equals(value);
+                        else if(comparator == "!=")
+                            return !fieldValue.equals(value);
+                        else if(comparator == "<")
+                            return fieldValue.compareTo(value) < 0;
+                        else if(comparator == ">")
+                            return fieldValue.compareTo(value) > 0;
+                        else if(comparator == "<=")
+                            return fieldValue.compareTo(value) <= 0;
+                        else if(comparator == ">=")
+                            return fieldValue.compareTo(value) >= 0;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                };
+                break;
+            case "UserID":
+                predicate = (UserModel.InnerUserModel model) -> {
+                    try {
+                        Field field = model.getClass().getDeclaredField(column);
+                        field.setAccessible(true);
+                        int fieldValue = (int) field.get(model);
+                        if(comparator == "==")
+                            return fieldValue == Integer.parseInt(value);
+                        else if(comparator == "!=")
+                            return fieldValue != Integer.parseInt(value);
+                        else if(comparator == "<")
+                            return fieldValue < Integer.parseInt(value);
+                        else if(comparator == ">")
+                            return fieldValue > Integer.parseInt(value);
+                        else if(comparator == "<=")
+                            return fieldValue <= Integer.parseInt(value);
+                        else if(comparator == ">=")
+                            return fieldValue >= Integer.parseInt(value);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                };
+                break;
+        }
+
+        this.modelList = this.modelList.filter(predicate, value);
     }
 
     @Override

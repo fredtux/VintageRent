@@ -4,6 +4,7 @@ import org.database.DatabaseConnection;
 import org.database.csv.CsvConnection;
 
 import javax.swing.table.DefaultTableModel;
+import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.text.SimpleDateFormat;
@@ -11,8 +12,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public class CameraModel extends Model implements LinkModelToDatabase<ModelList<CameraModel.InnerCameraModel>, CameraModel.InnerCameraModel> {
+
+
     public static class InnerCameraModel extends AbstractInnerModel implements Comparable<InnerCameraModel> {
         public String Brand;
         public String ModelCamera;
@@ -33,6 +37,8 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
         public int compareTo(InnerCameraModel o) {
             return this.IDCamera - o.IDCamera;
         }
+
+
     }
     private String tableName = "CAMERA";
 
@@ -124,6 +130,99 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
 
             this.modelList.add(model);
         }
+    }
+
+    public void getFilteredData(String comparator, String value, String column) throws Exception{
+        this.getData();
+
+        Predicate<InnerCameraModel> predicate =  null;
+
+        switch (column) {
+            case "Brand":
+            case "ModelCamera":
+            case "NameFormat":
+            case "FilmWidth":
+            case "NameTip":
+            case "NameMount":
+                predicate = (InnerCameraModel model) -> {
+                    try {
+                        Field field = model.getClass().getDeclaredField(column);
+                        field.setAccessible(true);
+                        String fieldValue = (String) field.get(model);
+                        if(comparator == "==")
+                            return fieldValue.equals(value);
+                        else if(comparator == "!=")
+                            return !fieldValue.equals(value);
+                        else if(comparator == "<")
+                            return fieldValue.compareTo(value) < 0;
+                        else if(comparator == ">")
+                            return fieldValue.compareTo(value) > 0;
+                        else if(comparator == "<=")
+                            return fieldValue.compareTo(value) <= 0;
+                        else if(comparator == ">=")
+                            return fieldValue.compareTo(value) >= 0;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                };
+                break;
+            case "ManufacturingYear":
+            case "IDCamera":
+            case "FormatID":
+            case "TypeID":
+            case "MountID":
+                predicate = (InnerCameraModel model) -> {
+                    try {
+                        Field field = model.getClass().getDeclaredField(column);
+                        field.setAccessible(true);
+                        int fieldValue = (int) field.get(model);
+                        if(comparator == "==")
+                            return fieldValue == Integer.parseInt(value);
+                        else if(comparator == "!=")
+                            return fieldValue != Integer.parseInt(value);
+                        else if(comparator == "<")
+                            return fieldValue < Integer.parseInt(value);
+                        else if(comparator == ">")
+                            return fieldValue > Integer.parseInt(value);
+                        else if(comparator == "<=")
+                            return fieldValue <= Integer.parseInt(value);
+                        else if(comparator == ">=")
+                            return fieldValue >= Integer.parseInt(value);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                };
+                break;
+            case "Price":
+            case "RentalPrice":
+                predicate = (InnerCameraModel model) -> {
+                    try {
+                        Field field = model.getClass().getDeclaredField(column);
+                        field.setAccessible(true);
+                        double fieldValue = (double) field.get(model);
+                        if(comparator == "==")
+                            return fieldValue == Double.parseDouble(value);
+                        else if(comparator == "!=")
+                            return fieldValue !=  Double.parseDouble(value);
+                        else if(comparator == "<")
+                            return fieldValue <  Double.parseDouble(value);
+                        else if(comparator == ">")
+                            return fieldValue >  Double.parseDouble(value);
+                        else if(comparator == "<=")
+                            return fieldValue <=  Double.parseDouble(value);
+                        else if(comparator == ">=")
+                            return fieldValue >=  Double.parseDouble(value);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                };
+                break;
+        }
+
+        this.modelList = this.modelList.filter(predicate, value);
     }
 
     @Override

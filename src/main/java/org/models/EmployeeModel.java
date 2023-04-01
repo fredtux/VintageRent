@@ -4,6 +4,7 @@ import org.database.DatabaseConnection;
 import org.database.csv.CsvConnection;
 
 import javax.swing.table.DefaultTableModel;
+import java.lang.reflect.Field;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public class EmployeeModel extends Model implements LinkModelToDatabase<ModelList<EmployeeModel.InnerEmployeeModel>, EmployeeModel.InnerEmployeeModel> {
     public static class InnerEmployeeModel extends AbstractInnerModel implements Comparable<InnerEmployeeModel> {
@@ -117,6 +119,94 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
 
             this.modelList.add(model);
         }
+    }
+
+    public void getFilteredData(String comparator, String value, String column) throws Exception{
+        this.getData();
+
+        Predicate<EmployeeModel.InnerEmployeeModel> predicate =  null;
+
+        switch (column) {
+            case "SurnameAngajat":
+            case "SurnameManager":
+                predicate = (EmployeeModel.InnerEmployeeModel model) -> {
+                    try {
+                        Field field = model.getClass().getDeclaredField(column);
+                        field.setAccessible(true);
+                        String fieldValue = (String) field.get(model);
+                        if(comparator == "==")
+                            return fieldValue.equals(value);
+                        else if(comparator == "!=")
+                            return !fieldValue.equals(value);
+                        else if(comparator == "<")
+                            return fieldValue.compareTo(value) < 0;
+                        else if(comparator == ">")
+                            return fieldValue.compareTo(value) > 0;
+                        else if(comparator == "<=")
+                            return fieldValue.compareTo(value) <= 0;
+                        else if(comparator == ">=")
+                            return fieldValue.compareTo(value) >= 0;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                };
+                break;
+            case "UserID":
+            case "IDManager":
+            case "SalaryID":
+            case "Salary":
+
+                predicate = (EmployeeModel.InnerEmployeeModel model) -> {
+                    try {
+                        Field field = model.getClass().getDeclaredField(column);
+                        field.setAccessible(true);
+                        int fieldValue = (int) field.get(model);
+                        if(comparator == "==")
+                            return fieldValue == Integer.parseInt(value);
+                        else if(comparator == "!=")
+                            return fieldValue != Integer.parseInt(value);
+                        else if(comparator == "<")
+                            return fieldValue < Integer.parseInt(value);
+                        else if(comparator == ">")
+                            return fieldValue > Integer.parseInt(value);
+                        else if(comparator == "<=")
+                            return fieldValue <= Integer.parseInt(value);
+                        else if(comparator == ">=")
+                            return fieldValue >= Integer.parseInt(value);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                };
+                break;
+            case "BirthDate":
+                case "HireDate":
+                    predicate = (EmployeeModel.InnerEmployeeModel model) -> {
+                        try {
+                            Field field = model.getClass().getDeclaredField(column);
+                            field.setAccessible(true);
+                            LocalDateTime fieldValue = (LocalDateTime) field.get(model);
+                            if(comparator == "==")
+                                return fieldValue.equals(LocalDateTime.parse(value));
+                            else if(comparator == "!=")
+                                return !fieldValue.equals(LocalDateTime.parse(value));
+                            else if(comparator == "<")
+                                return fieldValue.compareTo(LocalDateTime.parse(value)) < 0;
+                            else if(comparator == ">")
+                                return fieldValue.compareTo(LocalDateTime.parse(value)) > 0;
+                            else if(comparator == "<=")
+                                return fieldValue.compareTo(LocalDateTime.parse(value)) <= 0;
+                            else if(comparator == ">=")
+                                return fieldValue.compareTo(LocalDateTime.parse(value)) >= 0;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        return false;
+                    };
+        }
+
+        this.modelList = this.modelList.filter(predicate, value);
     }
 
     @Override
