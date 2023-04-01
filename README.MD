@@ -9,6 +9,9 @@ docker-compose up
 Aceste instructiuni creaza user-ul, baza de date fiind creata de aplicatie.
 
 ## Etapa 1
+Pentru prima etapa poate fi folosita suita de unit testing definita in test.java.org.suites.AllTests
+
+De asemenea, poate fi folosita si interfata grafica de unde se va alege Datasource->InMemory, deoarece reprezinta obiectele stocate in memorie, fara sa fie nevoie deo conexiune la baza de date.
 ### Definirea sistemului
 #### Să se creeze o lista pe baza temei alese cu cel puțin 10 acțiuni/interogări care se pot face în cadrul sistemului și o lista cu cel puțin 8 tipuri de obiecte.
 
@@ -17,6 +20,7 @@ Aceste instructiuni creaza user-ul, baza de date fiind creata de aplicatie.
    - Filtrare (==, <, >, >=, <= si !=) pe fiecare tabela mentionata anterior
    - Raport clienti
    - Raport formate
+   - Raport monturi
    - Email pentru rapoarte
    - Schimbare datasource
 2. Lista
@@ -127,7 +131,7 @@ Am utilizat mostenire si apoi am incadrat in colectii in:
 - org.action.MainService metoda getForMount() are ca lista List\<Model.AbstractInnerModel> result
 - org.database.DatabaseConnection contine ArrayList\<DatabaseConnection> instances o lista cu instantele de conexiune la baza de date mostenite din DatabaseConnection
 #### cel puțin o clasă serviciu care sa expună operațiile sistemului
-Clasa de serviciu este MainService
+Clasa de serviciu este MainService. Prin ea se face CRUD, filtrare si se genereaza rapoarte.
 
 #### o clasa Main din care sunt făcute apeluri către servicii
 Am utilizat unit testing avand ca suita: test.java.org.suites.AllTests . Pentru acest lucru a fost nevoie de o stocare in memorie cu ajutorul: org.databases.memory.InMemory
@@ -264,6 +268,7 @@ ___
 ___
 - Raport clienti
 - Raport vanzari per format
+- Raport monturi
 ___
 - Email pentru rapoarte
 ___
