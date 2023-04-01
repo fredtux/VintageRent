@@ -47,39 +47,101 @@ ___
 - Modificare inchiriere
 - Stergere inchiriere
 - Creare inchiriere
+- Filtrare inchiriere
 ___
 - Vizualizare camere
 - Modificare camera
 - Stergere camera
 - Creare camera
+- Filtrare camera
 ___
 - Vizualizare tipuri camere
 - Modificare tip camera
 - Stergere tip camera
 - Creare tip camera
+- Filtrare tip camera
 ___
 - Vizualizare formaturi camere
 - Modificare format camera
 - Stergere format camera
 - Creare format camera
+- Filtrare format camera
 ___
 - Vizualizare angajati
 - Modificare angajat
 - Stergere angajat
 - Creare angajat
+- Filtrare angajat
 ___
 - Vizualizare salarii
 - Modificare salariu
 - Stergere salariu
 - Creare salariu
+- Filtrare salariu
 ___
 - Vizualizare utilizatori
 - Modificare utilizator
 - Stergere utilizator
 - Creare utilizator
+- Filtrare utilizator
+___
+- Vizualizare adrese
+- Modificare adresa
+- Stergere adresa
+- Creare adresa
+- Filtrare adresa
+___
+- Vizualizare administratori
+- Modificare administrator
+- Stergere administrator
+- Creare administrator
+- Filtrare administrator
+___
+- Vizualizare administratori subdomenii
+- Stergere administrator subdomeniu
+- Creare administrator subdomeniu
+- Filtrare administrator subdomeniu
+___
+- Vizualizare clienti
+- Modificare client
+- Stergere client
+- Creare client
+- Filtrare client
+___
+- Vizualizare tipuri client
+- Modificare tip client
+- Stergere tip client
+- Creare tip client
+- Filtrare tip client
+___
+- Vizualizare monturi
+- Modificare montura
+- Stergere montura
+- Creare montura
+- Filtrare montura
+___
+- Vizualizare obiective
+- Modificare obiectiv
+- Stergere obiectiv
+- Creare obiectiv
+- Filtrare obiectiv
+___
+- Vizualizare salarii
+- Modificare salariu
+- Stergere salariu
+- Creare salariu
+- Filtrare salariu
+___
+- Vizualizare subdomenii
+- Modificare subdomeniu
+- Stergere subdomeniu
+- Creare subdomeniu
+- Filtrare subdomeniu
 ___
 - Raport clienti
 - Raport vanzari per format
+___
+- Email pentru rapoarte
 ___
 - Schimbare datasource: Oracle/CSV
 ___
@@ -112,6 +174,14 @@ ___
     - RentAdd
     - EmployeeAdd
     - UserAdd
+    - AddressAdd
+    - AdministratorAdd
+    - AdministratorSubdomainAdd
+    - ClientAdd
+    - MountAdd
+    - ObjectiveAdd
+    - SalaryAdd
+    - SubdomainAdd
   - logs
     - LogGUI
 - logger
@@ -139,6 +209,22 @@ ___
     - InnerSalaryModel extends AbstractInnerModel
   - UserModel extends Model implements LinkModelToDatabase
     - InnerUserModel extends AbstractInnerModel
+  - AddressModel extends Model implements LinkModelToDatabase
+    - InnerAddressModel extends AbstractInnerModel
+  - AdministratorModel extends Model implements LinkModelToDatabase
+    - InnerAdministratorModel extends AbstractInnerModel
+  - AdministratorSubdomainModel extends Model implements LinkModelToDatabase
+    - InnerAdministratorSubdomainModel extends AbstractInnerModel
+  - SubdomainModel extends Model implements LinkModelToDatabase
+    - InnerSubdomainModel extends AbstractInnerModel
+  - ClientTypeModel extends Model implements LinkModelToDatabase
+    - InnerClientTypeModel extends AbstractInnerModel
+  - MountTypeModel extends Model implements LinkModelToDatabase
+    - InnerMountTypeModel extends AbstractInnerModel
+  - ObjectiveTypeModel extends Model implements LinkModelToDatabase
+    - InnerObjectiveTypeModel extends AbstractInnerModel
+  - SalaryTypeModel extends Model implements LinkModelToDatabase
+    - InnerSalaryTypeModel extends AbstractInnerModel
   - LinkModelToDatabase (interface)
   - ModelInit
   - Pair<T,U>
