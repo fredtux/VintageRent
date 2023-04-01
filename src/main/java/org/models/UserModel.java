@@ -64,7 +64,12 @@ public class UserModel extends Model implements LinkModelToDatabase<ModelList<Us
     public DefaultTableModel getTableModel() {
         String[] columns = {"UserID", "UserName", "Password", "Surname", "Firstname", "CNP", "Email"};
 
-        DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
+        DefaultTableModel tableModel = new DefaultTableModel(columns, 0){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return column != 0;
+            }
+        };
         for(InnerUserModel model : this.modelList.getList()){
             Object[] obj = {model.UserID, model.UserName, model.Password, model.Surname, model.Firstname, model.CNP, model.Email};
             tableModel.addRow(obj);

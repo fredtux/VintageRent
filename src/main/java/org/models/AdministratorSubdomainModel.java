@@ -5,40 +5,37 @@ import org.database.csv.CsvConnection;
 
 import javax.swing.table.DefaultTableModel;
 import java.lang.reflect.Field;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
-public class ClientTypeModel extends Model implements LinkModelToDatabase<ModelList<ClientTypeModel.InnerClientTypeModel>, ClientTypeModel.InnerClientTypeModel> {
-    public static class InnerClientTypeModel extends AbstractInnerModel implements Comparable<InnerClientTypeModel> {
-        public int TypeID;;
-        public String Name;
-        public double Discount;
+public class AdministratorSubdomainModel extends Model implements LinkModelToDatabase<ModelList<AdministratorSubdomainModel.InnerAdministratorSubdomainModel>, AdministratorSubdomainModel.InnerAdministratorSubdomainModel> {
+
+    public static class InnerAdministratorSubdomainModel extends AbstractInnerModel implements Comparable<InnerAdministratorSubdomainModel> {
+        public int IDAdministrator;
+        public int SubdomainID;
 
         @Override
-        public int compareTo(InnerClientTypeModel o) {
-            return this.TypeID - o.TypeID;
+        public int compareTo(InnerAdministratorSubdomainModel o) {
+            return this.IDAdministrator - o.IDAdministrator;
         }
     }
-    private String tableName = "CLIENTTYPE";
+    private String tableName = "ADMINISTRATOR_SUBDOMAINS";
 
-    private static ClientTypeModel instance = null;
-    private ModelList<InnerClientTypeModel> modelList = null;
+    private static AdministratorSubdomainModel instance = null;
+    private ModelList<InnerAdministratorSubdomainModel> modelList = null;
 
-    public ModelList<InnerClientTypeModel> getModelList() {
+    public ModelList<InnerAdministratorSubdomainModel> getModelList() {
         return modelList;
     }
 
-    public static ClientTypeModel getInstance() {
+    public static AdministratorSubdomainModel getInstance() {
         if (instance == null)
-            instance = new ClientTypeModel();
+            instance = new AdministratorSubdomainModel();
 
         return instance;
     }
@@ -47,25 +44,26 @@ public class ClientTypeModel extends Model implements LinkModelToDatabase<ModelL
         this.databaseType = databaseType;
 
         if(databaseType == DatabaseConnection.DatabaseType.CSV){
-            this.tableName = "ClientType.csv";
+            this.tableName = "Administrator_Subdomains.csv";
         } else if (databaseType == DatabaseConnection.DatabaseType.ORACLE){
-            this.tableName = "CLIENTTYPE";
+            this.tableName = "ADMINISTRATOR_SUBDOMAINS";
         } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
-            this.tableName = "client_type";
+            this.tableName = "administrator_subdomain";
         }
     }
 
     public DefaultTableModel getTableModel() {
-        String[] columns = {"TypeID", "Name", "Discount"};
+        String[] columns = {"IDAdministrator", "SubdomainID"};
 
         DefaultTableModel tableModel = new DefaultTableModel(columns, 0){
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column != 0;
+                return false;
             }
         };
-        for(InnerClientTypeModel model : this.modelList.getList()){
-            Object[] obj = {model.TypeID, model.Name, model.Discount};
+
+        for(InnerAdministratorSubdomainModel model : this.modelList.getList()){
+            Object[] obj = {model.IDAdministrator, model.SubdomainID};
             tableModel.addRow(obj);
         }
 
@@ -73,42 +71,41 @@ public class ClientTypeModel extends Model implements LinkModelToDatabase<ModelL
         return tableModel;
     }
 
-    public ClientTypeModel() {
+    public AdministratorSubdomainModel() {
         // Singleton
         if(instance != null)
-            throw new RuntimeException("ClientTypeModel is a singleton class. Use getInstance() instead.");
+            throw new RuntimeException("AdministratorSubdomainModel is a singleton class. Use getInstance() instead.");
         else
             instance = this;
 
-        this.name = "ClientType";
+        this.name = "Administrator_Subdomain";
         this.databaseType = DatabaseConnection.DatabaseType.ORACLE;
     }
 
-    public ClientTypeModel(DatabaseConnection.DatabaseType t) {
+    public AdministratorSubdomainModel(DatabaseConnection.DatabaseType t) {
         // Singleton
         if(instance != null)
-            throw new RuntimeException("ClientTypeModel is a singleton class. Use getInstance() instead.");
+            throw new RuntimeException("AdministratorSubdomainModel is a singleton class. Use getInstance() instead.");
         else
             instance = this;
 
-        this.name = "ClientTypei";
+        this.name = "ADMINISTRATOR_SUBDOMAINS";
         this.databaseType = t;
         if(t == DatabaseConnection.DatabaseType.CSV)
-            this.tableName = "ClientType.csv";
+            this.tableName = "Administrator_Subdomains.csv";
         else if(t == DatabaseConnection.DatabaseType.ORACLE)
-            this.tableName = "CLIENTS";
+            this.tableName = "ADMINISTRATOR_SUBDOMAINS";
         else if(t == DatabaseConnection.DatabaseType.INMEMORY)
-            this.tableName = "client_type";
+            this.tableName = "administrator_subdomain";
     }
 
     private void transferToModelList(ResultSet rs) throws Exception{
         this.modelList = new ModelList<>(true);
 
         while(rs.next()){
-            InnerClientTypeModel model = new InnerClientTypeModel();
-            model.TypeID = rs.getInt("TypeID");
-            model.Name = rs.getString("Name");
-            model.Discount = rs.getDouble("Discount");
+            InnerAdministratorSubdomainModel model = new InnerAdministratorSubdomainModel();
+            model.IDAdministrator = rs.getInt("ADMINISTRATORID");
+            model.SubdomainID = rs.getInt("SubdomainID");
 
             this.modelList.add(model);
         }
@@ -117,35 +114,12 @@ public class ClientTypeModel extends Model implements LinkModelToDatabase<ModelL
     public void getFilteredData(String comparator, String value, String column) throws Exception{
         this.getData();
 
-        Predicate<ClientTypeModel.InnerClientTypeModel> predicate =  null;
+        Predicate<AdministratorSubdomainModel.InnerAdministratorSubdomainModel> predicate =  null;
 
         switch (column) {
-            case "Name":
-                predicate = (ClientTypeModel.InnerClientTypeModel model) -> {
-                    try {
-                        Field field = model.getClass().getDeclaredField(column);
-                        field.setAccessible(true);
-                        String fieldValue = (String) field.get(model);
-                        if(comparator == "==")
-                            return fieldValue.equals(value);
-                        else if(comparator == "!=")
-                            return !fieldValue.equals(value);
-                        else if(comparator == "<")
-                            return fieldValue.compareTo(value) < 0;
-                        else if(comparator == ">")
-                            return fieldValue.compareTo(value) > 0;
-                        else if(comparator == "<=")
-                            return fieldValue.compareTo(value) <= 0;
-                        else if(comparator == ">=")
-                            return fieldValue.compareTo(value) >= 0;
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    return false;
-                };
-                break;
-            case "TypeID":
-                predicate = (ClientTypeModel.InnerClientTypeModel model) -> {
+            case "IDAdministrator":
+                case "SubdomainID":
+                predicate = (AdministratorSubdomainModel.InnerAdministratorSubdomainModel model) -> {
                     try {
                         Field field = model.getClass().getDeclaredField(column);
                         field.setAccessible(true);
@@ -168,66 +142,42 @@ public class ClientTypeModel extends Model implements LinkModelToDatabase<ModelL
                     return false;
                 };
                 break;
-            case "Discount":
-                predicate = (ClientTypeModel.InnerClientTypeModel model) -> {
-                    try {
-                        Field field = model.getClass().getDeclaredField(column);
-                        field.setAccessible(true);
-                        double fieldValue = (double) field.get(model);
-                        if(comparator == "==")
-                            return fieldValue == Double.parseDouble(value);
-                        else if(comparator == "!=")
-                            return fieldValue != Double.parseDouble(value);
-                        else if(comparator == "<")
-                            return fieldValue < Double.parseDouble(value);
-                        else if(comparator == ">")
-                            return fieldValue > Double.parseDouble(value);
-                        else if(comparator == "<=")
-                            return fieldValue <= Double.parseDouble(value);
-                        else if(comparator == ">=")
-                            return fieldValue >= Double.parseDouble(value);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    return false;
-                };
-                break;
         }
 
         this.modelList = this.modelList.filter(predicate, value);
     }
 
+
     @Override
-    public ModelList<InnerClientTypeModel> getData() throws Exception{
+    public ModelList<InnerAdministratorSubdomainModel> getData() throws Exception{
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         Map<String, String> tables = null;
         if(databaseType == DatabaseConnection.DatabaseType.CSV) {
             tables = new HashMap<>();
-            tables.put("CLIENTTYPE", "ClientType.csv");
+            tables.put("ADMINISTRATOR_SUBDOMAINS", "Administrator_Subdomains.csv");
         } else if(databaseType == DatabaseConnection.DatabaseType.ORACLE) {
             tables = new HashMap<>();
-            tables.put("CLIENTTYPE", "CLIENTTYPE");
-        } else if(databaseType == DatabaseConnection.DatabaseType.INMEMORY){
+            tables.put("ADMINISTRATOR_SUBDOMAINS", "ADMINISTRATOR_SUBDOMAINS");
+        } else {
             tables = new HashMap<>();
-            tables.put("CLIENTTYPE", "client_type");
+            tables.put("ADMINISTRATOR_SUBDOMAINS", "administrator_subdomain");
         }
 
 
-        ResultSet tipClients = db.getAllTableData(tables.get("CLIENTTYPE"));
+        ResultSet formats = db.getAllTableData(tables.get("ADMINISTRATOR_SUBDOMAINS"));
 
         // Add fields to cameras
         this.modelList = new ModelList<>(true);
-        while(tipClients.next()) {
-            InnerClientTypeModel model = new InnerClientTypeModel();
-            model.TypeID = tipClients.getInt("TypeID");
-            model.Name = tipClients.getString("Name");
-            model.Discount = tipClients.getDouble("Discount");
+        while(formats.next()) {
+            InnerAdministratorSubdomainModel model = new InnerAdministratorSubdomainModel();
+            model.IDAdministrator = formats.getInt("IDADMINISTRATOR");
+            model.SubdomainID = formats.getInt("SUBDOMAINID");
 
             this.modelList.add(model);
         }
 
         try{
-            logger.log("ClientTypeModel got data");
+            logger.log("AdministratorSubdomainModel got data");
         } catch (Exception ex) {
             System.out.println("Error logging to CSV: " + ex.getMessage());
         }
@@ -236,18 +186,15 @@ public class ClientTypeModel extends Model implements LinkModelToDatabase<ModelL
     }
 
     @Override
-    public void updateData(ModelList<InnerClientTypeModel> oneRow) throws Exception {
+    public void updateData(ModelList<InnerAdministratorSubdomainModel> oneRow) throws Exception {
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
         Map<String, String> set = new HashMap<>();
-        set.put("Name", "'" + oneRow.get(0).Name + "'");
-        set.put("Discount", String.valueOf(oneRow.get(0).Discount));
-
+        set.put("SUBDOMAINID", oneRow.get(0).SubdomainID + "");
         Map<String, String> where = new HashMap<>();
-        where.put("TypeID", String.valueOf(oneRow.get(0).TypeID));
-
+        where.put("IDADMINISTRATOR", oneRow.get(0).IDAdministrator + "");
         db.update(this.tableName, set, where);
         try{
-            logger.log("ClientTypeModel update data");
+            logger.log("AdministratorSubdomainModel update data");
         } catch (Exception ex) {
             System.out.println("Error logging to CSV: " + ex.getMessage());
         }
@@ -255,14 +202,15 @@ public class ClientTypeModel extends Model implements LinkModelToDatabase<ModelL
     }
 
     @Override
-    public void deleteRow(ModelList<InnerClientTypeModel> row) throws Exception {
+    public void deleteRow(ModelList<InnerAdministratorSubdomainModel> row) throws Exception {
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
 
         Map<String, String> where = new HashMap<>();
-        where.put("TypeID", row.get(0).TypeID + "");
+        where.put("IDADMINISTRATOR", row.get(0).IDAdministrator + "");
+        where.put("SUBDOMAINID", row.get(0).SubdomainID + "");
         db.delete(this.tableName, where);
         try{
-            logger.log("ClientTypeModel delete data");
+            logger.log("AdministratorSubdomainModel delete data");
         } catch (Exception ex) {
             System.out.println("Error logging to CSV: " + ex.getMessage());
         }
@@ -304,27 +252,23 @@ public class ClientTypeModel extends Model implements LinkModelToDatabase<ModelL
 
         csv.createAndInsert(this.tableName + ".csv", headers, data);
         try{
-            logger.log("ClientTypeModel throw data into csv");
+            logger.log("AdministratorSubdomainModel throw data into csv");
         } catch (Exception ex) {
             System.out.println("Error logging to CSV: " + ex.getMessage());
         }
     }
 
     @Override
-    public void insertRow(InnerClientTypeModel row) throws Exception {
+    public void insertRow(InnerAdministratorSubdomainModel row) throws Exception {
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         List<Pair<String, String>> values = new ArrayList<>();
-        values.add(new Pair<>("TYPEID", ""));
-        values.add(new Pair<>("NAME", "'" + row.Name + "'"));
-        values.add(new Pair<>("DISCOUNT", row.Discount + ""));
-
+        values.add(new Pair<>("IDADMINISTRATOR", row.IDAdministrator + ""));
+        values.add(new Pair<>("SUBDOMAINID", row.SubdomainID + ""));
 
         db.insert(this.tableName, values);
-
         try{
-            logger.log("ClientTypeModel insert data");
+            logger.log("AdministratorSubdomainModel insert data");
         } catch (Exception ex) {
             System.out.println("Error logging to CSV: " + ex.getMessage());
         }

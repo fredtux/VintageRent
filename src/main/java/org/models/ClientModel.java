@@ -61,7 +61,12 @@ public class ClientModel extends Model implements LinkModelToDatabase<ModelList<
     public DefaultTableModel getTableModel() {
         String[] columns = {"UserID", "BirthDate", "TypeID", "NameTip", "DiscountTip", "SurnameClient"};
 
-        DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
+        DefaultTableModel tableModel = new DefaultTableModel(columns, 0){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return column != 0;
+            }
+        };
         for(InnerClientModel model : this.modelList.getList()){
             Object[] obj = {model.UserID, model.BirthDate, model.TypeID, model.NameTip, model.DiscountTip, model.SurnameClient};
             tableModel.addRow(obj);

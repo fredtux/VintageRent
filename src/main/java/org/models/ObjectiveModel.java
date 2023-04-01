@@ -65,7 +65,12 @@ public class ObjectiveModel extends Model implements LinkModelToDatabase<ModelLi
     public DefaultTableModel getTableModel() {
         String[] columns = {"ObjectiveID", "Name", "FocalDistance", "MinimumAperture", "MaximumAperture", "Diameter", "Price", "RentalPrice", "MountID", "NameMount"};
 
-        DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
+        DefaultTableModel tableModel = new DefaultTableModel(columns, 0){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return column != 0;
+            }
+        };
         for(InnerObjectiveModel model : this.modelList.getList()){
             Object[] obj = {model.ObjectiveID, model.Name, model.FocalDistance, model.MinimumAperture, model.MaximumAperture, model.Diameter, model.Price, model.RentalPrice, model.MountID, model.NameMount};
             tableModel.addRow(obj);

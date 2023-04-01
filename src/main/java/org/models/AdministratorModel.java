@@ -56,7 +56,12 @@ public class AdministratorModel extends Model implements LinkModelToDatabase<Mod
     public DefaultTableModel getTableModel() {
         String[] columns = {"UserID", "isActive"};
 
-        DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
+        DefaultTableModel tableModel = new DefaultTableModel(columns, 0){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return column != 0;
+            }
+        };
         for(InnerAdministratorModel model : this.modelList.getList()){
             Object[] obj = {model.UserID, model.isActive};
             tableModel.addRow(obj);
@@ -73,7 +78,7 @@ public class AdministratorModel extends Model implements LinkModelToDatabase<Mod
         else
             instance = this;
 
-        this.name = "CameraType";
+        this.name = "Administrator";
         this.databaseType = DatabaseConnection.DatabaseType.ORACLE;
     }
 
@@ -91,7 +96,7 @@ public class AdministratorModel extends Model implements LinkModelToDatabase<Mod
         else if(t == DatabaseConnection.DatabaseType.ORACLE)
             this.tableName = "ADMINISTRATORS";
         else if(t == DatabaseConnection.DatabaseType.INMEMORY)
-            this.tableName = "administrators";
+            this.tableName = "administrator";
     }
 
     private void transferToModelList(ResultSet rs) throws Exception{

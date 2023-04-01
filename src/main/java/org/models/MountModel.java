@@ -54,7 +54,12 @@ public class MountModel extends Model implements LinkModelToDatabase<ModelList<M
     public DefaultTableModel getTableModel() {
         String[] columns = {"TypeID", "Name"};
 
-        DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
+        DefaultTableModel tableModel = new DefaultTableModel(columns, 0){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return column != 0;
+            }
+        };
         for(InnerMountModel model : this.modelList.getList()){
             Object[] obj = {model.MountID, model.Name};
             tableModel.addRow(obj);

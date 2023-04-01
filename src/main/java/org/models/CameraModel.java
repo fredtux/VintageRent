@@ -71,7 +71,12 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
     public DefaultTableModel getTableModel() {
         String[] columns = {"IDCamera", "Brand", "ModelCamera", "ManufacturingYear", "Price", "RentalPrice", "NameFormat", "FilmWidth", "NameTip", "NameMount"};
 
-        DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
+        DefaultTableModel tableModel = new DefaultTableModel(columns, 0){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return column != 0;
+            }
+        };
         for(InnerCameraModel model : this.modelList.getList()){
             Object[] obj = {model.IDCamera, model.Brand, model.ModelCamera, model.ManufacturingYear, model.Price, model.RentalPrice, model.NameFormat, model.FilmWidth, model.NameTip, model.NameMount};
             tableModel.addRow(obj);

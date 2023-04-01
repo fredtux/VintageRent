@@ -55,7 +55,12 @@ public class FormatModel extends Model implements LinkModelToDatabase<ModelList<
     public DefaultTableModel getTableModel() {
         String[] columns = {"FormatID", "Name", "FilmWidth"};
 
-        DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
+        DefaultTableModel tableModel = new DefaultTableModel(columns, 0){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return column != 0;
+            }
+        };
         for(InnerFormatModel model : this.modelList.getList()){
             Object[] obj = {model.FormatID, model.Name, model.FilmWidth};
             tableModel.addRow(obj);

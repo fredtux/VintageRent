@@ -56,7 +56,12 @@ public class SubdomainModel extends Model implements LinkModelToDatabase<ModelLi
     public DefaultTableModel getTableModel() {
         String[] columns = {"SubdomainID", "Name"};
 
-        DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
+        DefaultTableModel tableModel = new DefaultTableModel(columns, 0){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return column != 0;
+            }
+        };
         for(InnerSubdomainModel model : this.modelList.getList()){
             Object[] obj = {model.SubdomainID, model.Name};
             tableModel.addRow(obj);

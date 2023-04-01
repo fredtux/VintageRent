@@ -287,6 +287,51 @@ public class ModelInit {
         }
     }
 
+    private static void initInMemSAdministratorubdomainModel(){
+        try{
+            AdministratorSubdomainModel administratorSubdomainModel = AdministratorSubdomainModel.getInstance();
+            MainService.setDatabaseType(administratorSubdomainModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(administratorSubdomainModel);
+
+            AdministratorSubdomainModel.InnerAdministratorSubdomainModel data = new AdministratorSubdomainModel.InnerAdministratorSubdomainModel();
+            data.IDAdministrator = 1;
+            data.SubdomainID = 1;
+            MainService.insert(administratorSubdomainModel, data);
+
+            data.IDAdministrator = 2;
+            data.SubdomainID = 1;
+            MainService.insert(administratorSubdomainModel, data);
+
+            data.IDAdministrator = 3;
+            data.SubdomainID = 3;
+            MainService.insert(administratorSubdomainModel, data);
+
+            data.IDAdministrator = 4;
+            data.SubdomainID = 4;
+            MainService.insert(administratorSubdomainModel, data);
+
+            data.IDAdministrator = 5;
+            data.SubdomainID = 2;
+            MainService.insert(administratorSubdomainModel, data);
+
+            data.IDAdministrator = 6;
+            data.SubdomainID = 2;
+            MainService.insert(administratorSubdomainModel, data);
+
+            data.IDAdministrator = 7;
+            data.SubdomainID = 2;
+            MainService.insert(administratorSubdomainModel, data);
+
+            data.IDAdministrator = 7;
+            data.SubdomainID = 1;
+            MainService.insert(administratorSubdomainModel, data);
+
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     private static void initInMemSubdomainModel(){
         try{
             SubdomainModel subdomainModel = SubdomainModel.getInstance();
@@ -1017,6 +1062,7 @@ public class ModelInit {
         initInMemRentModel();
         initInMemAdministratorModel();
         initInMemSubdomainModel();
+        initInMemSAdministratorubdomainModel();
     }
 
     public static void csvInit() throws Exception{

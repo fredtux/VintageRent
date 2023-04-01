@@ -64,7 +64,12 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
     public DefaultTableModel getTableModel() {
         String[] columns = {"UserID", "BirthDate", "HireDate", "IDManager", "SalaryID", "Salary", "EmployeeName", "ManagerName"};
 
-        DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
+        DefaultTableModel tableModel = new DefaultTableModel(columns, 0){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return column != 0;
+            }
+        };
         for(InnerEmployeeModel model : this.modelList.getList()){
             Object[] obj = {model.UserID, model.BirthDate, model.HireDate, model.IDManager, model.SalaryID, model.Salary, model.EmployeeName, model.ManagerName};
             tableModel.addRow(obj);
