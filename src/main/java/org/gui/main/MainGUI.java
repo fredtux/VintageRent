@@ -81,9 +81,9 @@ public class MainGUI { // Singleton
         userModel.setDatabaseType(this.databaseType);
         try {
             if(comparator == null)
-                userModel.getData();
+                MainService.getData(userModel);
             else
-                userModel.getFilteredData(comparator, value, column);
+                MainService.getFilteredData(userModel, comparator, value, column);
             DefaultTableModel rm = userModel.getTableModel();
 
             this.tblMain = new JTable();
@@ -174,9 +174,9 @@ public class MainGUI { // Singleton
         employeeModel.setDatabaseType(this.databaseType);
         try {
             if(comparator == null)
-                employeeModel.getData();
+                MainService.getData(employeeModel);
             else
-                employeeModel.getFilteredData(comparator, value, column);
+                MainService.getFilteredData(employeeModel, comparator, value, column);
             DefaultTableModel rm = employeeModel.getTableModel();
 
             this.tblMain = new JTable();
@@ -257,9 +257,9 @@ public class MainGUI { // Singleton
         formatModel.setDatabaseType(this.databaseType);
         try {
             if(comparator == null)
-                formatModel.getData();
+                MainService.getData(formatModel);
             else
-                formatModel.getFilteredData(comparator, value, column);
+                MainService.getFilteredData(formatModel, comparator, value, column);
             DefaultTableModel rm = formatModel.getTableModel();
 
             this.tblMain = new JTable();
@@ -333,9 +333,9 @@ public class MainGUI { // Singleton
         cameraModel.setDatabaseType(this.databaseType);
         try {
             if(comparator == null)
-                cameraModel.getData();
+                MainService.getData(cameraModel);
             else
-                cameraModel.getFilteredData(comparator, value, column);
+                MainService.getFilteredData(cameraModel, comparator, value, column);
 
             DefaultTableModel rm = cameraModel.getTableModel();
 
@@ -440,9 +440,9 @@ public class MainGUI { // Singleton
         rentModel.setDatabaseType(this.databaseType);
         try {
             if(comparator == null)
-                rentModel.getData();
+                MainService.getData(rentModel);
             else
-                rentModel.getFilteredData(comparator, value, column);
+                MainService.getFilteredData(rentModel, comparator, value, column);
             DefaultTableModel rm = rentModel.getTableModel();
             this.tblMain = new JTable();
             this.jscrPane.setViewportView(this.tblMain);
@@ -541,9 +541,9 @@ public class MainGUI { // Singleton
         cameraType.setDatabaseType(this.databaseType);
         try {
             if(comparator == null)
-                cameraType.getData();
+                MainService.getData(cameraType);
             else
-                cameraType.getFilteredData(comparator, value, column);
+                MainService.getFilteredData(cameraType, comparator, value, column);
             DefaultTableModel rm = cameraType.getTableModel();
             this.tblMain = new JTable();
             this.jscrPane.setViewportView(this.tblMain);
