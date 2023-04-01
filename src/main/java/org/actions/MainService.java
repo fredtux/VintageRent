@@ -234,6 +234,16 @@ public class MainService {
             result = ClientRents(id, dbType);
         } else if(report == "FormatSalesReport"){
             result = formatSales(id, dbType);
+        } else if (report == "MountReport"){
+            List<Model.AbstractInnerModel> reportResult = getForMount(id, dbType);
+            result = new HashMap<>();
+
+            for (Model.AbstractInnerModel item : reportResult) {
+                if(item instanceof ObjectiveModel.InnerObjectiveModel)
+                    result.put(((ObjectiveModel.InnerObjectiveModel) item).Name, "Objective");
+                else if(item instanceof CameraModel.InnerCameraModel)
+                    result.put(((CameraModel.InnerCameraModel) item).Brand + " - " + ((CameraModel.InnerCameraModel) item).Brand, "Objective");
+            }
         }
 
         if(result == null)

@@ -66,6 +66,9 @@ public class MainServiceTest {
 
             result = MainService.sendEmail("",1, "FormatSalesReport", DatabaseConnection.DatabaseType.INMEMORY);
             assertFalse(result);
+
+            result = MainService.sendEmail("",1, "MountReport", DatabaseConnection.DatabaseType.INMEMORY);
+            assertFalse(result);
         } catch (Exception e) {
             fail(e.getMessage());
         }
