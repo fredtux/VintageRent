@@ -55,4 +55,17 @@ public class MainServiceTest {
             fail(e.getMessage());
         }
     }
+
+    @Test
+    public void sendEmailTest(){
+        try {
+            boolean result = MainService.sendEmail("",1, "ClientReport", DatabaseConnection.DatabaseType.INMEMORY);
+            assertFalse(result);
+
+            result = MainService.sendEmail("",1, "FormatSalesReport", DatabaseConnection.DatabaseType.INMEMORY);
+            assertFalse(result);
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
 }

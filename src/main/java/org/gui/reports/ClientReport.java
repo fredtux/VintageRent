@@ -19,6 +19,7 @@ public class ClientReport {
     private static ClientReport instance = null;
     private JPanel pnlMain;
     private JButton btnExit;
+    private JButton btnEmail;
 
     public ClientReport(JFrame parentFrame, MainGUI caller) {
         // Singleton
@@ -50,7 +51,7 @@ public class ClientReport {
 
         GridBagConstraints c3 = new GridBagConstraints();
         c3.gridy = 1;
-        c3.gridx = 1;
+        c3.gridx = 0;
         c3.anchor = GridBagConstraints.NORTH;
         c3.gridwidth = 1;
         c3.gridheight = 1;
@@ -60,7 +61,7 @@ public class ClientReport {
         lblClient.setText("Name");
         pnlMain.add(lblClient, c3);
 
-        c3.gridx = 2;
+        c3.gridx = 1;
         JComboBox<ComboItem> cmbClient = new JComboBox<>();
         ClientModel clientModel = ClientModel.getInstance();
         clientModel.setDatabaseType(caller.getDatabaseType());
@@ -71,7 +72,7 @@ public class ClientReport {
         pnlMain.add(cmbClient, c3);
 
         c3.gridy = 2;
-        c3.gridx = 1;
+        c3.gridx = 0;
         c3.anchor = GridBagConstraints.EAST;
         c3.gridheight = 2;
         c3.gridwidth = 2;
@@ -101,19 +102,36 @@ public class ClientReport {
         pnlMain.add(scrollPane, c3);
 
         c3.gridy = 4;
-        c3.gridx = 1;
-        c3.gridwidth = 2;
+        c3.gridx = 0;
+        c3.gridheight = 1;
+        c3.gridwidth = 1;
         c3.fill = GridBagConstraints.HORIZONTAL;
         c3.anchor = GridBagConstraints.NORTH;
+        this.btnEmail = new JButton("Email");
+        this.btnEmail.setText("Email");
+        this.btnEmail.addActionListener(e -> {
+            String email = JOptionPane.showInputDialog("Enter email address");
+            if(email != null && !email.isEmpty()) {
+                try {
+                    if(MainService.sendEmail(email,  Integer.parseInt(cmbClient.getItemAt(cmbClient.getSelectedIndex()).getValue().toString()), "ClientReport", caller.getDatabaseType()))
+                        JOptionPane.showMessageDialog(null, "Email sent successfully");
+                    else
+                        JOptionPane.showMessageDialog(null, "Email failed to send");
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Email failed to send");
+                }
+            }
+        });
+        this.pnlMain.add(this.btnEmail, c3);
+
+
+        c3.gridx = 1;
         this.btnExit = new JButton("Exit");
         this.btnExit.setText("Exit");
         this.btnExit.addActionListener(e -> {
             closeFrame(frame, false);
         });
         this.pnlMain.add(this.btnExit, c3);
-
-
-
 
 
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

@@ -4,11 +4,14 @@ import org.database.DatabaseConnection;
 import org.logger.CsvLogger;
 import org.models.*;
 
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.swing.table.TableModel;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.sql.Date;
+import javax.mail.*;
 
 public class MainService {
     private static CsvLogger logger = CsvLogger.getInstance();
@@ -199,5 +202,46 @@ public class MainService {
 
     public static void getFilteredData(LinkModelToDatabase model, String comparator, String value, String column) throws Exception {
         model.getFilteredData(comparator, value, column);
+    }
+
+    public static boolean sendEmail(String to, int id, String report, DatabaseConnection.DatabaseType dbType) throws Exception {
+        Map<String, String> result = null;
+        if(report == "ClientReport"){
+            result = ClientRents(id, dbType);
+        } else if(report == "FormatSalesReport"){
+            result = formatSales(id, dbType);
+        }
+
+        if(result == null)
+            return false;
+
+        String subject = report + ": " + id;
+        String body = "";
+        for (Map.Entry<String, String> entry : result.entrySet()) {
+            body += entry.getKey() + ": " + entry.getValue() + "\n";
+        }
+
+        // Tutorial: https://www.tutorialspoint.com/java/java_sending_email.htm
+        String from = "root@localhost";
+        String host = "localhost";
+        try {
+            Properties properties = System.getProperties();
+            properties.setProperty("mail.smtp.host", host);
+
+            Session session = Session.getDefaultInstance(properties);
+
+
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(from));
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+            message.setSubject(subject);
+            message.setText(body);
+            Transport.send(message);
+            return true;
+        } catch (Exception ex) {
+        }
+
+        return false;
+
     }
 }
