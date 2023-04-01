@@ -51,7 +51,8 @@ public class MainGUI { // Singleton
         MOUNT,
         OBJECTIVE,
         SALARY,
-        ADMINISTRATOR
+        ADMINISTRATOR,
+        SUBDOMAIN
     }
 
     private TableType currentTableType = TableType.RENT;
@@ -80,6 +81,78 @@ public class MainGUI { // Singleton
             return new MainGUI();
 
         return instance;
+    }
+
+    public void initSubdomainsTable(String comparator, String value, String column){
+        SubdomainModel subdomainModel = SubdomainModel.getInstance();
+        subdomainModel.setDatabaseType(this.databaseType);
+        try {
+            if(comparator == null)
+                MainService.getData(subdomainModel);
+            else
+                MainService.getFilteredData(subdomainModel, comparator, value, column);
+            DefaultTableModel rm = subdomainModel.getTableModel();
+
+            this.tblMain = new JTable();
+            this.jscrPane.setViewportView(this.tblMain);
+            this.tblMain.setModel(rm);
+            rm.fireTableDataChanged();
+
+            class TableModelEvents implements TableModelListener {
+                public boolean isCellEditable(int row, int column) {
+                    return column != 0;
+                }
+
+                public void setValueAt(String value, int row, int column) throws Exception {
+                    SubdomainModel rm = SubdomainModel.getInstance();
+                    ModelList<SubdomainModel.InnerSubdomainModel> modelList = new ModelList<>();
+                    SubdomainModel.InnerSubdomainModel irm = new SubdomainModel.InnerSubdomainModel();
+                    DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
+
+                    irm.SubdomainID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+                    irm.Name = dtm.getValueAt(row, 1).toString();
+
+
+                    switch (column) {
+                        case 1:
+                            irm.Name = value;
+                            break;
+                        default:
+                            throw new Exception("Invalid column index");
+                    }
+
+                    modelList.add(irm);
+                    rm.updateData(modelList);
+                }
+
+                @Override
+                public void tableChanged(TableModelEvent e) {
+                    if (e.getType() == TableModelEvent.UPDATE) {
+                        int row = e.getFirstRow();
+                        int column = e.getColumn();
+                        try {
+                            setValueAt((String) tblMain.getValueAt(row, column), row, column);
+                        } catch (Exception ex) {
+                            System.out.println("Error in trying to update administrator table: " + ex.getMessage());
+                        }
+                    }
+                }
+            }
+
+            if(comparator == null) {
+                this.tblMain.getModel().addTableModelListener(new TableModelEvents());
+                this.currentTableType = TableType.SUBDOMAIN;
+
+                this.cmbColumn.removeAllItems();
+                List<String> columnNames = MainService.getAttributes(SubdomainModel.InnerSubdomainModel.class);
+
+                for (String columnName : columnNames) {
+                    this.cmbColumn.addItem(columnName);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error in trying to initialize administrator table: " + e.getMessage());
+        }
     }
 
     public void initAdministratorsTable(String comparator, String value, String column){
@@ -1086,6 +1159,20 @@ public class MainGUI { // Singleton
         }
     }
 
+    private void removeRowFromSubdomainModel(int row) throws Exception{
+        SubdomainModel rm = SubdomainModel.getInstance();
+        ModelList<SubdomainModel.InnerSubdomainModel> modelList = new ModelList<>();
+        SubdomainModel.InnerSubdomainModel irm = new SubdomainModel.InnerSubdomainModel();
+        DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
+
+        irm.SubdomainID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+
+        modelList.add(irm);
+        rm.deleteRow(modelList);
+
+        dtm.removeRow(row);
+    }
+
     private void removeRowFromAdministratorModel(int row) throws Exception{
         AdministratorModel rm = AdministratorModel.getInstance();
         ModelList<AdministratorModel.InnerAdministratorModel> modelList = new ModelList<>();
@@ -1369,6 +1456,13 @@ public class MainGUI { // Singleton
         });
         crud.add(menuAdministrators);
 
+        JMenuItem menuSubdomains = new JMenuItem("Subdomains");
+        menuSubdomains.addActionListener(e -> {
+            initSubdomainsTable(null, null, null);
+            this.currentTableType = TableType.SUBDOMAIN;
+        });
+        crud.add(menuSubdomains);
+
         JMenu datasources = new JMenu("Datasources");
         menuBar.add(datasources);
 
@@ -1400,6 +1494,8 @@ public class MainGUI { // Singleton
                     initSalaryTable(null, null, null);
                 } else if(this.currentTableType == TableType.ADMINISTRATOR){
                     initAdministratorsTable(null, null, null);
+                } else if(this.currentTableType == TableType.SUBDOMAIN){
+                    initSubdomainsTable(null, null, null);
                 }
 
                 try{
@@ -1441,6 +1537,8 @@ public class MainGUI { // Singleton
                     initSalaryTable(null, null, null);
                 } else if(this.currentTableType == TableType.ADMINISTRATOR){
                     initAdministratorsTable(null, null, null);
+                } else if(this.currentTableType == TableType.SUBDOMAIN){
+                    initSubdomainsTable(null, null, null);
                 }
 
                 try{
@@ -1482,6 +1580,8 @@ public class MainGUI { // Singleton
                     initSalaryTable(null, null, null);
                 } else if(this.currentTableType == TableType.ADMINISTRATOR){
                     initAdministratorsTable(null, null, null);
+                } else if(this.currentTableType == TableType.SUBDOMAIN){
+                    initSubdomainsTable(null, null, null);
                 }
 
                 try{
@@ -1618,6 +1718,8 @@ public class MainGUI { // Singleton
                 initSalaryTable(cmbSign.getSelectedItem().toString(), this.txtValue.getText(), this.cmbColumn.getSelectedItem().toString());
             } else if(this.currentTableType == TableType.ADMINISTRATOR){
                 initAdministratorsTable(cmbSign.getSelectedItem().toString(), this.txtValue.getText(), this.cmbColumn.getSelectedItem().toString());
+            } else if(this.currentTableType == TableType.SUBDOMAIN){
+                initSubdomainsTable(cmbSign.getSelectedItem().toString(), this.txtValue.getText(), this.cmbColumn.getSelectedItem().toString());
             }
 
         });
@@ -1651,6 +1753,8 @@ public class MainGUI { // Singleton
                 initSalaryTable(null, null, null);
             } else if(this.currentTableType == TableType.ADMINISTRATOR){
                 initAdministratorsTable(null, null, null);
+            } else if(this.currentTableType == TableType.SUBDOMAIN){
+                initSubdomainsTable(null, null, null);
             }
         });
 
@@ -1708,6 +1812,8 @@ public class MainGUI { // Singleton
                             removeRowFromSalaryModel(row);
                         else if(currentTableType == TableType.ADMINISTRATOR)
                             removeRowFromAdministratorModel(row);
+                        else if(currentTableType == TableType.SUBDOMAIN)
+                            removeRowFromSubdomainModel(row);
                     } catch (SQLException ex) {
                         JDialog dialog = new JDialog();
                         dialog.setAlwaysOnTop(true);
@@ -1769,6 +1875,9 @@ public class MainGUI { // Singleton
                 } else if(currentTableType == TableType.ADMINISTRATOR){
                     AdministratorAdd aa = AdministratorAdd.getInstance(frame, instance);
                     aa.main();
+                } else if(currentTableType == TableType.SUBDOMAIN){
+                    SubdomainAdd sa = SubdomainAdd.getInstance(frame, instance);
+                    sa.main();
                 }
             }
         });

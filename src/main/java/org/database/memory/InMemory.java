@@ -30,6 +30,7 @@ public class InMemory extends DatabaseConnection {
     private ModelList<ObjectiveModel.InnerObjectiveModel> objectives = null;
     private ModelList<RentModel.InnerRentModel> rents = null;
     private ModelList<AdministratorModel.InnerAdministratorModel> administrators = null;
+    private ModelList<SubdomainModel.InnerSubdomainModel> subdomains = null;
 
     private List<ModelList> modelLists = new ArrayList<>();
 
@@ -53,6 +54,7 @@ public class InMemory extends DatabaseConnection {
         objectives = new ModelList<>();
         rents = new ModelList<>();
         administrators = new ModelList<>();
+        subdomains = new ModelList<>();
 
         modelLists.add(cameraTypes);
         modelLists.add(cameras);
@@ -66,6 +68,7 @@ public class InMemory extends DatabaseConnection {
         modelLists.add(objectives);
         modelLists.add(rents);
         modelLists.add(administrators);
+        modelLists.add(subdomains);
     }
 
     public static DatabaseConnection getInstance(DatabaseType t) throws RuntimeException {
@@ -706,6 +709,55 @@ public class InMemory extends DatabaseConnection {
                     break;
                 }
             }
+        } else if(tableName.equals("subdomain")) {
+            for(SubdomainModel.InnerSubdomainModel data : subdomains.getList()) {
+                int counter = 0;
+                for(String key : where.keySet()) {
+                    for(Field f : data.getClass().getDeclaredFields()) {
+                        f.setAccessible(true);
+                        if(f.getName().toLowerCase().replace("_", "").equals(key.toLowerCase())) {
+                            if(f.get(data).toString().equals(where.get(key))) {
+                                ++counter;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if(counter == where.size()){
+                    for(String key : set.keySet()) {
+                        for(Field f : data.getClass().getDeclaredFields()) {
+                            f.setAccessible(true);
+                            if(f.getName().toLowerCase().replace("_", "").equals(key.toLowerCase())) {
+                                if(f.getType().equals(String.class)) {
+                                    f.set(data, set.get(key));
+                                    break;
+                                } else if(f.getType().equals(int.class)) {
+                                    f.set(data, Integer.parseInt(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(double.class)) {
+                                    f.set(data, Double.parseDouble(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(float.class)) {
+                                    f.set(data, Float.parseFloat(set.get(key)));
+                                    break;
+                                } else if(f.getType().equals(boolean.class)) {
+                                    f.set(data, set.get(key) == "1" ? true : false);
+                                    break;
+                                } else if(f.getType().equals(LocalDateTime.class)) {
+                                    f.set(data, LocalDateTime.parse(set.get(key), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                                    break;
+                                } else if(f.getType().equals(Date.class)) {
+                                    f.set(data, new SimpleDateFormat("yyyy-MM-dd").parse(set.get(key)));
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    break;
+                }
+            }
         }
     }
 
@@ -798,6 +850,9 @@ public class InMemory extends DatabaseConnection {
         } else if (tableName == "administrator") {
             headers = this.getAttributes(AdministratorModel.InnerAdministratorModel.class);
             data = this.getObjectsFromModelList(this.administrators);
+        } else if (tableName == "subdomain") {
+            headers = this.getAttributes(SubdomainModel.InnerSubdomainModel.class);
+            data = this.getObjectsFromModelList(this.subdomains);
         }
 
         return this.getResultSet(headers, data);
@@ -1391,6 +1446,58 @@ public class InMemory extends DatabaseConnection {
 
             this.administrators.getList().add(model);
 
+        } else if (tableName.equals("subdomain")) {
+            int id = 0;
+            for (SubdomainModel.InnerSubdomainModel c : this.subdomains.getList()) {
+                if (c.SubdomainID > id)
+                    id = c.SubdomainID;
+            }
+
+            for (Pair<String, String> p : values) {
+                if (p.first.toLowerCase().equals("subdomainid")) {
+                    p.second = String.valueOf(id + 1);
+                    break;
+                }
+            }
+
+
+            SubdomainModel.InnerSubdomainModel model = new SubdomainModel.InnerSubdomainModel();
+            for (Pair<String, String> p : values) {
+                for (Field f : model.getClass().getDeclaredFields()) {
+                    if (f.getName().toLowerCase().equals(p.first.toLowerCase())) {
+                        f.setAccessible(true);
+                        // Cast p.second to f.getType()
+                        if (f.getType() == String.class) {
+                            f.set(model, p.second);
+                            break;
+                        } else if (f.getType() == int.class) {
+                            f.set(model, Integer.parseInt(p.second));
+                            break;
+                        } else if (f.getType() == double.class) {
+                            f.set(model, Double.parseDouble(p.second));
+                            break;
+                        } else if (f.getType() == boolean.class) {
+                            f.set(model, Boolean.parseBoolean(p.second));
+                            break;
+                        } else if (f.getType() == Date.class) {
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                            try {
+                                f.set(model, sdf.parse(p.second));
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            break;
+                        } else if (f.getType() == LocalDateTime.class) {
+                            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                            f.set(model, LocalDateTime.parse(p.second, dtf));
+                            break;
+                        }
+                    }
+                }
+            }
+
+            this.subdomains.getList().add(model);
+
         }
 
 
@@ -1443,6 +1550,8 @@ public class InMemory extends DatabaseConnection {
             this.deleteFromModelList(this.rents, where);
         } else if (tableName == "administrator") {
             this.deleteFromModelList(this.administrators, where);
+        } else if (tableName == "subdomain") {
+            this.deleteFromModelList(this.subdomains, where);
         }
     }
 

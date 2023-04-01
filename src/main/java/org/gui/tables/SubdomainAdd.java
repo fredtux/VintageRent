@@ -10,29 +10,29 @@ import org.models.*;
 import javax.swing.*;
 import java.awt.*;
 
-public class AdministratorAdd {
+public class SubdomainAdd {
     private MainGUI caller = null;
     private JFrame parentFrame = null;
-    private static AdministratorAdd instance = null;
+    private static SubdomainAdd instance = null;
     private JLabel lblRentDate;
     private JDatePanelImpl JDatePanelImpl1;
     private JDatePickerImpl JDatePickerImpl1;
     private JPanel pnlMain;
     private JButton btnExit;
 
-    public AdministratorAdd(JFrame parentFrame, MainGUI caller) {
+    public SubdomainAdd(JFrame parentFrame, MainGUI caller) {
         // Singleton
-        if (AdministratorAdd.instance != null)
-            throw new RuntimeException("AdministratorAdd is a singleton class. Use getInstance() instead.");
+        if (SubdomainAdd.instance != null)
+            throw new RuntimeException("SubdomainAdd is a singleton class. Use getInstance() instead.");
 
         instance = this;
         this.parentFrame = parentFrame;
         this.caller = caller;
     }
 
-    public static AdministratorAdd getInstance(JFrame parentFrame, MainGUI caller) {
+    public static SubdomainAdd getInstance(JFrame parentFrame, MainGUI caller) {
         if (instance == null)
-            instance = new AdministratorAdd(parentFrame, caller);
+            instance = new SubdomainAdd(parentFrame, caller);
 
         return instance;
     }
@@ -51,45 +51,23 @@ public class AdministratorAdd {
         c3.gridy = 0;
         c3.gridx = 0;
         c3.anchor = GridBagConstraints.WEST;
-        JLabel lblName = new JLabel("User");
-        lblName.setText("User");
+        JLabel lblName = new JLabel("Name");
+        lblName.setText("Name");
         pnlMain.add(lblName, c3);
 
         c3.gridx = 1;
-        JComboBox cmbUtilizator = new JComboBox();
-        UserModel userModel = UserModel.getInstance();
-        userModel.setDatabaseType(caller.getDatabaseType());
-        ModelList<UserModel.InnerUserModel> listUsers = null;
-        try {
-            listUsers = userModel.getData();
-        } catch (Exception e) {
-            listUsers = new ModelList<>();
-        }
-        for (UserModel.InnerUserModel user : listUsers.getList()) {
-            cmbUtilizator.addItem(new ComboItem(user.Surname + " " + user.Firstname, user.UserID + ""));
-        }
-        pnlMain.add(cmbUtilizator, c3);
-
-        c3.gridy = 1;
-        c3.gridx = 0;
-        JLabel lblIsActive = new JLabel("Is Active");
-        lblIsActive.setText("Is Active");
-        pnlMain.add(lblIsActive, c3);
-
-        c3.gridx = 1;
-        JCheckBox chkIsActive = new JCheckBox();
-        chkIsActive.setText("Is Active");
-        pnlMain.add(chkIsActive, c3);
+        JTextField txtName = new JTextField();
+        txtName.setText("");
+        pnlMain.add(txtName, c3);
 
         JButton btnAdd = new JButton("Add");
         btnAdd.setText("Add");
         btnAdd.addActionListener(e -> {
-            AdministratorModel administratorModel = AdministratorModel.getInstance();
-            AdministratorModel.InnerAdministratorModel administrator = new AdministratorModel.InnerAdministratorModel();
-            administrator.UserID = Integer.parseInt(((ComboItem) cmbUtilizator.getSelectedItem()).getValue());
-            administrator.isActive = chkIsActive.isSelected();
+            SubdomainModel subdomainModel = SubdomainModel.getInstance();
+            SubdomainModel.InnerSubdomainModel subdomain = new SubdomainModel.InnerSubdomainModel();
+            subdomain.Name = txtName.getText();
             try {
-                administratorModel.insertRow(administrator);
+                subdomainModel.insertRow(subdomain);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
@@ -100,7 +78,7 @@ public class AdministratorAdd {
 //            size.setSize(800, 600);
 //            this.parentFrame.setSize(size);;
         });
-        c3.gridy = 2;
+        c3.gridy = 1;
         c3.gridx = 0;
         this.pnlMain.add(btnAdd, c3);
 
@@ -134,7 +112,7 @@ public class AdministratorAdd {
     public void closeFrame(JFrame frame, boolean initParent) {
         frame.dispose();
         if(initParent)
-            this.caller.initAdministratorsTable(null, null, null);
+            this.caller.initSubdomainsTable(null, null, null);
         this.parentFrame.setEnabled(true);
         this.parentFrame.setFocusable(true);
         this.parentFrame.setVisible(true);

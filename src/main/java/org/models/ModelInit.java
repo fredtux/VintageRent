@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class ModelInit {
-    private static String[] modelNames = {"Employee", "Rental", "Administrator_Subdomains", "Administrators", "Address", "Camera","Clients", "Format", "Mount", "Objective", "Salary", "CameraType", "ClientType", "Users"};
+    private static String[] modelNames = {"Employee", "Rental", "Administrator_Subdomains", "Administrators", "Address", "Camera","Clients", "Format", "Mount", "Objective", "Salary", "CameraType", "ClientType", "Users", "Subdomains"};
 
     public static void copyResourceDirectory(Path source, Path destination) throws IOException  {
 //        Path source = Paths.get("CSV");
@@ -282,6 +282,50 @@ public class ModelInit {
             data.UserID = 8;
             data.isActive = true;
             MainService.insert(administratorModel, data);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private static void initInMemSubdomainModel(){
+        try{
+            SubdomainModel subdomainModel = SubdomainModel.getInstance();
+            MainService.setDatabaseType(subdomainModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(subdomainModel);
+
+            SubdomainModel.InnerSubdomainModel data = new SubdomainModel.InnerSubdomainModel();
+            data.SubdomainID = 1;
+            data.Name = "Subdomain1";
+            MainService.insert(subdomainModel, data);
+
+            data.SubdomainID = 2;
+            data.Name = "Subdomain2";
+            MainService.insert(subdomainModel, data);
+
+            data.SubdomainID = 3;
+            data.Name = "Subdomain3";
+            MainService.insert(subdomainModel, data);
+
+            data.SubdomainID = 4;
+            data.Name = "Subdomain4";
+            MainService.insert(subdomainModel, data);
+
+            data.SubdomainID = 5;
+            data.Name = "Subdomain5";
+            MainService.insert(subdomainModel, data);
+
+            data.SubdomainID = 6;
+            data.Name = "Subdomain6";
+            MainService.insert(subdomainModel, data);
+
+            data.SubdomainID = 7;
+            data.Name = "Subdomain7";
+            MainService.insert(subdomainModel, data);
+
+            data.SubdomainID = 8;
+            data.Name = "Subdomain8";
+            MainService.insert(subdomainModel, data);
+
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -972,6 +1016,7 @@ public class ModelInit {
 
         initInMemRentModel();
         initInMemAdministratorModel();
+        initInMemSubdomainModel();
     }
 
     public static void csvInit() throws Exception{
