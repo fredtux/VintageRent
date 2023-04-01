@@ -53,7 +53,8 @@ public class MainGUI { // Singleton
         SALARY,
         ADMINISTRATOR,
         SUBDOMAIN,
-        ADMINISTRATORSUBDOMAIN
+        ADMINISTRATORSUBDOMAIN,
+        ADDRESS
     }
 
     private TableType currentTableType = TableType.RENT;
@@ -84,9 +85,98 @@ public class MainGUI { // Singleton
         return instance;
     }
 
+    public void initAddressesTable(String comparator, String value, String column){
+        AddressModel addressModel = AddressModel.getInstance();
+        try {
+            MainService.setDatabaseType(addressModel, this.databaseType);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        try {
+            if(comparator == null)
+                MainService.getData(addressModel);
+            else
+                MainService.getFilteredData(addressModel, comparator, value, column);
+            DefaultTableModel rm = addressModel.getTableModel();
+
+            this.tblMain = new JTable();
+            this.jscrPane.setViewportView(this.tblMain);
+            this.tblMain.setModel(rm);
+            rm.fireTableDataChanged();
+
+            class TableModelEvents implements TableModelListener {
+
+                public void setValueAt(String value, int row, int column) throws Exception {
+                    AddressModel rm = AddressModel.getInstance();
+                    ModelList<AddressModel.InnerAddressModel> modelList = new ModelList<>();
+                    AddressModel.InnerAddressModel irm = new AddressModel.InnerAddressModel();
+                    DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
+
+                    irm.AddressID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+                    irm.Street = dtm.getValueAt(row, 1).toString();
+                    irm.City = dtm.getValueAt(row, 2).toString();
+                    irm.County = dtm.getValueAt(row, 3).toString();
+                    irm.PostalCode = dtm.getValueAt(row, 4).toString();
+
+
+                    switch (column) {
+                        case 1:
+                            irm.Street = value;
+                            break;
+                        case 2:
+                            irm.City = value;
+                            break;
+                        case 3:
+                            irm.County = value;
+                            break;
+                        case 4:
+                            irm.PostalCode = value;
+                            break;
+                        default:
+                            throw new Exception("Invalid column index");
+                    }
+
+                    modelList.add(irm);
+                    MainService.update(rm, modelList);
+                }
+
+                @Override
+                public void tableChanged(TableModelEvent e) {
+                    if (e.getType() == TableModelEvent.UPDATE) {
+                        int row = e.getFirstRow();
+                        int column = e.getColumn();
+                        try {
+                            setValueAt((String) tblMain.getValueAt(row, column), row, column);
+                        } catch (Exception ex) {
+                            System.out.println("Error in trying to update administrator subdomain table: " + ex.getMessage());
+                        }
+                    }
+                }
+            }
+
+            if(comparator == null) {
+                this.tblMain.getModel().addTableModelListener(new TableModelEvents());
+                this.currentTableType = TableType.ADDRESS;
+
+                this.cmbColumn.removeAllItems();
+                List<String> columnNames = MainService.getAttributes(AddressModel.InnerAddressModel.class);
+
+                for (String columnName : columnNames) {
+                    this.cmbColumn.addItem(columnName);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error in trying to initialize administrator subdomain table: " + e.getMessage());
+        }
+    }
+
     public void initAdministratorSubdomainsTable(String comparator, String value, String column){
         AdministratorSubdomainModel administratorSubdomainModel = AdministratorSubdomainModel.getInstance();
-        administratorSubdomainModel.setDatabaseType(this.databaseType);
+        try {
+            MainService.setDatabaseType(administratorSubdomainModel, this.databaseType);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         try {
             if(comparator == null)
                 MainService.getData(administratorSubdomainModel);
@@ -155,7 +245,11 @@ public class MainGUI { // Singleton
 
     public void initSubdomainsTable(String comparator, String value, String column){
         SubdomainModel subdomainModel = SubdomainModel.getInstance();
-        subdomainModel.setDatabaseType(this.databaseType);
+        try {
+            MainService.setDatabaseType(subdomainModel, this.databaseType);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         try {
             if(comparator == null)
                 MainService.getData(subdomainModel);
@@ -224,7 +318,11 @@ public class MainGUI { // Singleton
 
     public void initAdministratorsTable(String comparator, String value, String column){
         AdministratorModel administratorModel = AdministratorModel.getInstance();
-        administratorModel.setDatabaseType(this.databaseType);
+        try {
+            MainService.setDatabaseType(administratorModel, this.databaseType);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         try {
             if(comparator == null)
                 MainService.getData(administratorModel);
@@ -293,7 +391,11 @@ public class MainGUI { // Singleton
 
     public void initSalaryTable(String comparator, String value, String column){
         SalaryModel salaryModel = SalaryModel.getInstance();
-        salaryModel.setDatabaseType(this.databaseType);
+        try {
+            MainService.setDatabaseType(salaryModel, this.databaseType);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         try {
             if(comparator == null)
                 MainService.getData(salaryModel);
@@ -366,7 +468,11 @@ public class MainGUI { // Singleton
 
     public void initObjectiveTable(String comparator, String value, String column){
         ObjectiveModel objectiveModel = ObjectiveModel.getInstance();
-        objectiveModel.setDatabaseType(this.databaseType);
+        try {
+            MainService.setDatabaseType(objectiveModel, this.databaseType);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         try {
             if(comparator == null)
                 MainService.getData(objectiveModel);
@@ -460,7 +566,11 @@ public class MainGUI { // Singleton
 
     public void initMountTable(String comparator, String value, String column){
         MountModel mountModel = MountModel.getInstance();
-        mountModel.setDatabaseType(this.databaseType);
+        try {
+            MainService.setDatabaseType(mountModel, this.databaseType);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         try {
             if(comparator == null)
                 MainService.getData(mountModel);
@@ -529,7 +639,11 @@ public class MainGUI { // Singleton
 
     public void initClientTypeTable(String comparator, String value, String column){
         ClientTypeModel clientTypeModel = ClientTypeModel.getInstance();
-        clientTypeModel.setDatabaseType(this.databaseType);
+        try {
+            MainService.setDatabaseType(clientTypeModel, this.databaseType);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         try {
             if(comparator == null)
                 MainService.getData(clientTypeModel);
@@ -602,7 +716,11 @@ public class MainGUI { // Singleton
 
     public void initClientTable(String comparator, String value, String column) {
         ClientModel clientModel = ClientModel.getInstance();
-        clientModel.setDatabaseType(this.databaseType);
+        try {
+            MainService.setDatabaseType(clientModel, this.databaseType);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         try {
             if(comparator == null)
                 MainService.getData(clientModel);
@@ -675,7 +793,11 @@ public class MainGUI { // Singleton
 
     public void initUserTable(String comparator, String value, String column) {
         UserModel userModel = UserModel.getInstance();
-        userModel.setDatabaseType(this.databaseType);
+        try {
+            MainService.setDatabaseType(userModel, this.databaseType);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         try {
             if(comparator == null)
                 MainService.getData(userModel);
@@ -765,7 +887,11 @@ public class MainGUI { // Singleton
 
     public void initEmployeeTable(String comparator, String value, String column) {
         EmployeeModel employeeModel = EmployeeModel.getInstance();
-        employeeModel.setDatabaseType(this.databaseType);
+        try {
+            MainService.setDatabaseType(employeeModel, this.databaseType);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         try {
             if(comparator == null)
                 MainService.getData(employeeModel);
@@ -845,7 +971,11 @@ public class MainGUI { // Singleton
     }
     public void initFormatTable(String comparator, String value, String column) {
         FormatModel formatModel = FormatModel.getInstance();
-        formatModel.setDatabaseType(this.databaseType);
+        try {
+            MainService.setDatabaseType(formatModel, this.databaseType);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         try {
             if(comparator == null)
                 MainService.getData(formatModel);
@@ -918,7 +1048,11 @@ public class MainGUI { // Singleton
 
     public void initCameraTable(String comparator, String value, String column) {
         CameraModel cameraModel = CameraModel.getInstance();
-        cameraModel.setDatabaseType(this.databaseType);
+        try {
+            MainService.setDatabaseType(cameraModel, this.databaseType);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         try {
             if(comparator == null)
                 MainService.getData(cameraModel);
@@ -1022,7 +1156,11 @@ public class MainGUI { // Singleton
 
     public void initRentTable(String comparator, String value, String column) {
         RentModel rentModel = RentModel.getInstance();
-        rentModel.setDatabaseType(this.databaseType);
+        try {
+            MainService.setDatabaseType(rentModel, this.databaseType);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         try {
             if(comparator == null)
                 MainService.getData(rentModel);
@@ -1120,7 +1258,11 @@ public class MainGUI { // Singleton
 
     public void initCameraTypeTable(String comparator, String value, String column) {
         CameraTypeModel cameraType = CameraTypeModel.getInstance();
-        cameraType.setDatabaseType(this.databaseType);
+        try {
+            MainService.setDatabaseType(cameraType, this.databaseType);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         try {
             if(comparator == null)
                 MainService.getData(cameraType);
@@ -1188,6 +1330,20 @@ public class MainGUI { // Singleton
         } catch (Exception e) {
             System.out.println("Error in trying to initialize camera type table: " + e.getMessage());
         }
+    }
+
+    private void removeRowFromAddressModel(int row) throws Exception{
+        AddressModel rm = AddressModel.getInstance();
+        ModelList<AddressModel.InnerAddressModel> modelList = new ModelList<>();
+        AddressModel.InnerAddressModel irm = new AddressModel.InnerAddressModel();
+        DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
+
+        irm.AddressID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+
+        modelList.add(irm);
+        MainService.delete(rm, modelList);
+
+        dtm.removeRow(row);
     }
 
     private void removeRowFromAdministratorSubdomainModel(int row) throws Exception{
@@ -1516,6 +1672,13 @@ public class MainGUI { // Singleton
         });
         crud.add(menuAdministratorSubdomains);
 
+        JMenuItem menuAddresses = new JMenuItem("Addresses");
+        menuAddresses.addActionListener(e -> {
+            initAddressesTable(null, null, null);
+            this.currentTableType = TableType.ADDRESS;
+        });
+        crud.add(menuAddresses);
+
         JMenu datasources = new JMenu("Datasources");
         menuBar.add(datasources);
 
@@ -1551,6 +1714,8 @@ public class MainGUI { // Singleton
                     initSubdomainsTable(null, null, null);
                 } else if(this.currentTableType == TableType.ADMINISTRATORSUBDOMAIN){
                     initAdministratorSubdomainsTable(null, null, null);
+                } else if(this.currentTableType == TableType.ADDRESS){
+                    initAddressesTable(null, null, null);
                 }
 
                 try{
@@ -1596,6 +1761,8 @@ public class MainGUI { // Singleton
                     initSubdomainsTable(null, null, null);
                 } else if(this.currentTableType == TableType.ADMINISTRATORSUBDOMAIN){
                     initAdministratorSubdomainsTable(null, null, null);
+                } else if(this.currentTableType == TableType.ADDRESS){
+                    initAddressesTable(null, null, null);
                 }
 
                 try{
@@ -1641,6 +1808,8 @@ public class MainGUI { // Singleton
                     initSubdomainsTable(null, null, null);
                 } else if(this.currentTableType == TableType.ADMINISTRATORSUBDOMAIN){
                     initAdministratorSubdomainsTable(null, null, null);
+                } else if(this.currentTableType == TableType.ADDRESS){
+                    initAddressesTable(null, null, null);
                 }
 
                 try{
@@ -1781,6 +1950,8 @@ public class MainGUI { // Singleton
                 initSubdomainsTable(cmbSign.getSelectedItem().toString(), this.txtValue.getText(), this.cmbColumn.getSelectedItem().toString());
             } else if(this.currentTableType == TableType.ADMINISTRATORSUBDOMAIN){
                 initAdministratorSubdomainsTable(cmbSign.getSelectedItem().toString(), this.txtValue.getText(), this.cmbColumn.getSelectedItem().toString());
+            } else if(this.currentTableType == TableType.ADDRESS){
+                initAddressesTable(cmbSign.getSelectedItem().toString(), this.txtValue.getText(), this.cmbColumn.getSelectedItem().toString());
             }
 
         });
@@ -1818,6 +1989,8 @@ public class MainGUI { // Singleton
                 initSubdomainsTable(null, null, null);
             } else if(this.currentTableType == TableType.ADMINISTRATORSUBDOMAIN){
                 initAdministratorSubdomainsTable(null, null, null);
+            } else if(this.currentTableType == TableType.ADDRESS){
+                initAddressesTable(null, null, null);
             }
         });
 
@@ -1879,6 +2052,8 @@ public class MainGUI { // Singleton
                             removeRowFromSubdomainModel(row);
                         else if(currentTableType == TableType.ADMINISTRATORSUBDOMAIN)
                             removeRowFromAdministratorSubdomainModel(row);
+                        else if(currentTableType == TableType.ADDRESS)
+                            removeRowFromAddressModel(row);
                     } catch (SQLException ex) {
                         JDialog dialog = new JDialog();
                         dialog.setAlwaysOnTop(true);
@@ -1946,6 +2121,9 @@ public class MainGUI { // Singleton
                 } else if(currentTableType == TableType.ADMINISTRATORSUBDOMAIN){
                     AdministratorSubdomainAdd asa = AdministratorSubdomainAdd.getInstance(frame, instance);
                     asa.main();
+                } else if(currentTableType == TableType.ADDRESS){
+                    AddressAdd aa = AddressAdd.getInstance(frame, instance);
+                    aa.main();
                 }
             }
         });

@@ -287,7 +287,89 @@ public class ModelInit {
         }
     }
 
-    private static void initInMemSAdministratorubdomainModel(){
+    private static void initInMemAddressModel(){
+        try{
+            AddressModel addressModel = AddressModel.getInstance();
+            MainService.setDatabaseType(addressModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(addressModel);
+
+            AddressModel.InnerAddressModel data = new AddressModel.InnerAddressModel();
+            data.AddressID = 1;
+            data.Street = "Street1";
+            data.City = "City1";
+            data.County = "County1";
+            data.PostalCode = "PostalCode1";
+            data.IDClient = 1;
+            MainService.insert(addressModel, data);
+
+
+            data.AddressID = 2;
+            data.Street = "Street2";
+            data.City = "City2";
+            data.County = "County2";
+            data.PostalCode = "PostalCode2";
+            data.IDClient = 2;
+            MainService.insert(addressModel, data);
+
+
+            data.AddressID = 3;
+            data.Street = "Street3";
+            data.City = "City3";
+            data.County = "County3";
+            data.PostalCode = "PostalCode3";
+            data.IDClient = 3;
+            MainService.insert(addressModel, data);
+
+
+            data.AddressID = 4;
+            data.Street = "Street1";
+            data.City = "City1";
+            data.County = "County1";
+            data.PostalCode = "PostalCode1";
+            data.IDClient = 1;
+            MainService.insert(addressModel, data);
+
+            data.AddressID = 5;
+            data.Street = "Street1";
+            data.City = "City1";
+            data.County = "County1";
+            data.PostalCode = "PostalCode1";
+            data.IDClient = 1;
+            MainService.insert(addressModel, data);
+
+
+            data.AddressID = 6;
+            data.Street = "Street1";
+            data.City = "City1";
+            data.County = "County1";
+            data.PostalCode = "PostalCode1";
+            data.IDClient = 1;
+            MainService.insert(addressModel, data);
+
+
+            data.AddressID = 7;
+            data.Street = "Street1";
+            data.City = "City1";
+            data.County = "County1";
+            data.PostalCode = "PostalCode1";
+            data.IDClient = 1;
+            MainService.insert(addressModel, data);
+
+
+            data.AddressID = 8;
+            data.Street = "Street1";
+            data.City = "City1";
+            data.County = "County1";
+            data.PostalCode = "PostalCode1";
+            data.IDClient = 1;
+            MainService.insert(addressModel, data);
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private static void initInMemAdministratorSubdomainModel(){
         try{
             AdministratorSubdomainModel administratorSubdomainModel = AdministratorSubdomainModel.getInstance();
             MainService.setDatabaseType(administratorSubdomainModel, DatabaseConnection.DatabaseType.INMEMORY);
@@ -1062,7 +1144,8 @@ public class ModelInit {
         initInMemRentModel();
         initInMemAdministratorModel();
         initInMemSubdomainModel();
-        initInMemSAdministratorubdomainModel();
+        initInMemAdministratorSubdomainModel();
+        initInMemAddressModel();
     }
 
     public static void csvInit() throws Exception{
