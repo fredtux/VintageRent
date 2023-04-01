@@ -20,8 +20,8 @@ Aceste instructiuni creaza user-ul, baza de date fiind creata de aplicatie.
    - Email pentru rapoarte
    - Schimbare datasource
 2. Lista
-   - org.database.memory.InMemory contine List<ModelList> modelLists. Fiecare ModelList contine un template separat
-   - org.database.DatabaseConnection contine ArrayList<DatabaseConnection> instances, fiecare obiect mostenind DatabaseConnection
+   - org.database.memory.InMemory contine List\<ModelList> modelLists. Fiecare ModelList contine un template separat
+   - org.database.DatabaseConnection contine ArrayList\<DatabaseConnection> instances, fiecare obiect mostenind DatabaseConnection
    - org.actions.MainService contine o metoda denumita getForMount care contine o lista cu 2 tipuri de obiecte (CameraModel.InnerCameraType si ObjectiveModel.InnerObjectiveType, ambele mostenesc Model.AbstractInnerModel) si minim 8 elemente pentru MountID = 1. Acest lucru este testat in MainServiceTest.getForMountTest()
 
 ### Implementare
@@ -104,28 +104,28 @@ Clasele sunt:
     - InnerSalaryTypeModel extends AbstractInnerModel
   - LinkModelToDatabase (interface)
   - ModelInit
-  - Pair<T,U>
-  - ModelList<T>
+  - Pair\<T,U>
+  - ModelList\<T>
 - vintage
   - Main
 #### cel puțin 2 colecții diferite capabile să gestioneze obiectele definite anterior (eg: List, Set, Map, etc.) dintre care cel puțin una sa fie sortata –se vor folosi array-uri uni-/bidimensionale în cazul în care nu se parcurg colectiile pana la data checkpoint-ului.
 Colectiile sunt:
-- ModelList <T extends Model.AbstractInnerModel> contine o lista de obiecte de tipul T si o poate sorta
-- org.database.DatabaseConnection contine ArrayList<DatabaseConnection> instances o lista cu instantele de conexiune la baza de date
-- org.database.memory.InMemory contine List<ModelList> modelLists o lista cu modelele de date
+- ModelList \<T extends Model.AbstractInnerModel> contine o lista de obiecte de tipul T si o poate sorta
+- org.database.DatabaseConnection contine ArrayList\<DatabaseConnection> instances o lista cu instantele de conexiune la baza de date
+- org.database.memory.InMemory contine List\<ModelList> modelLists o lista cu modelele de date
 - org.actions.MainService contine metoda formatSales() care are ca liste:
-  - Map<String, String> result
-  - TreeMap<Double, Double> rentPriceMap
+  - Map\<String, String> result
+  - TreeMap\<Double, Double> rentPriceMap
 - org.action.MainService contine metoda ClientRents() care are ca liste:
-  - List<Model.AbstractInnerModel> list
-  - Map<String, String> result
+  - List\<Model.AbstractInnerModel> list
+  - Map\<String, String> result
 - org.action.MainService contine metoda getForMount() care are ca lista:
-  - List<Model.AbstractInnerModel> result
+  - List\<Model.AbstractInnerModel> result
 #### utilizare moștenire pentru crearea de clase adiționale și utilizarea lor încadrul colecțiilor;
 Am utilizat mostenire si apoi am incadrat in colectii in:
-- ModelList<T extends Model.AbstractInnerModel>
-- org.action.MainService metoda getForMount() are ca lista List<Model.AbstractInnerModel> result
-- org.database.DatabaseConnection contine ArrayList<DatabaseConnection> instances o lista cu instantele de conexiune la baza de date mostenite din DatabaseConnection
+- ModelList\<T extends Model.AbstractInnerModel>
+- org.action.MainService metoda getForMount() are ca lista List\<Model.AbstractInnerModel> result
+- org.database.DatabaseConnection contine ArrayList\<DatabaseConnection> instances o lista cu instantele de conexiune la baza de date mostenite din DatabaseConnection
 #### cel puțin o clasă serviciu care sa expună operațiile sistemului
 Clasa de serviciu este MainService
 
