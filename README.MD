@@ -8,6 +8,130 @@ docker-compose up
 
 Aceste instructiuni creaza user-ul, baza de date fiind creata de aplicatie.
 
+## Etapa 1
+### Definirea sistemului
+#### Să se creeze o lista pe baza temei alese cu cel puțin 10 acțiuni/interogări care se pot face în cadrul sistemului și o lista cu cel puțin 8 tipuri de obiecte.
+
+1. Actiuni 
+   - CRUD pe fiecare tabela (Address, Administrator, AdministratorSubdomain, Camera, CameraType, Client, Employee, Format, Mount, Objective, Rent, Salary, User)
+   - Filtrare (==, <, >, >=, <= si !=) pe fiecare tabela mentionata anterior
+   - Raport clienti
+   - Raport formate
+   - Email pentru rapoarte
+   - Schimbare datasource
+2. Lista
+   - org.database.memory.InMemory contine List<ModelList> modelLists. Fiecare ModelList contine un template separat
+   - org.database.DatabaseConnection contine ArrayList<DatabaseConnection> instances, fiecare obiect mostenind DatabaseConnection
+   - org.actions.MainService contine o metoda denumita getForMount care contine o lista cu 2 tipuri de obiecte (CameraModel.InnerCameraType si ObjectiveModel.InnerObjectiveType, ambele mostenesc Model.AbstractInnerModel) si minim 8 elemente pentru MountID = 1. Acest lucru este testat in MainServiceTest.getForMountTest()
+
+### Implementare
+#### clase simple cu atribute private / protected și metode de acces
+Clasele sunt: 
+- actions
+  - MainService
+- database
+  - DatabaseConnection (factory)
+  - csv
+    - CSVConnection
+  - oracle
+    - OracleConnection
+- gui
+  - custom
+    - ComboItem
+  - main
+    - MainGUI
+  - reports
+    - ClientReport
+  - splash
+    - Splash
+  - tables
+    - CameraAdd
+    - CameraTypeAdd
+    - FormatAdd
+    - RentAdd
+    - EmployeeAdd
+    - UserAdd
+    - AddressAdd
+    - AdministratorAdd
+    - AdministratorSubdomainAdd
+    - ClientAdd
+    - MountAdd
+    - ObjectiveAdd
+    - SalaryAdd
+    - SubdomainAdd
+  - logs
+    - LogGUI
+- logger
+  - CsvLogger
+- models
+  - Model
+    - AbstractInnerModel
+  - CameraModel extends Model
+    - InnerCameraModel extends AbstractInnerModel
+  - CameraTypeModel extends Model implements LinkModelToDatabase
+    - InnerCameraTypeModel extends AbstractInnerModel
+  - ClientModel extends Model implements LinkModelToDatabase
+    - InnerClient extends AbstractInnerModel
+  - EmployeeModel extends Model implements LinkModelToDatabase
+    - InnerEmployeeModel extends AbstractInnerModel
+  - FormatModel extends Model implements LinkModelToDatabase
+    - InnerFormatModel extends AbstractInnerModel
+  - MountModel extends Model implements LinkModelToDatabase
+    - InnerMountModel extends AbstractInnerModel
+  - ObjectiveModel extends Model implements LinkModelToDatabase
+    - InnerObjectiveModel extends AbstractInnerModel
+  - RentModel extends Model implements LinkModelToDatabase
+    - InnerRentModel extends AbstractInnerModel
+  - SalaryModel extends Model implements LinkModelToDatabase
+    - InnerSalaryModel extends AbstractInnerModel
+  - UserModel extends Model implements LinkModelToDatabase
+    - InnerUserModel extends AbstractInnerModel
+  - AddressModel extends Model implements LinkModelToDatabase
+    - InnerAddressModel extends AbstractInnerModel
+  - AdministratorModel extends Model implements LinkModelToDatabase
+    - InnerAdministratorModel extends AbstractInnerModel
+  - AdministratorSubdomainModel extends Model implements LinkModelToDatabase
+    - InnerAdministratorSubdomainModel extends AbstractInnerModel
+  - SubdomainModel extends Model implements LinkModelToDatabase
+    - InnerSubdomainModel extends AbstractInnerModel
+  - ClientTypeModel extends Model implements LinkModelToDatabase
+    - InnerClientTypeModel extends AbstractInnerModel
+  - MountTypeModel extends Model implements LinkModelToDatabase
+    - InnerMountTypeModel extends AbstractInnerModel
+  - ObjectiveTypeModel extends Model implements LinkModelToDatabase
+    - InnerObjectiveTypeModel extends AbstractInnerModel
+  - SalaryTypeModel extends Model implements LinkModelToDatabase
+    - InnerSalaryTypeModel extends AbstractInnerModel
+  - LinkModelToDatabase (interface)
+  - ModelInit
+  - Pair<T,U>
+  - ModelList<T>
+- vintage
+  - Main
+#### cel puțin 2 colecții diferite capabile să gestioneze obiectele definite anterior (eg: List, Set, Map, etc.) dintre care cel puțin una sa fie sortata –se vor folosi array-uri uni-/bidimensionale în cazul în care nu se parcurg colectiile pana la data checkpoint-ului.
+Colectiile sunt:
+- ModelList <T extends Model.AbstractInnerModel> contine o lista de obiecte de tipul T si o poate sorta
+- org.database.DatabaseConnection contine ArrayList<DatabaseConnection> instances o lista cu instantele de conexiune la baza de date
+- org.database.memory.InMemory contine List<ModelList> modelLists o lista cu modelele de date
+- org.actions.MainService contine metoda formatSales() care are ca liste:
+  - Map<String, String> result
+  - TreeMap<Double, Double> rentPriceMap
+- org.action.MainService contine metoda ClientRents() care are ca liste:
+  - List<Model.AbstractInnerModel> list
+  - Map<String, String> result
+- org.action.MainService contine metoda getForMount() care are ca lista:
+  - List<Model.AbstractInnerModel> result
+#### utilizare moștenire pentru crearea de clase adiționale și utilizarea lor încadrul colecțiilor;
+Am utilizat mostenire si apoi am incadrat in colectii in:
+- ModelList<T extends Model.AbstractInnerModel>
+- org.action.MainService metoda getForMount() are ca lista List<Model.AbstractInnerModel> result
+- org.database.DatabaseConnection contine ArrayList<DatabaseConnection> instances o lista cu instantele de conexiune la baza de date mostenite din DatabaseConnection
+#### cel puțin o clasă serviciu care sa expună operațiile sistemului
+Clasa de serviciu este MainService
+
+#### o clasa Main din care sunt făcute apeluri către servicii
+Am utilizat unit testing avand ca suita: test.java.org.suites.AllTests . Pentru acest lucru a fost nevoie de o stocare in memorie cu ajutorul: org.databases.memory.InMemory
+
 ## Documentatie
 Documentatia se gaseste in format PDF in fisierul [Documentatie.pdf](https://github.com/fredtux/VintageRent/blob/main/Documentatie.pdf)
 
@@ -148,86 +272,3 @@ ___
 - Logging
 - Afisare loguri
 ___
-
-## Clase
-- actions
-  - MainService
-- database
-  - DatabaseConnection (factory)
-  - csv
-    - CSVConnection
-  - oracle
-    - OracleConnection
-- gui
-  - custom
-    - ComboItem
-  - main
-    - MainGUI
-  - reports
-    - ClientReport
-  - splash
-    - Splash
-  - tables
-    - CameraAdd
-    - CameraTypeAdd
-    - FormatAdd
-    - RentAdd
-    - EmployeeAdd
-    - UserAdd
-    - AddressAdd
-    - AdministratorAdd
-    - AdministratorSubdomainAdd
-    - ClientAdd
-    - MountAdd
-    - ObjectiveAdd
-    - SalaryAdd
-    - SubdomainAdd
-  - logs
-    - LogGUI
-- logger
-  - CsvLogger
-- models
-  - Model
-    - AbstractInnerModel 
-  - CameraModel extends Model
-    - InnerCameraModel extends AbstractInnerModel
-  - CameraTypeModel extends Model implements LinkModelToDatabase
-    - InnerCameraTypeModel extends AbstractInnerModel
-  - ClientModel extends Model implements LinkModelToDatabase
-    - InnerClient extends AbstractInnerModel
-  - EmployeeModel extends Model implements LinkModelToDatabase
-    - InnerEmployeeModel extends AbstractInnerModel
-  - FormatModel extends Model implements LinkModelToDatabase
-    - InnerFormatModel extends AbstractInnerModel
-  - MountModel extends Model implements LinkModelToDatabase
-    - InnerMountModel extends AbstractInnerModel
-  - ObjectiveModel extends Model implements LinkModelToDatabase
-    - InnerObjectiveModel extends AbstractInnerModel
-  - RentModel extends Model implements LinkModelToDatabase
-    - InnerRentModel extends AbstractInnerModel
-  - SalaryModel extends Model implements LinkModelToDatabase
-    - InnerSalaryModel extends AbstractInnerModel
-  - UserModel extends Model implements LinkModelToDatabase
-    - InnerUserModel extends AbstractInnerModel
-  - AddressModel extends Model implements LinkModelToDatabase
-    - InnerAddressModel extends AbstractInnerModel
-  - AdministratorModel extends Model implements LinkModelToDatabase
-    - InnerAdministratorModel extends AbstractInnerModel
-  - AdministratorSubdomainModel extends Model implements LinkModelToDatabase
-    - InnerAdministratorSubdomainModel extends AbstractInnerModel
-  - SubdomainModel extends Model implements LinkModelToDatabase
-    - InnerSubdomainModel extends AbstractInnerModel
-  - ClientTypeModel extends Model implements LinkModelToDatabase
-    - InnerClientTypeModel extends AbstractInnerModel
-  - MountTypeModel extends Model implements LinkModelToDatabase
-    - InnerMountTypeModel extends AbstractInnerModel
-  - ObjectiveTypeModel extends Model implements LinkModelToDatabase
-    - InnerObjectiveTypeModel extends AbstractInnerModel
-  - SalaryTypeModel extends Model implements LinkModelToDatabase
-    - InnerSalaryTypeModel extends AbstractInnerModel
-  - LinkModelToDatabase (interface)
-  - ModelInit
-  - Pair<T,U>
-  - ModelList<T>
-- vintage
-  - Main
