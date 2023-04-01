@@ -74,8 +74,8 @@ public class RentAdd {
 //        pnlDate.add(JDatePickerImpl1);
         JDatePickerImpl1.setBounds(220,350,120,30);
 
-        this.lblRentDate = new JLabel("Data inchiriere");
-        this.lblRentDate.setText("Data inchiriere");
+        this.lblRentDate = new JLabel("Rent date");
+        this.lblRentDate.setText("Rent date");
         pnlMain.add(this.lblRentDate, c3);
         c3.gridx = 2;
         pnlMain.add(JDatePickerImpl1, c3);
@@ -85,8 +85,8 @@ public class RentAdd {
         c3.gridy = 2;
         c3.gridx = 1;
         c3.anchor = GridBagConstraints.WEST;
-        JLabel lblDurata = new JLabel("Durata");
-        lblDurata.setText("Durata");
+        JLabel lblDurata = new JLabel("Duration");
+        lblDurata.setText("Duration");
         pnlMain.add(lblDurata, c3);
 
 
@@ -142,8 +142,8 @@ public class RentAdd {
 
         c3.gridy = 6;
         c3.gridx = 1;
-        JLabel lblAngajat = new JLabel("Angajat");
-        lblAngajat.setText("Angajat");
+        JLabel lblAngajat = new JLabel("Employee");
+        lblAngajat.setText("Employee");
         pnlMain.add(lblAngajat, c3);
 
         c3.gridx = 2;
@@ -157,14 +157,14 @@ public class RentAdd {
             listEmployees = new ModelList<>();
         }
         for (EmployeeModel.InnerEmployeeModel angajat : listEmployees.getList()) {
-            cmbAngajat.addItem(new ComboItem(angajat.SurnameAngajat, angajat.UserID + ""));
+            cmbAngajat.addItem(new ComboItem(angajat.EmployeeName, angajat.UserID + ""));
         }
         pnlMain.add(cmbAngajat, c3);
 
         c3.gridy = 7;
         c3.gridx = 1;
-        JLabel lblObiectiv = new JLabel("Obiectiv");
-        lblObiectiv.setText("Obiectiv");
+        JLabel lblObiectiv = new JLabel("Objective");
+        lblObiectiv.setText("Objective");
         pnlMain.add(lblObiectiv, c3);
 
         c3.gridx = 2;
@@ -184,14 +184,14 @@ public class RentAdd {
 
         c3.gridy = 8;
         c3.gridx = 1;
-        JLabel lblIsReturned = new JLabel("Este returnat");
-        lblIsReturned.setText("Este returnat");
+        JLabel lblIsReturned = new JLabel("Is returned");
+        lblIsReturned.setText("Is returned");
         pnlMain.add(lblIsReturned, c3);
 
         c3.gridx = 2;
         JComboBox cmbIsReturned = new JComboBox();
-        cmbIsReturned.addItem(new ComboItem("Da", "1"));
-        cmbIsReturned.addItem(new ComboItem("Nu", "0"));
+        cmbIsReturned.addItem(new ComboItem("Yes", "1"));
+        cmbIsReturned.addItem(new ComboItem("No", "0"));
         pnlMain.add(cmbIsReturned, c3);
 
         c3.gridy = 9;

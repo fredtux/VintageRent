@@ -76,8 +76,8 @@ public class EmployeeAdd {
 //        pnlDate.add(JDatePickerImpl1);
         JDatePickerImpl1.setBounds(220,350,120,30);
 
-        this.lblRentDate = new JLabel("Data nasterii");
-        this.lblRentDate.setText("Data nasterii");
+        this.lblRentDate = new JLabel("Birth date");
+        this.lblRentDate.setText("Birth date");
         pnlMain.add(this.lblRentDate, c3);
         c3.gridx = 2;
         pnlMain.add(JDatePickerImpl1, c3);
@@ -87,8 +87,8 @@ public class EmployeeAdd {
         c3.gridy = 2;
         c3.gridx = 1;
         c3.anchor = GridBagConstraints.WEST;
-        JLabel lblHireDate = new JLabel("Data Angajarii");
-        lblHireDate.setText("Data Angajarii");
+        JLabel lblHireDate = new JLabel("Hire Date");
+        lblHireDate.setText("Hire Date");
         pnlMain.add(lblHireDate, c3);
 
 
@@ -114,7 +114,7 @@ public class EmployeeAdd {
             listManagers = new ModelList<>();
         }
         for (EmployeeModel.InnerEmployeeModel manager : listManagers.getList()) {
-            cmbManager.addItem(new ComboItem(manager.SurnameAngajat, manager.UserID + ""));
+            cmbManager.addItem(new ComboItem(manager.EmployeeName, manager.UserID + ""));
         }
         pnlMain.add(cmbManager, c3);
 
@@ -141,8 +141,8 @@ public class EmployeeAdd {
 
         c3.gridy = 5;
         c3.gridx = 1;
-        JLabel lblUtilizator = new JLabel("Surname");
-        lblUtilizator.setText("Surname");
+        JLabel lblUtilizator = new JLabel("User name");
+        lblUtilizator.setText("User name");
         pnlMain.add(lblUtilizator, c3);
 
         c3.gridx = 2;

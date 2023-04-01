@@ -100,7 +100,7 @@ public class EmployeeModelTest {
             modelList.sort((o1, o2) -> o2.UserID - o1.UserID);
             EmployeeModel.InnerEmployeeModel data = modelList.getList().get(0);
 
-            data.SurnameAngajat = "New Test";
+            data.EmployeeName = "New Test";
 
             List<EmployeeModel.InnerEmployeeModel> list = new ArrayList<>();
             list.add(data);
@@ -126,7 +126,7 @@ public class EmployeeModelTest {
             data.HireDate = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
             data.SalaryID = 1;
             data.IDManager = 1;
-            data.SurnameAngajat = "Test";
+            data.EmployeeName = "Test";
 
             MainService.insert(employeeModel, data);
 

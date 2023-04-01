@@ -64,13 +64,13 @@ public class UserAdd {
         c3.anchor = GridBagConstraints.WEST;
 
 
-        JLabel lblUserName = new JLabel("Surname utilizator");
-        lblUserName.setText("Surname utilizator");
+        JLabel lblUserName = new JLabel("Username");
+        lblUserName.setText("Username");
         pnlMain.add(lblUserName, c3);
         c3.gridx = 2;
 
         JTextField txtUserName = new JTextField();
-        txtUserName.setText("Utilizator nou");
+        txtUserName.setText("New user");
         pnlMain.add(txtUserName, c3);
 
         c3.gridy = 2;

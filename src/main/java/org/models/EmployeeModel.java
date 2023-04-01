@@ -25,8 +25,8 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
         public int IDManager;
         public int SalaryID;
         public int Salary;
-        public String SurnameAngajat;
-        public String SurnameManager;
+        public String EmployeeName;
+        public String ManagerName;
 
         @Override
         public int compareTo(InnerEmployeeModel o) {
@@ -62,11 +62,11 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
     }
 
     public DefaultTableModel getTableModel() {
-        String[] columns = {"UserID", "BirthDate", "HireDate", "IDManager", "SalaryID", "Salary", "SurnameAngajat", "SurnameManager"};
+        String[] columns = {"UserID", "BirthDate", "HireDate", "IDManager", "SalaryID", "Salary", "EmployeeName", "ManagerName"};
 
         DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
         for(InnerEmployeeModel model : this.modelList.getList()){
-            Object[] obj = {model.UserID, model.BirthDate, model.HireDate, model.IDManager, model.SalaryID, model.Salary, model.SurnameAngajat, model.SurnameManager};
+            Object[] obj = {model.UserID, model.BirthDate, model.HireDate, model.IDManager, model.SalaryID, model.Salary, model.EmployeeName, model.ManagerName};
             tableModel.addRow(obj);
         }
 
@@ -114,8 +114,8 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
             model.IDManager = rs.getInt("IDMANAGER");
             model.SalaryID = rs.getInt("SALARYID");
             model.Salary = rs.getInt("SALARY");
-            model.SurnameAngajat = rs.getString("SURNAMEANGAJAT");
-            model.SurnameManager = rs.getString("SURNAMEMANAGER");
+            model.EmployeeName = rs.getString("EmployeeName");
+            model.ManagerName = rs.getString("ManagerName");
 
             this.modelList.add(model);
         }
@@ -127,8 +127,8 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
         Predicate<EmployeeModel.InnerEmployeeModel> predicate =  null;
 
         switch (column) {
-            case "SurnameAngajat":
-            case "SurnameManager":
+            case "EmployeeName":
+            case "ManagerName":
                 predicate = (EmployeeModel.InnerEmployeeModel model) -> {
                     try {
                         Field field = model.getClass().getDeclaredField(column);
@@ -284,14 +284,14 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
                 model.Salary = 0;
             }
             try {
-                model.SurnameAngajat = userMap.get(model.UserID);
+                model.EmployeeName = userMap.get(model.UserID);
             } catch (Exception ex){
-                model.SurnameAngajat = "";
+                model.EmployeeName = "";
             }
             try{
-            model.SurnameManager = userMap.get(model.IDManager);
+            model.ManagerName = userMap.get(model.IDManager);
             } catch (Exception ex){
-                model.SurnameManager = "";
+                model.ManagerName = "";
             }
 
             this.modelList.add(model);

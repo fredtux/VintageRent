@@ -50,7 +50,8 @@ public class MainGUI { // Singleton
         CLIENTTYPE,
         MOUNT,
         OBJECTIVE,
-        SALARY
+        SALARY,
+        ADMINISTRATOR
     }
 
     private TableType currentTableType = TableType.RENT;
@@ -79,6 +80,78 @@ public class MainGUI { // Singleton
             return new MainGUI();
 
         return instance;
+    }
+
+    public void initAdministratorsTable(String comparator, String value, String column){
+        AdministratorModel administratorModel = AdministratorModel.getInstance();
+        administratorModel.setDatabaseType(this.databaseType);
+        try {
+            if(comparator == null)
+                MainService.getData(administratorModel);
+            else
+                MainService.getFilteredData(administratorModel, comparator, value, column);
+            DefaultTableModel rm = administratorModel.getTableModel();
+
+            this.tblMain = new JTable();
+            this.jscrPane.setViewportView(this.tblMain);
+            this.tblMain.setModel(rm);
+            rm.fireTableDataChanged();
+
+            class TableModelEvents implements TableModelListener {
+                public boolean isCellEditable(int row, int column) {
+                    return column != 0;
+                }
+
+                public void setValueAt(String value, int row, int column) throws Exception {
+                    AdministratorModel rm = AdministratorModel.getInstance();
+                    ModelList<AdministratorModel.InnerAdministratorModel> modelList = new ModelList<>();
+                    AdministratorModel.InnerAdministratorModel irm = new AdministratorModel.InnerAdministratorModel();
+                    DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
+
+                    irm.UserID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+                    irm.isActive = Boolean.parseBoolean(dtm.getValueAt(row, 1).toString());
+
+
+                    switch (column) {
+                        case 1:
+                            irm.isActive = Boolean.parseBoolean(value);
+                            break;
+                        default:
+                            throw new Exception("Invalid column index");
+                    }
+
+                    modelList.add(irm);
+                    rm.updateData(modelList);
+                }
+
+                @Override
+                public void tableChanged(TableModelEvent e) {
+                    if (e.getType() == TableModelEvent.UPDATE) {
+                        int row = e.getFirstRow();
+                        int column = e.getColumn();
+                        try {
+                            setValueAt((String) tblMain.getValueAt(row, column), row, column);
+                        } catch (Exception ex) {
+                            System.out.println("Error in trying to update administrator table: " + ex.getMessage());
+                        }
+                    }
+                }
+            }
+
+            if(comparator == null) {
+                this.tblMain.getModel().addTableModelListener(new TableModelEvents());
+                this.currentTableType = TableType.ADMINISTRATOR;
+
+                this.cmbColumn.removeAllItems();
+                List<String> columnNames = MainService.getAttributes(AdministratorModel.InnerAdministratorModel.class);
+
+                for (String columnName : columnNames) {
+                    this.cmbColumn.addItem(columnName);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error in trying to initialize administrator table: " + e.getMessage());
+        }
     }
 
     public void initSalaryTable(String comparator, String value, String column){
@@ -1013,6 +1086,20 @@ public class MainGUI { // Singleton
         }
     }
 
+    private void removeRowFromAdministratorModel(int row) throws Exception{
+        AdministratorModel rm = AdministratorModel.getInstance();
+        ModelList<AdministratorModel.InnerAdministratorModel> modelList = new ModelList<>();
+        AdministratorModel.InnerAdministratorModel irm = new AdministratorModel.InnerAdministratorModel();
+        DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
+
+        irm.UserID = Integer.parseInt(dtm.getValueAt(row, 0).toString());
+
+        modelList.add(irm);
+        rm.deleteRow(modelList);
+
+        dtm.removeRow(row);
+    }
+
     private void removeRowFromSalaryModel(int row) throws Exception{
         SalaryModel rm = SalaryModel.getInstance();
         ModelList<SalaryModel.InnerSalaryModel> modelList = new ModelList<>();
@@ -1275,6 +1362,13 @@ public class MainGUI { // Singleton
         });
         crud.add(menuSalaries);
 
+        JMenuItem menuAdministrators = new JMenuItem("Administrators");
+        menuAdministrators.addActionListener(e -> {
+            initAdministratorsTable(null, null, null);
+            this.currentTableType = TableType.ADMINISTRATOR;
+        });
+        crud.add(menuAdministrators);
+
         JMenu datasources = new JMenu("Datasources");
         menuBar.add(datasources);
 
@@ -1304,6 +1398,8 @@ public class MainGUI { // Singleton
                     initObjectiveTable(null, null, null);
                 } else if(this.currentTableType == TableType.SALARY){
                     initSalaryTable(null, null, null);
+                } else if(this.currentTableType == TableType.ADMINISTRATOR){
+                    initAdministratorsTable(null, null, null);
                 }
 
                 try{
@@ -1343,6 +1439,8 @@ public class MainGUI { // Singleton
                     initObjectiveTable(null, null, null);
                 } else if(this.currentTableType == TableType.SALARY){
                     initSalaryTable(null, null, null);
+                } else if(this.currentTableType == TableType.ADMINISTRATOR){
+                    initAdministratorsTable(null, null, null);
                 }
 
                 try{
@@ -1382,6 +1480,8 @@ public class MainGUI { // Singleton
                     initObjectiveTable(null, null, null);
                 } else if(this.currentTableType == TableType.SALARY){
                     initSalaryTable(null, null, null);
+                } else if(this.currentTableType == TableType.ADMINISTRATOR){
+                    initAdministratorsTable(null, null, null);
                 }
 
                 try{
@@ -1516,6 +1616,8 @@ public class MainGUI { // Singleton
                 initObjectiveTable(cmbSign.getSelectedItem().toString(), this.txtValue.getText(), this.cmbColumn.getSelectedItem().toString());
             } else if(this.currentTableType == TableType.SALARY){
                 initSalaryTable(cmbSign.getSelectedItem().toString(), this.txtValue.getText(), this.cmbColumn.getSelectedItem().toString());
+            } else if(this.currentTableType == TableType.ADMINISTRATOR){
+                initAdministratorsTable(cmbSign.getSelectedItem().toString(), this.txtValue.getText(), this.cmbColumn.getSelectedItem().toString());
             }
 
         });
@@ -1547,6 +1649,8 @@ public class MainGUI { // Singleton
                 initObjectiveTable(null, null, null);
             } else if(this.currentTableType == TableType.SALARY){
                 initSalaryTable(null, null, null);
+            } else if(this.currentTableType == TableType.ADMINISTRATOR){
+                initAdministratorsTable(null, null, null);
             }
         });
 
@@ -1602,6 +1706,8 @@ public class MainGUI { // Singleton
                             removeRowFromObjectiveModel(row);
                         else if(currentTableType == TableType.SALARY)
                             removeRowFromSalaryModel(row);
+                        else if(currentTableType == TableType.ADMINISTRATOR)
+                            removeRowFromAdministratorModel(row);
                     } catch (SQLException ex) {
                         JDialog dialog = new JDialog();
                         dialog.setAlwaysOnTop(true);
@@ -1660,6 +1766,9 @@ public class MainGUI { // Singleton
                 } else if(currentTableType == TableType.SALARY){
                     SalaryAdd sa = SalaryAdd.getInstance(frame, instance);
                     sa.main();
+                } else if(currentTableType == TableType.ADMINISTRATOR){
+                    AdministratorAdd aa = AdministratorAdd.getInstance(frame, instance);
+                    aa.main();
                 }
             }
         });

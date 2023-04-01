@@ -244,6 +244,49 @@ public class ModelInit {
         }
     }
 
+    private static void initInMemAdministratorModel(){
+        try{
+            AdministratorModel administratorModel = AdministratorModel.getInstance();
+            MainService.setDatabaseType(administratorModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(administratorModel);
+
+            AdministratorModel.InnerAdministratorModel data = new AdministratorModel.InnerAdministratorModel();
+            data.UserID = 1;
+            data.isActive = true;
+            MainService.insert(administratorModel, data);
+
+            data.UserID = 2;
+            data.isActive = true;
+            MainService.insert(administratorModel, data);
+
+            data.UserID = 3;
+            data.isActive = false;
+            MainService.insert(administratorModel, data);
+
+            data.UserID = 4;
+            data.isActive = true;
+            MainService.insert(administratorModel, data);
+
+            data.UserID = 5;
+            data.isActive = false;
+            MainService.insert(administratorModel, data);
+
+            data.UserID = 6;
+            data.isActive = false;
+            MainService.insert(administratorModel, data);
+
+            data.UserID = 7;
+            data.isActive = true;
+            MainService.insert(administratorModel, data);
+
+            data.UserID = 8;
+            data.isActive = true;
+            MainService.insert(administratorModel, data);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     private static void initInMemClientModel(){
         try{
             ClientModel clientModel = ClientModel.getInstance();
@@ -375,7 +418,7 @@ public class ModelInit {
             data.HireDate = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
             data.SalaryID = 1;
             data.IDManager = 1;
-            data.SurnameAngajat = "Test";
+            data.EmployeeName = "Test";
 
             MainService.insert(employeeModel, data);
 
@@ -384,7 +427,7 @@ public class ModelInit {
             data.HireDate = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
             data.SalaryID = 2;
             data.IDManager = 1;
-            data.SurnameAngajat = "Test";
+            data.EmployeeName = "Test";
 
             MainService.insert(employeeModel, data);
 
@@ -393,7 +436,7 @@ public class ModelInit {
             data.HireDate = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
             data.SalaryID = 2;
             data.IDManager = 1;
-            data.SurnameAngajat = "Test";
+            data.EmployeeName = "Test";
 
             MainService.insert(employeeModel, data);
 
@@ -402,7 +445,7 @@ public class ModelInit {
             data.HireDate = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
             data.SalaryID = 3;
             data.IDManager = 2;
-            data.SurnameAngajat = "Test";
+            data.EmployeeName = "Test";
 
             MainService.insert(employeeModel, data);
 
@@ -411,7 +454,7 @@ public class ModelInit {
             data.HireDate = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
             data.SalaryID = 4;
             data.IDManager = 4;
-            data.SurnameAngajat = "Test";
+            data.EmployeeName = "Test";
 
             MainService.insert(employeeModel, data);
 
@@ -420,7 +463,7 @@ public class ModelInit {
             data.HireDate = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
             data.SalaryID = 2;
             data.IDManager = 2;
-            data.SurnameAngajat = "Test";
+            data.EmployeeName = "Test";
 
             MainService.insert(employeeModel, data);
 
@@ -429,7 +472,7 @@ public class ModelInit {
             data.HireDate = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
             data.SalaryID = 2;
             data.IDManager = 2;
-            data.SurnameAngajat = "Test";
+            data.EmployeeName = "Test";
 
             MainService.insert(employeeModel, data);
 
@@ -438,7 +481,7 @@ public class ModelInit {
             data.HireDate = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
             data.SalaryID = 5;
             data.IDManager = 5;
-            data.SurnameAngajat = "Test";
+            data.EmployeeName = "Test";
 
             MainService.insert(employeeModel, data);
         } catch (Exception e){
@@ -928,6 +971,7 @@ public class ModelInit {
         initInMemClientModel();
 
         initInMemRentModel();
+        initInMemAdministratorModel();
     }
 
     public static void csvInit() throws Exception{

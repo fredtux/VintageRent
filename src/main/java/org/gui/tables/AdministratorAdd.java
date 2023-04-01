@@ -10,29 +10,29 @@ import org.models.*;
 import javax.swing.*;
 import java.awt.*;
 
-public class FormatAdd {
+public class AdministratorAdd {
     private MainGUI caller = null;
     private JFrame parentFrame = null;
-    private static FormatAdd instance = null;
+    private static AdministratorAdd instance = null;
     private JLabel lblRentDate;
     private JDatePanelImpl JDatePanelImpl1;
     private JDatePickerImpl JDatePickerImpl1;
     private JPanel pnlMain;
     private JButton btnExit;
 
-    public FormatAdd(JFrame parentFrame, MainGUI caller) {
+    public AdministratorAdd(JFrame parentFrame, MainGUI caller) {
         // Singleton
-        if (FormatAdd.instance != null)
-            throw new RuntimeException("FormatAdd is a singleton class. Use getInstance() instead.");
+        if (AdministratorAdd.instance != null)
+            throw new RuntimeException("AdministratorAdd is a singleton class. Use getInstance() instead.");
 
         instance = this;
         this.parentFrame = parentFrame;
         this.caller = caller;
     }
 
-    public static FormatAdd getInstance(JFrame parentFrame, MainGUI caller) {
+    public static AdministratorAdd getInstance(JFrame parentFrame, MainGUI caller) {
         if (instance == null)
-            instance = new FormatAdd(parentFrame, caller);
+            instance = new AdministratorAdd(parentFrame, caller);
 
         return instance;
     }
@@ -48,39 +48,48 @@ public class FormatAdd {
         frame.setContentPane(this.pnlMain);
 
         GridBagConstraints c3 = new GridBagConstraints();
-        c3.gridy = 1;
+        c3.gridy = 0;
         c3.gridx = 1;
         c3.anchor = GridBagConstraints.WEST;
-        JLabel lblName = new JLabel("Name");
-        lblName.setText("Name");
+        JLabel lblName = new JLabel("User");
+        lblName.setText("User");
         pnlMain.add(lblName, c3);
 
         c3.gridx = 2;
-        JTextField txtName = new JTextField();
-        txtName.setText("N/A");
-        pnlMain.add(txtName, c3);
+        JComboBox cmbUtilizator = new JComboBox();
+        UserModel userModel = UserModel.getInstance();
+        userModel.setDatabaseType(caller.getDatabaseType());
+        ModelList<UserModel.InnerUserModel> listUsers = null;
+        try {
+            listUsers = userModel.getData();
+        } catch (Exception e) {
+            listUsers = new ModelList<>();
+        }
+        for (UserModel.InnerUserModel user : listUsers.getList()) {
+            cmbUtilizator.addItem(new ComboItem(user.Surname + " " + user.Firstname, user.UserID + ""));
+        }
+        pnlMain.add(cmbUtilizator, c3);
 
-        c3.gridy = 2;
+        c3.gridy = 1;
+        c3.gridx = 0;
+        JLabel lblIsActive = new JLabel("Is Active");
+        lblIsActive.setText("Is Active");
+        pnlMain.add(lblIsActive, c3);
+
         c3.gridx = 1;
-        c3.anchor = GridBagConstraints.WEST;
-        JLabel lblFilmWidth = new JLabel("Film width");
-        lblFilmWidth.setText("Film width");
-        pnlMain.add(lblFilmWidth, c3);
-
-        c3.gridx = 2;
-        JTextField txtFilmWidth = new JTextField();
-        txtFilmWidth.setText("1");
-        pnlMain.add(txtFilmWidth, c3);
+        JCheckBox chkIsActive = new JCheckBox();
+        chkIsActive.setText("Is Active");
+        pnlMain.add(chkIsActive, c3);
 
         JButton btnAdd = new JButton("Add");
         btnAdd.setText("Add");
         btnAdd.addActionListener(e -> {
-            FormatModel formatModel = FormatModel.getInstance();
-            FormatModel.InnerFormatModel format = new FormatModel.InnerFormatModel();
-            format.Name = txtName.getText();
-            format.FilmWidth = txtFilmWidth.getText();
+            AdministratorModel administratorModel = AdministratorModel.getInstance();
+            AdministratorModel.InnerAdministratorModel administrator = new AdministratorModel.InnerAdministratorModel();
+            administrator.UserID = Integer.parseInt(((ComboItem) cmbUtilizator.getSelectedItem()).getValue());
+            administrator.isActive = chkIsActive.isSelected();
             try {
-                formatModel.insertRow(format);
+                administratorModel.insertRow(administrator);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
@@ -91,7 +100,7 @@ public class FormatAdd {
 //            size.setSize(800, 600);
 //            this.parentFrame.setSize(size);;
         });
-        c3.gridy = 3;
+        c3.gridy = 2;
         c3.gridx = 1;
         this.pnlMain.add(btnAdd, c3);
 
@@ -125,7 +134,7 @@ public class FormatAdd {
     public void closeFrame(JFrame frame, boolean initParent) {
         frame.dispose();
         if(initParent)
-            this.caller.initFormatTable(null, null, null);
+            this.caller.initAdministratorsTable(null, null, null);
         this.parentFrame.setEnabled(true);
         this.parentFrame.setFocusable(true);
         this.parentFrame.setVisible(true);
