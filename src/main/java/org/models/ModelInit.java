@@ -107,7 +107,7 @@ public class ModelInit {
 
             data.IDCamera = 2;
             data.ModelCamera = "Camera2";
-            data.MountID = 2;
+            data.MountID = 1;
             data.FormatID = 2;
             data.RentalPrice = 100;
             data.Price = 100;
@@ -143,7 +143,7 @@ public class ModelInit {
 
             data.IDCamera = 5;
             data.ModelCamera = "Camera5";
-            data.MountID = 4;
+            data.MountID = 1;
             data.FormatID = 2;
             data.RentalPrice = 100;
             data.Price = 100;
@@ -155,7 +155,7 @@ public class ModelInit {
 
             data.IDCamera = 6;
             data.ModelCamera = "Camera6";
-            data.MountID = 2;
+            data.MountID = 1;
             data.FormatID = 2;
             data.RentalPrice = 100;
             data.Price = 100;
@@ -167,7 +167,7 @@ public class ModelInit {
 
             data.IDCamera = 7;
             data.ModelCamera = "Camera7";
-            data.MountID = 3;
+            data.MountID = 1;
             data.FormatID = 3;
             data.RentalPrice = 100;
             data.Price = 100;
@@ -785,6 +785,7 @@ public class ModelInit {
             data.MinimumAperture = 0.0;
             data.FocalDistance = 100;
             data.Diameter = 100;
+            data.MountID = 1;
 
             MainService.insert(mobjectiveModel, data);
 
@@ -796,6 +797,8 @@ public class ModelInit {
             data.MinimumAperture = 0.0;
             data.FocalDistance = 100;
             data.Diameter = 100;
+            data.MountID = 1;
+
 
             MainService.insert(mobjectiveModel, data);
 
@@ -807,6 +810,8 @@ public class ModelInit {
             data.MinimumAperture = 0.0;
             data.FocalDistance = 100;
             data.Diameter = 100;
+            data.MountID = 1;
+
 
             MainService.insert(mobjectiveModel, data);
 
@@ -818,6 +823,8 @@ public class ModelInit {
             data.MinimumAperture = 0.0;
             data.FocalDistance = 100;
             data.Diameter = 100;
+            data.MountID = 1;
+
 
             MainService.insert(mobjectiveModel, data);
 
@@ -829,6 +836,8 @@ public class ModelInit {
             data.MinimumAperture = 0.0;
             data.FocalDistance = 100;
             data.Diameter = 100;
+            data.MountID = 1;
+
 
             MainService.insert(mobjectiveModel, data);
 
@@ -840,6 +849,8 @@ public class ModelInit {
             data.MinimumAperture = 0.0;
             data.FocalDistance = 100;
             data.Diameter = 100;
+            data.MountID = 1;
+
 
             MainService.insert(mobjectiveModel, data);
 
@@ -851,6 +862,8 @@ public class ModelInit {
             data.MinimumAperture = 0.0;
             data.FocalDistance = 100;
             data.Diameter = 100;
+            data.MountID = 1;
+
 
             MainService.insert(mobjectiveModel, data);
 
@@ -862,6 +875,8 @@ public class ModelInit {
             data.MinimumAperture = 0.0;
             data.FocalDistance = 100;
             data.Diameter = 100;
+            data.MountID = 1;
+
 
             MainService.insert(mobjectiveModel, data);
         } catch (Exception e){

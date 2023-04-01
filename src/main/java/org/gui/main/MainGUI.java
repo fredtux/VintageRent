@@ -1848,6 +1848,17 @@ public class MainGUI { // Singleton
         });
         reports.add(formatReport);
 
+        JMenuItem mountReport = new JMenuItem("Mount report");
+        mountReport.addActionListener(e -> {
+            try {
+                MountReport mr = MountReport.getInstance(frame, instance);
+                mr.main();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        reports.add(mountReport);
+
         JMenu menuLog = new JMenu("Log");
         menuBar.add(menuLog);
 

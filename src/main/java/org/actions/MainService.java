@@ -143,6 +143,30 @@ public class MainService {
         return result;
     }
 
+    public static List<Model.AbstractInnerModel> getForMount(int id, DatabaseConnection.DatabaseType databaseType) throws Exception{
+        List<Model.AbstractInnerModel> result = new ArrayList<>();
+
+        ObjectiveModel objectiveModel = ObjectiveModel.getInstance();
+        MainService.setDatabaseType(objectiveModel, databaseType);
+        ModelList<ObjectiveModel.InnerObjectiveModel> objectives = MainService.getData(objectiveModel);
+        for(ObjectiveModel.InnerObjectiveModel objective : objectives.getList()){
+            if(objective.MountID == id){
+                result.add(objective);
+            }
+        }
+
+        CameraModel cameraModel = CameraModel.getInstance();
+        MainService.setDatabaseType(cameraModel, databaseType);
+        ModelList<CameraModel.InnerCameraModel> cameras = MainService.getData(cameraModel);
+        for(CameraModel.InnerCameraModel camera : cameras.getList()){
+            if(camera.MountID == id){
+                result.add(camera);
+            }
+        }
+
+        return result;
+    }
+
     private static double getCameraPrice(int cameraID, ModelList<CameraModel.InnerCameraModel> lcamera) {
         for (CameraModel.InnerCameraModel cameraModel : lcamera.getList()) {
             if (cameraModel.IDCamera == cameraID) {
