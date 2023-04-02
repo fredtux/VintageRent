@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class ModelInit {
-    private static String[] modelNames = {"Employee", "Rental", "Administrator_Subdomains", "Administrators", "Address", "Camera","Clients", "Format", "Mount", "Objective", "Salary", "CameraType", "ClientType", "Users"};
+    private static String[] modelNames = {"Employee", "Rental", "Administrator_Subdomains", "Administrators", "Address", "Camera","Clients", "Format", "Mount", "Objective", "Salary", "CameraType", "ClientType", "Users", "Subdomains"};
 
     public static void copyResourceDirectory(Path source, Path destination) throws IOException  {
 //        Path source = Paths.get("CSV");
@@ -107,7 +107,7 @@ public class ModelInit {
 
             data.IDCamera = 2;
             data.ModelCamera = "Camera2";
-            data.MountID = 2;
+            data.MountID = 1;
             data.FormatID = 2;
             data.RentalPrice = 100;
             data.Price = 100;
@@ -143,7 +143,7 @@ public class ModelInit {
 
             data.IDCamera = 5;
             data.ModelCamera = "Camera5";
-            data.MountID = 4;
+            data.MountID = 1;
             data.FormatID = 2;
             data.RentalPrice = 100;
             data.Price = 100;
@@ -155,7 +155,7 @@ public class ModelInit {
 
             data.IDCamera = 6;
             data.ModelCamera = "Camera6";
-            data.MountID = 2;
+            data.MountID = 1;
             data.FormatID = 2;
             data.RentalPrice = 100;
             data.Price = 100;
@@ -167,7 +167,7 @@ public class ModelInit {
 
             data.IDCamera = 7;
             data.ModelCamera = "Camera7";
-            data.MountID = 3;
+            data.MountID = 1;
             data.FormatID = 3;
             data.RentalPrice = 100;
             data.Price = 100;
@@ -239,6 +239,220 @@ public class ModelInit {
             data.Name = "Camera8";
 
             MainService.insert(cameraTypeModel, data);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private static void initInMemAdministratorModel(){
+        try{
+            AdministratorModel administratorModel = AdministratorModel.getInstance();
+            MainService.setDatabaseType(administratorModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(administratorModel);
+
+            AdministratorModel.InnerAdministratorModel data = new AdministratorModel.InnerAdministratorModel();
+            data.UserID = 1;
+            data.isActive = true;
+            MainService.insert(administratorModel, data);
+
+            data.UserID = 2;
+            data.isActive = true;
+            MainService.insert(administratorModel, data);
+
+            data.UserID = 3;
+            data.isActive = false;
+            MainService.insert(administratorModel, data);
+
+            data.UserID = 4;
+            data.isActive = true;
+            MainService.insert(administratorModel, data);
+
+            data.UserID = 5;
+            data.isActive = false;
+            MainService.insert(administratorModel, data);
+
+            data.UserID = 6;
+            data.isActive = false;
+            MainService.insert(administratorModel, data);
+
+            data.UserID = 7;
+            data.isActive = true;
+            MainService.insert(administratorModel, data);
+
+            data.UserID = 8;
+            data.isActive = true;
+            MainService.insert(administratorModel, data);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private static void initInMemAddressModel(){
+        try{
+            AddressModel addressModel = AddressModel.getInstance();
+            MainService.setDatabaseType(addressModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(addressModel);
+
+            AddressModel.InnerAddressModel data = new AddressModel.InnerAddressModel();
+            data.AddressID = 1;
+            data.Street = "Street1";
+            data.City = "City1";
+            data.County = "County1";
+            data.PostalCode = "PostalCode1";
+            data.IDClient = 1;
+            MainService.insert(addressModel, data);
+
+
+            data.AddressID = 2;
+            data.Street = "Street2";
+            data.City = "City2";
+            data.County = "County2";
+            data.PostalCode = "PostalCode2";
+            data.IDClient = 2;
+            MainService.insert(addressModel, data);
+
+
+            data.AddressID = 3;
+            data.Street = "Street3";
+            data.City = "City3";
+            data.County = "County3";
+            data.PostalCode = "PostalCode3";
+            data.IDClient = 3;
+            MainService.insert(addressModel, data);
+
+
+            data.AddressID = 4;
+            data.Street = "Street1";
+            data.City = "City1";
+            data.County = "County1";
+            data.PostalCode = "PostalCode1";
+            data.IDClient = 1;
+            MainService.insert(addressModel, data);
+
+            data.AddressID = 5;
+            data.Street = "Street1";
+            data.City = "City1";
+            data.County = "County1";
+            data.PostalCode = "PostalCode1";
+            data.IDClient = 1;
+            MainService.insert(addressModel, data);
+
+
+            data.AddressID = 6;
+            data.Street = "Street1";
+            data.City = "City1";
+            data.County = "County1";
+            data.PostalCode = "PostalCode1";
+            data.IDClient = 1;
+            MainService.insert(addressModel, data);
+
+
+            data.AddressID = 7;
+            data.Street = "Street1";
+            data.City = "City1";
+            data.County = "County1";
+            data.PostalCode = "PostalCode1";
+            data.IDClient = 1;
+            MainService.insert(addressModel, data);
+
+
+            data.AddressID = 8;
+            data.Street = "Street1";
+            data.City = "City1";
+            data.County = "County1";
+            data.PostalCode = "PostalCode1";
+            data.IDClient = 1;
+            MainService.insert(addressModel, data);
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private static void initInMemAdministratorSubdomainModel(){
+        try{
+            AdministratorSubdomainModel administratorSubdomainModel = AdministratorSubdomainModel.getInstance();
+            MainService.setDatabaseType(administratorSubdomainModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(administratorSubdomainModel);
+
+            AdministratorSubdomainModel.InnerAdministratorSubdomainModel data = new AdministratorSubdomainModel.InnerAdministratorSubdomainModel();
+            data.IDAdministrator = 1;
+            data.SubdomainID = 1;
+            MainService.insert(administratorSubdomainModel, data);
+
+            data.IDAdministrator = 2;
+            data.SubdomainID = 1;
+            MainService.insert(administratorSubdomainModel, data);
+
+            data.IDAdministrator = 3;
+            data.SubdomainID = 3;
+            MainService.insert(administratorSubdomainModel, data);
+
+            data.IDAdministrator = 4;
+            data.SubdomainID = 4;
+            MainService.insert(administratorSubdomainModel, data);
+
+            data.IDAdministrator = 5;
+            data.SubdomainID = 2;
+            MainService.insert(administratorSubdomainModel, data);
+
+            data.IDAdministrator = 6;
+            data.SubdomainID = 2;
+            MainService.insert(administratorSubdomainModel, data);
+
+            data.IDAdministrator = 7;
+            data.SubdomainID = 2;
+            MainService.insert(administratorSubdomainModel, data);
+
+            data.IDAdministrator = 7;
+            data.SubdomainID = 1;
+            MainService.insert(administratorSubdomainModel, data);
+
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private static void initInMemSubdomainModel(){
+        try{
+            SubdomainModel subdomainModel = SubdomainModel.getInstance();
+            MainService.setDatabaseType(subdomainModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getData(subdomainModel);
+
+            SubdomainModel.InnerSubdomainModel data = new SubdomainModel.InnerSubdomainModel();
+            data.SubdomainID = 1;
+            data.Name = "Subdomain1";
+            MainService.insert(subdomainModel, data);
+
+            data.SubdomainID = 2;
+            data.Name = "Subdomain2";
+            MainService.insert(subdomainModel, data);
+
+            data.SubdomainID = 3;
+            data.Name = "Subdomain3";
+            MainService.insert(subdomainModel, data);
+
+            data.SubdomainID = 4;
+            data.Name = "Subdomain4";
+            MainService.insert(subdomainModel, data);
+
+            data.SubdomainID = 5;
+            data.Name = "Subdomain5";
+            MainService.insert(subdomainModel, data);
+
+            data.SubdomainID = 6;
+            data.Name = "Subdomain6";
+            MainService.insert(subdomainModel, data);
+
+            data.SubdomainID = 7;
+            data.Name = "Subdomain7";
+            MainService.insert(subdomainModel, data);
+
+            data.SubdomainID = 8;
+            data.Name = "Subdomain8";
+            MainService.insert(subdomainModel, data);
+
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -375,7 +589,7 @@ public class ModelInit {
             data.HireDate = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
             data.SalaryID = 1;
             data.IDManager = 1;
-            data.SurnameAngajat = "Test";
+            data.EmployeeName = "Test";
 
             MainService.insert(employeeModel, data);
 
@@ -384,7 +598,7 @@ public class ModelInit {
             data.HireDate = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
             data.SalaryID = 2;
             data.IDManager = 1;
-            data.SurnameAngajat = "Test";
+            data.EmployeeName = "Test";
 
             MainService.insert(employeeModel, data);
 
@@ -393,7 +607,7 @@ public class ModelInit {
             data.HireDate = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
             data.SalaryID = 2;
             data.IDManager = 1;
-            data.SurnameAngajat = "Test";
+            data.EmployeeName = "Test";
 
             MainService.insert(employeeModel, data);
 
@@ -402,7 +616,7 @@ public class ModelInit {
             data.HireDate = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
             data.SalaryID = 3;
             data.IDManager = 2;
-            data.SurnameAngajat = "Test";
+            data.EmployeeName = "Test";
 
             MainService.insert(employeeModel, data);
 
@@ -411,7 +625,7 @@ public class ModelInit {
             data.HireDate = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
             data.SalaryID = 4;
             data.IDManager = 4;
-            data.SurnameAngajat = "Test";
+            data.EmployeeName = "Test";
 
             MainService.insert(employeeModel, data);
 
@@ -420,7 +634,7 @@ public class ModelInit {
             data.HireDate = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
             data.SalaryID = 2;
             data.IDManager = 2;
-            data.SurnameAngajat = "Test";
+            data.EmployeeName = "Test";
 
             MainService.insert(employeeModel, data);
 
@@ -429,7 +643,7 @@ public class ModelInit {
             data.HireDate = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
             data.SalaryID = 2;
             data.IDManager = 2;
-            data.SurnameAngajat = "Test";
+            data.EmployeeName = "Test";
 
             MainService.insert(employeeModel, data);
 
@@ -438,7 +652,7 @@ public class ModelInit {
             data.HireDate = LocalDateTime.parse("2020-01-01 00:00:01", dtf);
             data.SalaryID = 5;
             data.IDManager = 5;
-            data.SurnameAngajat = "Test";
+            data.EmployeeName = "Test";
 
             MainService.insert(employeeModel, data);
         } catch (Exception e){
@@ -571,6 +785,7 @@ public class ModelInit {
             data.MinimumAperture = 0.0;
             data.FocalDistance = 100;
             data.Diameter = 100;
+            data.MountID = 1;
 
             MainService.insert(mobjectiveModel, data);
 
@@ -582,6 +797,8 @@ public class ModelInit {
             data.MinimumAperture = 0.0;
             data.FocalDistance = 100;
             data.Diameter = 100;
+            data.MountID = 1;
+
 
             MainService.insert(mobjectiveModel, data);
 
@@ -593,6 +810,8 @@ public class ModelInit {
             data.MinimumAperture = 0.0;
             data.FocalDistance = 100;
             data.Diameter = 100;
+            data.MountID = 1;
+
 
             MainService.insert(mobjectiveModel, data);
 
@@ -604,6 +823,8 @@ public class ModelInit {
             data.MinimumAperture = 0.0;
             data.FocalDistance = 100;
             data.Diameter = 100;
+            data.MountID = 1;
+
 
             MainService.insert(mobjectiveModel, data);
 
@@ -615,6 +836,8 @@ public class ModelInit {
             data.MinimumAperture = 0.0;
             data.FocalDistance = 100;
             data.Diameter = 100;
+            data.MountID = 1;
+
 
             MainService.insert(mobjectiveModel, data);
 
@@ -626,6 +849,8 @@ public class ModelInit {
             data.MinimumAperture = 0.0;
             data.FocalDistance = 100;
             data.Diameter = 100;
+            data.MountID = 1;
+
 
             MainService.insert(mobjectiveModel, data);
 
@@ -637,6 +862,8 @@ public class ModelInit {
             data.MinimumAperture = 0.0;
             data.FocalDistance = 100;
             data.Diameter = 100;
+            data.MountID = 1;
+
 
             MainService.insert(mobjectiveModel, data);
 
@@ -648,6 +875,8 @@ public class ModelInit {
             data.MinimumAperture = 0.0;
             data.FocalDistance = 100;
             data.Diameter = 100;
+            data.MountID = 1;
+
 
             MainService.insert(mobjectiveModel, data);
         } catch (Exception e){
@@ -928,6 +1157,10 @@ public class ModelInit {
         initInMemClientModel();
 
         initInMemRentModel();
+        initInMemAdministratorModel();
+        initInMemSubdomainModel();
+        initInMemAdministratorSubdomainModel();
+        initInMemAddressModel();
     }
 
     public static void csvInit() throws Exception{

@@ -2,16 +2,20 @@ package org.models;
 
 import org.database.DatabaseConnection;
 import org.database.csv.CsvConnection;
+import org.gui.tables.CameraTypeAdd;
 
 import javax.swing.table.DefaultTableModel;
+import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public class CameraTypeModel extends Model implements LinkModelToDatabase<ModelList<CameraTypeModel.InnerCameraTypeModel>, CameraTypeModel.InnerCameraTypeModel> {
+
     public static class InnerCameraTypeModel extends AbstractInnerModel implements Comparable<InnerCameraTypeModel> {
         public int TypeID;
         public String Name;
@@ -52,7 +56,13 @@ public class CameraTypeModel extends Model implements LinkModelToDatabase<ModelL
     public DefaultTableModel getTableModel() {
         String[] columns = {"TypeID", "Name"};
 
-        DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
+        DefaultTableModel tableModel = new DefaultTableModel(columns, 0){
+            @Override
+
+            public boolean isCellEditable(int row, int column) {
+                return column >= 1;
+            }
+        };
         for(InnerCameraTypeModel model : this.modelList.getList()){
             Object[] obj = {model.TypeID, model.Name};
             tableModel.addRow(obj);
@@ -101,6 +111,66 @@ public class CameraTypeModel extends Model implements LinkModelToDatabase<ModelL
             this.modelList.add(model);
         }
     }
+
+    public void getFilteredData(String comparator, String value, String column) throws Exception{
+        this.getData();
+
+        Predicate<CameraTypeModel.InnerCameraTypeModel> predicate =  null;
+
+        switch (column) {
+            case "Name":
+                predicate = (CameraTypeModel.InnerCameraTypeModel model) -> {
+                    try {
+                        Field field = model.getClass().getDeclaredField(column);
+                        field.setAccessible(true);
+                        String fieldValue = (String) field.get(model);
+                        if(comparator == "==")
+                            return fieldValue.equals(value);
+                        else if(comparator == "!=")
+                            return !fieldValue.equals(value);
+                        else if(comparator == "<")
+                            return fieldValue.compareTo(value) < 0;
+                        else if(comparator == ">")
+                            return fieldValue.compareTo(value) > 0;
+                        else if(comparator == "<=")
+                            return fieldValue.compareTo(value) <= 0;
+                        else if(comparator == ">=")
+                            return fieldValue.compareTo(value) >= 0;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                };
+                break;
+            case "TypeID":
+                predicate = (CameraTypeModel.InnerCameraTypeModel model) -> {
+                    try {
+                        Field field = model.getClass().getDeclaredField(column);
+                        field.setAccessible(true);
+                        int fieldValue = (int) field.get(model);
+                        if(comparator == "==")
+                            return fieldValue == Integer.parseInt(value);
+                        else if(comparator == "!=")
+                            return fieldValue != Integer.parseInt(value);
+                        else if(comparator == "<")
+                            return fieldValue < Integer.parseInt(value);
+                        else if(comparator == ">")
+                            return fieldValue > Integer.parseInt(value);
+                        else if(comparator == "<=")
+                            return fieldValue <= Integer.parseInt(value);
+                        else if(comparator == ">=")
+                            return fieldValue >= Integer.parseInt(value);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                };
+                break;
+        }
+
+        this.modelList = this.modelList.filter(predicate, value);
+    }
+
 
     @Override
     public ModelList<InnerCameraTypeModel> getData() throws Exception{
@@ -225,5 +295,12 @@ public class CameraTypeModel extends Model implements LinkModelToDatabase<ModelL
         } catch (Exception ex) {
             System.out.println("Error logging to CSV: " + ex.getMessage());
         }
+    }
+    @Override
+    public void truncate() throws Exception {
+        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
+        this.setDatabaseType(databaseType);
+        db.truncate(this.tableName);
+        this.getData();
     }
 }

@@ -1,5 +1,6 @@
 package org.gui.tables;
 
+import org.actions.MainService;
 import org.gui.custom.ComboItem;
 import org.gui.main.MainGUI;
 import org.jdatepicker.impl.JDatePanelImpl;
@@ -64,13 +65,13 @@ public class UserAdd {
         c3.anchor = GridBagConstraints.WEST;
 
 
-        JLabel lblUserName = new JLabel("Surname utilizator");
-        lblUserName.setText("Surname utilizator");
+        JLabel lblUserName = new JLabel("Username");
+        lblUserName.setText("Username");
         pnlMain.add(lblUserName, c3);
         c3.gridx = 2;
 
         JTextField txtUserName = new JTextField();
-        txtUserName.setText("Utilizator nou");
+        txtUserName.setText("New user");
         pnlMain.add(txtUserName, c3);
 
         c3.gridy = 2;
@@ -145,7 +146,7 @@ public class UserAdd {
             user.Password = txtPassword.getText();
 
             try {
-                userModel.insertRow(user);
+                MainService.insert(userModel, user);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
@@ -178,7 +179,7 @@ public class UserAdd {
     public void closeFrame(JFrame frame, boolean initParent) {
         frame.dispose();
         if(initParent)
-            this.caller.initUserTable();
+            this.caller.initUserTable(null, null, null);
         this.parentFrame.setEnabled(true);
         this.parentFrame.setFocusable(true);
         this.parentFrame.setVisible(true);

@@ -1,5 +1,6 @@
 package org.gui.tables;
 
+import org.actions.MainService;
 import org.gui.custom.ComboItem;
 import org.gui.main.MainGUI;
 import org.jdatepicker.impl.JDatePanelImpl;
@@ -74,8 +75,8 @@ public class RentAdd {
 //        pnlDate.add(JDatePickerImpl1);
         JDatePickerImpl1.setBounds(220,350,120,30);
 
-        this.lblRentDate = new JLabel("Data inchiriere");
-        this.lblRentDate.setText("Data inchiriere");
+        this.lblRentDate = new JLabel("Rent date");
+        this.lblRentDate.setText("Rent date");
         pnlMain.add(this.lblRentDate, c3);
         c3.gridx = 2;
         pnlMain.add(JDatePickerImpl1, c3);
@@ -85,8 +86,8 @@ public class RentAdd {
         c3.gridy = 2;
         c3.gridx = 1;
         c3.anchor = GridBagConstraints.WEST;
-        JLabel lblDurata = new JLabel("Durata");
-        lblDurata.setText("Durata");
+        JLabel lblDurata = new JLabel("Duration");
+        lblDurata.setText("Duration");
         pnlMain.add(lblDurata, c3);
 
 
@@ -107,10 +108,14 @@ public class RentAdd {
         c3.gridx = 2;
         JComboBox cmbCamera = new JComboBox();
         CameraModel cameraModel = CameraModel.getInstance();
-        cameraModel.setDatabaseType(caller.getDatabaseType());
+        try {
+            MainService.setDatabaseType(cameraModel, caller.getDatabaseType());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         ModelList<CameraModel.InnerCameraModel> listCameras = null;
         try {
-            listCameras = cameraModel.getData();
+            listCameras = MainService.getData(cameraModel);
         } catch (Exception e) {
             listCameras = new ModelList<>();
         }
@@ -128,10 +133,14 @@ public class RentAdd {
         c3.gridx = 2;
         JComboBox cmbClient = new JComboBox();
         ClientModel clientModel = ClientModel.getInstance();
-        clientModel.setDatabaseType(caller.getDatabaseType());
+        try {
+            MainService.setDatabaseType(clientModel, caller.getDatabaseType());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         ModelList<ClientModel.InnerClientModel> listClients = null;
         try {
-            listClients = clientModel.getData();
+            listClients = MainService.getData(clientModel);
         } catch (Exception e) {
             listClients = new ModelList<>();
         }
@@ -142,38 +151,46 @@ public class RentAdd {
 
         c3.gridy = 6;
         c3.gridx = 1;
-        JLabel lblAngajat = new JLabel("Angajat");
-        lblAngajat.setText("Angajat");
+        JLabel lblAngajat = new JLabel("Employee");
+        lblAngajat.setText("Employee");
         pnlMain.add(lblAngajat, c3);
 
         c3.gridx = 2;
         JComboBox cmbAngajat = new JComboBox();
         EmployeeModel angajatModel = EmployeeModel.getInstance();
-        angajatModel.setDatabaseType(caller.getDatabaseType());
+        try {
+            MainService.setDatabaseType(angajatModel, caller.getDatabaseType());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         ModelList<EmployeeModel.InnerEmployeeModel> listEmployees = null;
         try {
-            listEmployees = angajatModel.getData();
+            listEmployees = MainService.getData(angajatModel);
         } catch (Exception e) {
             listEmployees = new ModelList<>();
         }
         for (EmployeeModel.InnerEmployeeModel angajat : listEmployees.getList()) {
-            cmbAngajat.addItem(new ComboItem(angajat.SurnameAngajat, angajat.UserID + ""));
+            cmbAngajat.addItem(new ComboItem(angajat.EmployeeName, angajat.UserID + ""));
         }
         pnlMain.add(cmbAngajat, c3);
 
         c3.gridy = 7;
         c3.gridx = 1;
-        JLabel lblObiectiv = new JLabel("Obiectiv");
-        lblObiectiv.setText("Obiectiv");
+        JLabel lblObiectiv = new JLabel("Objective");
+        lblObiectiv.setText("Objective");
         pnlMain.add(lblObiectiv, c3);
 
         c3.gridx = 2;
         JComboBox cmbObiectiv = new JComboBox();
         ObjectiveModel obiectivModel = ObjectiveModel.getInstance();
-        obiectivModel.setDatabaseType(caller.getDatabaseType());
+        try {
+            MainService.setDatabaseType(obiectivModel, caller.getDatabaseType());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         ModelList<ObjectiveModel.InnerObjectiveModel> listObjectives = null;
         try {
-            listObjectives = obiectivModel.getData();
+            listObjectives = MainService.getData(obiectivModel);
         } catch (Exception e) {
             listObjectives = new ModelList<>();
         }
@@ -184,14 +201,14 @@ public class RentAdd {
 
         c3.gridy = 8;
         c3.gridx = 1;
-        JLabel lblIsReturned = new JLabel("Este returnat");
-        lblIsReturned.setText("Este returnat");
+        JLabel lblIsReturned = new JLabel("Is returned");
+        lblIsReturned.setText("Is returned");
         pnlMain.add(lblIsReturned, c3);
 
         c3.gridx = 2;
         JComboBox cmbIsReturned = new JComboBox();
-        cmbIsReturned.addItem(new ComboItem("Da", "1"));
-        cmbIsReturned.addItem(new ComboItem("Nu", "0"));
+        cmbIsReturned.addItem(new ComboItem("Yes", "1"));
+        cmbIsReturned.addItem(new ComboItem("No", "0"));
         pnlMain.add(cmbIsReturned, c3);
 
         c3.gridy = 9;
@@ -222,7 +239,7 @@ public class RentAdd {
             rent.RENT_DATE = (Date) JDatePickerImpl1.getModel().getValue();
 
             try {
-                rentModel.insertRow(rent);
+                MainService.insert(rentModel, rent);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
@@ -293,7 +310,7 @@ public class RentAdd {
     public void closeFrame(JFrame frame, boolean initParent) {
         frame.dispose();
         if(initParent)
-            this.caller.initRentTable();
+            this.caller.initRentTable(null, null, null);
         this.parentFrame.setEnabled(true);
         this.parentFrame.setFocusable(true);
         this.parentFrame.setVisible(true);

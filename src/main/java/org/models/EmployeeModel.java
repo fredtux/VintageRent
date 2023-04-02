@@ -4,6 +4,7 @@ import org.database.DatabaseConnection;
 import org.database.csv.CsvConnection;
 
 import javax.swing.table.DefaultTableModel;
+import java.lang.reflect.Field;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public class EmployeeModel extends Model implements LinkModelToDatabase<ModelList<EmployeeModel.InnerEmployeeModel>, EmployeeModel.InnerEmployeeModel> {
     public static class InnerEmployeeModel extends AbstractInnerModel implements Comparable<InnerEmployeeModel> {
@@ -23,8 +25,8 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
         public int IDManager;
         public int SalaryID;
         public int Salary;
-        public String SurnameAngajat;
-        public String SurnameManager;
+        public String EmployeeName;
+        public String ManagerName;
 
         @Override
         public int compareTo(InnerEmployeeModel o) {
@@ -60,11 +62,16 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
     }
 
     public DefaultTableModel getTableModel() {
-        String[] columns = {"UserID", "BirthDate", "HireDate", "IDManager", "SalaryID", "Salary", "SurnameAngajat", "SurnameManager"};
+        String[] columns = {"UserID", "BirthDate", "HireDate", "IDManager", "SalaryID", "Salary", "EmployeeName", "ManagerName"};
 
-        DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
+        DefaultTableModel tableModel = new DefaultTableModel(columns, 0){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return column != 0;
+            }
+        };
         for(InnerEmployeeModel model : this.modelList.getList()){
-            Object[] obj = {model.UserID, model.BirthDate, model.HireDate, model.IDManager, model.SalaryID, model.Salary, model.SurnameAngajat, model.SurnameManager};
+            Object[] obj = {model.UserID, model.BirthDate, model.HireDate, model.IDManager, model.SalaryID, model.Salary, model.EmployeeName, model.ManagerName};
             tableModel.addRow(obj);
         }
 
@@ -112,11 +119,99 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
             model.IDManager = rs.getInt("IDMANAGER");
             model.SalaryID = rs.getInt("SALARYID");
             model.Salary = rs.getInt("SALARY");
-            model.SurnameAngajat = rs.getString("SURNAMEANGAJAT");
-            model.SurnameManager = rs.getString("SURNAMEMANAGER");
+            model.EmployeeName = rs.getString("EmployeeName");
+            model.ManagerName = rs.getString("ManagerName");
 
             this.modelList.add(model);
         }
+    }
+
+    public void getFilteredData(String comparator, String value, String column) throws Exception{
+        this.getData();
+
+        Predicate<EmployeeModel.InnerEmployeeModel> predicate =  null;
+
+        switch (column) {
+            case "EmployeeName":
+            case "ManagerName":
+                predicate = (EmployeeModel.InnerEmployeeModel model) -> {
+                    try {
+                        Field field = model.getClass().getDeclaredField(column);
+                        field.setAccessible(true);
+                        String fieldValue = (String) field.get(model);
+                        if(comparator == "==")
+                            return fieldValue.equals(value);
+                        else if(comparator == "!=")
+                            return !fieldValue.equals(value);
+                        else if(comparator == "<")
+                            return fieldValue.compareTo(value) < 0;
+                        else if(comparator == ">")
+                            return fieldValue.compareTo(value) > 0;
+                        else if(comparator == "<=")
+                            return fieldValue.compareTo(value) <= 0;
+                        else if(comparator == ">=")
+                            return fieldValue.compareTo(value) >= 0;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                };
+                break;
+            case "UserID":
+            case "IDManager":
+            case "SalaryID":
+            case "Salary":
+
+                predicate = (EmployeeModel.InnerEmployeeModel model) -> {
+                    try {
+                        Field field = model.getClass().getDeclaredField(column);
+                        field.setAccessible(true);
+                        int fieldValue = (int) field.get(model);
+                        if(comparator == "==")
+                            return fieldValue == Integer.parseInt(value);
+                        else if(comparator == "!=")
+                            return fieldValue != Integer.parseInt(value);
+                        else if(comparator == "<")
+                            return fieldValue < Integer.parseInt(value);
+                        else if(comparator == ">")
+                            return fieldValue > Integer.parseInt(value);
+                        else if(comparator == "<=")
+                            return fieldValue <= Integer.parseInt(value);
+                        else if(comparator == ">=")
+                            return fieldValue >= Integer.parseInt(value);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                };
+                break;
+            case "BirthDate":
+                case "HireDate":
+                    predicate = (EmployeeModel.InnerEmployeeModel model) -> {
+                        try {
+                            Field field = model.getClass().getDeclaredField(column);
+                            field.setAccessible(true);
+                            LocalDateTime fieldValue = (LocalDateTime) field.get(model);
+                            if(comparator == "==")
+                                return fieldValue.equals(LocalDateTime.parse(value));
+                            else if(comparator == "!=")
+                                return !fieldValue.equals(LocalDateTime.parse(value));
+                            else if(comparator == "<")
+                                return fieldValue.compareTo(LocalDateTime.parse(value)) < 0;
+                            else if(comparator == ">")
+                                return fieldValue.compareTo(LocalDateTime.parse(value)) > 0;
+                            else if(comparator == "<=")
+                                return fieldValue.compareTo(LocalDateTime.parse(value)) <= 0;
+                            else if(comparator == ">=")
+                                return fieldValue.compareTo(LocalDateTime.parse(value)) >= 0;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        return false;
+                    };
+        }
+
+        this.modelList = this.modelList.filter(predicate, value);
     }
 
     @Override
@@ -194,14 +289,14 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
                 model.Salary = 0;
             }
             try {
-                model.SurnameAngajat = userMap.get(model.UserID);
+                model.EmployeeName = userMap.get(model.UserID);
             } catch (Exception ex){
-                model.SurnameAngajat = "";
+                model.EmployeeName = "";
             }
             try{
-            model.SurnameManager = userMap.get(model.IDManager);
+            model.ManagerName = userMap.get(model.IDManager);
             } catch (Exception ex){
-                model.SurnameManager = "";
+                model.ManagerName = "";
             }
 
             this.modelList.add(model);
@@ -340,5 +435,12 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
         } catch (Exception ex) {
             System.out.println("Error logging to CSV: " + ex.getMessage());
         }
+    }
+    @Override
+    public void truncate() throws Exception {
+        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
+        this.setDatabaseType(databaseType);
+        db.truncate(this.tableName);
+        this.getData();
     }
 }

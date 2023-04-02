@@ -19,6 +19,7 @@ public class FormatSalesReport {
     private static FormatSalesReport instance = null;
     private JPanel pnlMain;
     private JButton btnExit;
+    private JButton btnEmail;
 
     public FormatSalesReport(JFrame parentFrame, MainGUI caller) {
         // Singleton
@@ -49,8 +50,8 @@ public class FormatSalesReport {
         frame.setContentPane(this.pnlMain);
 
         GridBagConstraints c3 = new GridBagConstraints();
-        c3.gridy = 1;
-        c3.gridx = 1;
+        c3.gridy = 0;
+        c3.gridx = 0;
         c3.anchor = GridBagConstraints.NORTH;
         c3.gridwidth = 1;
         c3.gridheight = 1;
@@ -60,7 +61,7 @@ public class FormatSalesReport {
         lblFormat.setText("Format");
         pnlMain.add(lblFormat, c3);
 
-        c3.gridx = 2;
+        c3.gridx = 1;
         JComboBox<ComboItem> cmbFormat = new JComboBox<>();
         FormatModel formatModel = FormatModel.getInstance();
         formatModel.setDatabaseType(caller.getDatabaseType());
@@ -70,8 +71,8 @@ public class FormatSalesReport {
         }
         pnlMain.add(cmbFormat, c3);
 
-        c3.gridy = 2;
-        c3.gridx = 1;
+        c3.gridy = 1;
+        c3.gridx = 0;
         c3.anchor = GridBagConstraints.EAST;
         c3.gridheight = 2;
         c3.gridwidth = 2;
@@ -100,11 +101,30 @@ public class FormatSalesReport {
         });
         pnlMain.add(scrollPane, c3);
 
-        c3.gridy = 4;
-        c3.gridx = 1;
-        c3.gridwidth = 2;
+        c3.gridy = 3;
+        c3.gridx = 0;
+        c3.gridheight = 1;
+        c3.gridwidth = 1;
         c3.fill = GridBagConstraints.HORIZONTAL;
         c3.anchor = GridBagConstraints.NORTH;
+        this.btnEmail = new JButton("Email");
+        this.btnEmail.setText("Email");
+        this.btnEmail.addActionListener(e -> {
+            String email = JOptionPane.showInputDialog("Enter email address");
+            if(email != null && !email.isEmpty()) {
+                try {
+                    if(MainService.sendEmail(email,  Integer.parseInt(cmbFormat.getItemAt(0).getValue().toString()), "FormatSalesReport", caller.getDatabaseType()))
+                        JOptionPane.showMessageDialog(null, "Email sent successfully");
+                    else
+                        JOptionPane.showMessageDialog(null, "Email failed to send");
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Email failed to send");
+                }
+            }
+        });
+        this.pnlMain.add(this.btnEmail, c3);
+
+        c3.gridx = 1;
         this.btnExit = new JButton("Exit");
         this.btnExit.setText("Exit");
         this.btnExit.addActionListener(e -> {
@@ -126,7 +146,7 @@ public class FormatSalesReport {
     public void closeFrame(JFrame frame, boolean initParent) {
         frame.dispose();
         if(initParent)
-            this.caller.initFormatTable();
+            this.caller.initFormatTable(null, null, null);
         this.parentFrame.setEnabled(true);
         this.parentFrame.setFocusable(true);
         this.parentFrame.setVisible(true);

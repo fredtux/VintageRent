@@ -4,12 +4,14 @@ import org.database.DatabaseConnection;
 import org.database.csv.CsvConnection;
 
 import javax.swing.table.DefaultTableModel;
+import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public class MountModel extends Model implements LinkModelToDatabase<ModelList<MountModel.InnerMountModel>, MountModel.InnerMountModel> {
     public static class InnerMountModel extends AbstractInnerModel implements Comparable<InnerMountModel> {
@@ -52,7 +54,12 @@ public class MountModel extends Model implements LinkModelToDatabase<ModelList<M
     public DefaultTableModel getTableModel() {
         String[] columns = {"TypeID", "Name"};
 
-        DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
+        DefaultTableModel tableModel = new DefaultTableModel(columns, 0){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return column != 0;
+            }
+        };
         for(InnerMountModel model : this.modelList.getList()){
             Object[] obj = {model.MountID, model.Name};
             tableModel.addRow(obj);
@@ -100,6 +107,65 @@ public class MountModel extends Model implements LinkModelToDatabase<ModelList<M
 
             this.modelList.add(model);
         }
+    }
+
+    public void getFilteredData(String comparator, String value, String column) throws Exception{
+        this.getData();
+
+        Predicate<MountModel.InnerMountModel> predicate =  null;
+
+        switch (column) {
+            case "Name":
+                predicate = (MountModel.InnerMountModel model) -> {
+                    try {
+                        Field field = model.getClass().getDeclaredField(column);
+                        field.setAccessible(true);
+                        String fieldValue = (String) field.get(model);
+                        if(comparator == "==")
+                            return fieldValue.equals(value);
+                        else if(comparator == "!=")
+                            return !fieldValue.equals(value);
+                        else if(comparator == "<")
+                            return fieldValue.compareTo(value) < 0;
+                        else if(comparator == ">")
+                            return fieldValue.compareTo(value) > 0;
+                        else if(comparator == "<=")
+                            return fieldValue.compareTo(value) <= 0;
+                        else if(comparator == ">=")
+                            return fieldValue.compareTo(value) >= 0;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                };
+                break;
+            case "MountID":
+                predicate = (MountModel.InnerMountModel model) -> {
+                    try {
+                        Field field = model.getClass().getDeclaredField(column);
+                        field.setAccessible(true);
+                        int fieldValue = (int) field.get(model);
+                        if(comparator == "==")
+                            return fieldValue == Integer.parseInt(value);
+                        else if(comparator == "!=")
+                            return fieldValue != Integer.parseInt(value);
+                        else if(comparator == "<")
+                            return fieldValue < Integer.parseInt(value);
+                        else if(comparator == ">")
+                            return fieldValue > Integer.parseInt(value);
+                        else if(comparator == "<=")
+                            return fieldValue <= Integer.parseInt(value);
+                        else if(comparator == ">=")
+                            return fieldValue >= Integer.parseInt(value);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                };
+                break;
+        }
+
+        this.modelList = this.modelList.filter(predicate, value);
     }
 
     @Override
@@ -226,5 +292,12 @@ public class MountModel extends Model implements LinkModelToDatabase<ModelList<M
         } catch (Exception ex) {
             System.out.println("Error logging to CSV: " + ex.getMessage());
         }
+    }
+    @Override
+    public void truncate() throws Exception {
+        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
+        this.setDatabaseType(databaseType);
+        db.truncate(this.tableName);
+        this.getData();
     }
 }

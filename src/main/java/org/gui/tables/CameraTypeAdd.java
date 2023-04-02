@@ -1,5 +1,6 @@
 package org.gui.tables;
 
+import org.actions.MainService;
 import org.gui.custom.ComboItem;
 import org.gui.main.MainGUI;
 import org.jdatepicker.impl.JDatePanelImpl;
@@ -67,7 +68,7 @@ public class CameraTypeAdd {
             CameraTypeModel.InnerCameraTypeModel camera = new CameraTypeModel.InnerCameraTypeModel();
             camera.Name = txtName.getText();
             try {
-                cameraTypeModel.insertRow(camera);
+                MainService.insert(cameraTypeModel, camera);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
@@ -112,7 +113,7 @@ public class CameraTypeAdd {
     public void closeFrame(JFrame frame, boolean initParent) {
         frame.dispose();
         if(initParent)
-            this.caller.initCameraTypeTable();
+            this.caller.initCameraTypeTable(null, null, null);
         this.parentFrame.setEnabled(true);
         this.parentFrame.setFocusable(true);
         this.parentFrame.setVisible(true);

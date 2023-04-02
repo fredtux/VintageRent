@@ -4,12 +4,14 @@ import org.database.DatabaseConnection;
 import org.database.csv.CsvConnection;
 
 import javax.swing.table.DefaultTableModel;
+import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public class FormatModel extends Model implements LinkModelToDatabase<ModelList<FormatModel.InnerFormatModel>, FormatModel.InnerFormatModel> {
     public static class InnerFormatModel extends AbstractInnerModel implements Comparable<InnerFormatModel> {
@@ -53,7 +55,12 @@ public class FormatModel extends Model implements LinkModelToDatabase<ModelList<
     public DefaultTableModel getTableModel() {
         String[] columns = {"FormatID", "Name", "FilmWidth"};
 
-        DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
+        DefaultTableModel tableModel = new DefaultTableModel(columns, 0){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return column != 0;
+            }
+        };
         for(InnerFormatModel model : this.modelList.getList()){
             Object[] obj = {model.FormatID, model.Name, model.FilmWidth};
             tableModel.addRow(obj);
@@ -102,6 +109,66 @@ public class FormatModel extends Model implements LinkModelToDatabase<ModelList<
 
             this.modelList.add(model);
         }
+    }
+
+    public void getFilteredData(String comparator, String value, String column) throws Exception{
+        this.getData();
+
+        Predicate<FormatModel.InnerFormatModel> predicate =  null;
+
+        switch (column) {
+            case "Name":
+                case "FilmWidth":
+                predicate = (FormatModel.InnerFormatModel model) -> {
+                    try {
+                        Field field = model.getClass().getDeclaredField(column);
+                        field.setAccessible(true);
+                        String fieldValue = (String) field.get(model);
+                        if(comparator == "==")
+                            return fieldValue.equals(value);
+                        else if(comparator == "!=")
+                            return !fieldValue.equals(value);
+                        else if(comparator == "<")
+                            return fieldValue.compareTo(value) < 0;
+                        else if(comparator == ">")
+                            return fieldValue.compareTo(value) > 0;
+                        else if(comparator == "<=")
+                            return fieldValue.compareTo(value) <= 0;
+                        else if(comparator == ">=")
+                            return fieldValue.compareTo(value) >= 0;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                };
+                break;
+            case "FormatID":
+                predicate = (FormatModel.InnerFormatModel model) -> {
+                    try {
+                        Field field = model.getClass().getDeclaredField(column);
+                        field.setAccessible(true);
+                        int fieldValue = (int) field.get(model);
+                        if(comparator == "==")
+                            return fieldValue == Integer.parseInt(value);
+                        else if(comparator == "!=")
+                            return fieldValue != Integer.parseInt(value);
+                        else if(comparator == "<")
+                            return fieldValue < Integer.parseInt(value);
+                        else if(comparator == ">")
+                            return fieldValue > Integer.parseInt(value);
+                        else if(comparator == "<=")
+                            return fieldValue <= Integer.parseInt(value);
+                        else if(comparator == ">=")
+                            return fieldValue >= Integer.parseInt(value);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                };
+                break;
+        }
+
+        this.modelList = this.modelList.filter(predicate, value);
     }
 
     @Override
@@ -231,5 +298,12 @@ public class FormatModel extends Model implements LinkModelToDatabase<ModelList<
         } catch (Exception ex) {
             System.out.println("Error logging to CSV: " + ex.getMessage());
         }
+    }
+    @Override
+    public void truncate() throws Exception {
+        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
+        this.setDatabaseType(databaseType);
+        db.truncate(this.tableName);
+        this.getData();
     }
 }

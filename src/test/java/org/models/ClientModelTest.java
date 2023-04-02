@@ -140,6 +140,21 @@ public class ClientModelTest {
         return null;
     }
 
+    public void testFilteredData(List<Integer> id){
+        try {
+            ClientModel clientModel = ClientModel.getInstance();
+            MainService.setDatabaseType(clientModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getFilteredData(clientModel, "==", id.get(0).toString(), "UserID");
+
+            ModelList<ClientModel.InnerClientModel> modelList = clientModel.getModelList();
+            ClientModel.InnerClientModel data = modelList.getList().get(0);
+
+            assertEquals(id.get(0), Integer.valueOf(data.UserID));
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
     public void delete(List<Integer> id){
         try {
             ClientModel clientModel = ClientModel.getInstance();
@@ -163,6 +178,7 @@ public class ClientModelTest {
     public void insertUpdateDelete() {
         try {
             List<Integer> newId = this.insert();
+            this.testFilteredData(newId);
             this.update(newId);
             this.delete(newId);
         } catch (Exception e) {
@@ -174,5 +190,28 @@ public class ClientModelTest {
     public void getInstance() {
         ClientModel clientModel = ClientModel.getInstance();
         assertNotNull(clientModel);
+    }
+
+    @Test
+    public void getAttributes(){
+        try {
+            List<String> attributes = MainService.getAttributes(ClientModel.class);
+            assertNotNull(attributes);
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void truncate(){
+        try{
+            ClientModel classModel = ClientModel.getInstance();
+            MainService.setDatabaseType(classModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.truncate(classModel);
+            ModelList<ClientModel.InnerClientModel> modelList = MainService.getModelList(classModel);
+            assertEquals(0, modelList.getList().size());
+        } catch (Exception e){
+            fail(e.getMessage());
+        }
     }
 }

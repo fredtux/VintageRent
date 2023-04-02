@@ -4,14 +4,17 @@ import org.database.DatabaseConnection;
 import org.database.csv.CsvConnection;
 
 import javax.swing.table.DefaultTableModel;
+import java.lang.reflect.Field;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public class ClientModel extends Model implements LinkModelToDatabase<ModelList<ClientModel.InnerClientModel>, ClientModel.InnerClientModel> {
     public static class InnerClientModel extends AbstractInnerModel implements Comparable<InnerClientModel> {
@@ -58,7 +61,12 @@ public class ClientModel extends Model implements LinkModelToDatabase<ModelList<
     public DefaultTableModel getTableModel() {
         String[] columns = {"UserID", "BirthDate", "TypeID", "NameTip", "DiscountTip", "SurnameClient"};
 
-        DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
+        DefaultTableModel tableModel = new DefaultTableModel(columns, 0){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return column != 0;
+            }
+        };
         for(InnerClientModel model : this.modelList.getList()){
             Object[] obj = {model.UserID, model.BirthDate, model.TypeID, model.NameTip, model.DiscountTip, model.SurnameClient};
             tableModel.addRow(obj);
@@ -108,6 +116,116 @@ public class ClientModel extends Model implements LinkModelToDatabase<ModelList<
 
             this.modelList.add(model);
         }
+    }
+
+    public void getFilteredData(String comparator, String value, String column) throws Exception{
+        this.getData();
+
+        Predicate<ClientModel.InnerClientModel> predicate =  null;
+
+        switch (column) {
+            case "NameTip":
+            case "SurnameClient":
+                predicate = (ClientModel.InnerClientModel model) -> {
+                    try {
+                        Field field = model.getClass().getDeclaredField(column);
+                        field.setAccessible(true);
+                        String fieldValue = (String) field.get(model);
+                        if(comparator == "==")
+                            return fieldValue.equals(value);
+                        else if(comparator == "!=")
+                            return !fieldValue.equals(value);
+                        else if(comparator == "<")
+                            return fieldValue.compareTo(value) < 0;
+                        else if(comparator == ">")
+                            return fieldValue.compareTo(value) > 0;
+                        else if(comparator == "<=")
+                            return fieldValue.compareTo(value) <= 0;
+                        else if(comparator == ">=")
+                            return fieldValue.compareTo(value) >= 0;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                };
+                break;
+          case "UserID":
+            case "TypeID":
+                  predicate = (ClientModel.InnerClientModel model) -> {
+                    try {
+                        Field field = model.getClass().getDeclaredField(column);
+                        field.setAccessible(true);
+                        int fieldValue = (int) field.get(model);
+                        if(comparator == "==")
+                            return fieldValue == Integer.parseInt(value);
+                        else if(comparator == "!=")
+                            return fieldValue != Integer.parseInt(value);
+                        else if(comparator == "<")
+                            return fieldValue < Integer.parseInt(value);
+                        else if(comparator == ">")
+                            return fieldValue > Integer.parseInt(value);
+                        else if(comparator == "<=")
+                            return fieldValue <= Integer.parseInt(value);
+                        else if(comparator == ">=")
+                            return fieldValue >= Integer.parseInt(value);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                };
+                break;
+            case "BirthDate":
+                predicate = (ClientModel.InnerClientModel model) -> {
+                    try {
+                        Field field = model.getClass().getDeclaredField(column);
+                        field.setAccessible(true);
+                        LocalDateTime fieldValue = (LocalDateTime) field.get(model);
+                        if(comparator == "==")
+                            return fieldValue.equals(LocalDateTime.parse(value));
+                        else if(comparator == "!=")
+                            return !fieldValue.equals(LocalDateTime.parse(value));
+                        else if(comparator == "<")
+                            return fieldValue.compareTo(LocalDateTime.parse(value)) < 0;
+                        else if(comparator == ">")
+                            return fieldValue.compareTo(LocalDateTime.parse(value)) > 0;
+                        else if(comparator == "<=")
+                            return fieldValue.compareTo(LocalDateTime.parse(value)) <= 0;
+                        else if(comparator == ">=")
+                            return fieldValue.compareTo(LocalDateTime.parse(value)) >= 0;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                };
+                break;
+
+                case "DiscountTip":
+                predicate = (ClientModel.InnerClientModel model) -> {
+                    try {
+                        Field field = model.getClass().getDeclaredField(column);
+                        field.setAccessible(true);
+                        double fieldValue = (double) field.get(model);
+                        if(comparator == "==")
+                            return fieldValue == Double.parseDouble(value);
+                        else if(comparator == "!=")
+                            return fieldValue != Double.parseDouble(value);
+                        else if(comparator == "<")
+                            return fieldValue < Double.parseDouble(value);
+                        else if(comparator == ">")
+                            return fieldValue > Double.parseDouble(value);
+                        else if(comparator == "<=")
+                            return fieldValue <= Double.parseDouble(value);
+                        else if(comparator == ">=")
+                            return fieldValue >= Double.parseDouble(value);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                };
+                break;
+        }
+
+        this.modelList = this.modelList.filter(predicate, value);
     }
 
     @Override
@@ -280,5 +398,12 @@ public class ClientModel extends Model implements LinkModelToDatabase<ModelList<
         } catch (Exception ex) {
             System.out.println("Error logging to CSV: " + ex.getMessage());
         }
+    }
+    @Override
+    public void truncate() throws Exception {
+        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
+        this.setDatabaseType(databaseType);
+        db.truncate(this.tableName);
+        this.getData();
     }
 }

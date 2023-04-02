@@ -1,5 +1,6 @@
 package org.gui.tables;
 
+import org.actions.MainService;
 import org.gui.custom.ComboItem;
 import org.gui.main.MainGUI;
 import org.jdatepicker.impl.JDatePanelImpl;
@@ -63,8 +64,8 @@ public class FormatAdd {
         c3.gridy = 2;
         c3.gridx = 1;
         c3.anchor = GridBagConstraints.WEST;
-        JLabel lblFilmWidth = new JLabel("Latime film");
-        lblFilmWidth.setText("Latime film");
+        JLabel lblFilmWidth = new JLabel("Film width");
+        lblFilmWidth.setText("Film width");
         pnlMain.add(lblFilmWidth, c3);
 
         c3.gridx = 2;
@@ -80,7 +81,7 @@ public class FormatAdd {
             format.Name = txtName.getText();
             format.FilmWidth = txtFilmWidth.getText();
             try {
-                formatModel.insertRow(format);
+                MainService.insert(formatModel, format);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
@@ -125,7 +126,7 @@ public class FormatAdd {
     public void closeFrame(JFrame frame, boolean initParent) {
         frame.dispose();
         if(initParent)
-            this.caller.initFormatTable();
+            this.caller.initFormatTable(null, null, null);
         this.parentFrame.setEnabled(true);
         this.parentFrame.setFocusable(true);
         this.parentFrame.setVisible(true);

@@ -1,5 +1,6 @@
 package org.gui.tables;
 
+import org.actions.MainService;
 import org.gui.custom.ComboItem;
 import org.gui.main.MainGUI;
 import org.jdatepicker.impl.JDatePanelImpl;
@@ -76,8 +77,8 @@ public class EmployeeAdd {
 //        pnlDate.add(JDatePickerImpl1);
         JDatePickerImpl1.setBounds(220,350,120,30);
 
-        this.lblRentDate = new JLabel("Data nasterii");
-        this.lblRentDate.setText("Data nasterii");
+        this.lblRentDate = new JLabel("Birth date");
+        this.lblRentDate.setText("Birth date");
         pnlMain.add(this.lblRentDate, c3);
         c3.gridx = 2;
         pnlMain.add(JDatePickerImpl1, c3);
@@ -87,8 +88,8 @@ public class EmployeeAdd {
         c3.gridy = 2;
         c3.gridx = 1;
         c3.anchor = GridBagConstraints.WEST;
-        JLabel lblHireDate = new JLabel("Data Angajarii");
-        lblHireDate.setText("Data Angajarii");
+        JLabel lblHireDate = new JLabel("Hire Date");
+        lblHireDate.setText("Hire Date");
         pnlMain.add(lblHireDate, c3);
 
 
@@ -106,15 +107,19 @@ public class EmployeeAdd {
         c3.gridx = 2;
         JComboBox cmbManager = new JComboBox();
         EmployeeModel managerModel = EmployeeModel.getInstance();
-        managerModel.setDatabaseType(caller.getDatabaseType());
+        try {
+            MainService.setDatabaseType(managerModel, caller.getDatabaseType());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         ModelList<EmployeeModel.InnerEmployeeModel> listManagers = null;
         try {
-            listManagers = managerModel.getData();
+            listManagers = MainService.getData(managerModel);
         } catch (Exception e) {
             listManagers = new ModelList<>();
         }
         for (EmployeeModel.InnerEmployeeModel manager : listManagers.getList()) {
-            cmbManager.addItem(new ComboItem(manager.SurnameAngajat, manager.UserID + ""));
+            cmbManager.addItem(new ComboItem(manager.EmployeeName, manager.UserID + ""));
         }
         pnlMain.add(cmbManager, c3);
 
@@ -127,10 +132,14 @@ public class EmployeeAdd {
         c3.gridx = 2;
         JComboBox cmbSalary = new JComboBox();
         SalaryModel salaryModel = SalaryModel.getInstance();
-        salaryModel.setDatabaseType(caller.getDatabaseType());
+        try {
+            MainService.setDatabaseType(salaryModel, caller.getDatabaseType());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         ModelList<SalaryModel.InnerSalaryModel> listSalaries = null;
         try {
-            listSalaries = salaryModel.getData();
+            listSalaries = MainService.getData(salaryModel);
         } catch (Exception e) {
             listSalaries = new ModelList<>();
         }
@@ -141,17 +150,21 @@ public class EmployeeAdd {
 
         c3.gridy = 5;
         c3.gridx = 1;
-        JLabel lblUtilizator = new JLabel("Surname");
-        lblUtilizator.setText("Surname");
+        JLabel lblUtilizator = new JLabel("User name");
+        lblUtilizator.setText("User name");
         pnlMain.add(lblUtilizator, c3);
 
         c3.gridx = 2;
         JComboBox cmbUtilizator = new JComboBox();
         UserModel userModel = UserModel.getInstance();
-        userModel.setDatabaseType(caller.getDatabaseType());
+        try {
+            MainService.setDatabaseType(userModel, caller.getDatabaseType());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         ModelList<UserModel.InnerUserModel> listUsers = null;
         try {
-            listUsers = userModel.getData();
+            listUsers = MainService.getData(userModel);
         } catch (Exception e) {
             listUsers = new ModelList<>();
         }
@@ -174,7 +187,7 @@ public class EmployeeAdd {
             employee.SalaryID = Integer.parseInt(((ComboItem) cmbSalary.getSelectedItem()).getValue());
             employee.UserID = Integer.parseInt(((ComboItem) cmbUtilizator.getSelectedItem()).getValue());
             try {
-                employeeModel.insertRow(employee);
+                MainService.insert(employeeModel, employee);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
@@ -252,7 +265,7 @@ public class EmployeeAdd {
     public void closeFrame(JFrame frame, boolean initParent) {
         frame.dispose();
         if(initParent)
-            this.caller.initEmployeeTable();
+            this.caller.initEmployeeTable(null, null, null);
         this.parentFrame.setEnabled(true);
         this.parentFrame.setFocusable(true);
         this.parentFrame.setVisible(true);

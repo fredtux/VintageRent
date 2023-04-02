@@ -140,6 +140,21 @@ public class UserModelTest {
         return null;
     }
 
+    public void testFilteredData(List<Integer> id){
+        try {
+            UserModel muserModel = UserModel.getInstance();
+            MainService.setDatabaseType(muserModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getFilteredData(muserModel, "==", id.get(0).toString(), "UserID");
+
+            ModelList<UserModel.InnerUserModel> modelList = muserModel.getModelList();
+            UserModel.InnerUserModel data = modelList.getList().get(0);
+
+            assertEquals(id.get(0), Integer.valueOf(data.UserID));
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
     public void delete(List<Integer> id){
         try {
             UserModel muserModel = UserModel.getInstance();
@@ -163,6 +178,7 @@ public class UserModelTest {
     public void insertUpdateDelete() {
         try {
             List<Integer> newId = this.insert();
+            this.testFilteredData(newId);
             this.update(newId);
             this.delete(newId);
         } catch (Exception e) {
@@ -174,5 +190,28 @@ public class UserModelTest {
     public void getInstance() {
         UserModel muserModel = UserModel.getInstance();
         assertNotNull(muserModel);
+    }
+
+    @Test
+    public void getAttributes(){
+        try {
+            List<String> attributes = MainService.getAttributes(UserModel.class);
+            assertNotNull(attributes);
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void truncate(){
+        try{
+            UserModel classModel = UserModel.getInstance();
+            MainService.setDatabaseType(classModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.truncate(classModel);
+            ModelList<UserModel.InnerUserModel> modelList = MainService.getModelList(classModel);
+            assertEquals(0, modelList.getList().size());
+        } catch (Exception e){
+            fail(e.getMessage());
+        }
     }
 }

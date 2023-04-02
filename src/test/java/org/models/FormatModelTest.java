@@ -137,6 +137,21 @@ public class FormatModelTest {
         return null;
     }
 
+    public void testFilteredData(List<Integer> id){
+        try {
+            FormatModel formatModel = FormatModel.getInstance();
+            MainService.setDatabaseType(formatModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getFilteredData(formatModel, "==", id.get(0).toString(), "FormatID");
+
+            ModelList<FormatModel.InnerFormatModel> modelList = formatModel.getModelList();
+            FormatModel.InnerFormatModel data = modelList.getList().get(0);
+
+            assertEquals(id.get(0), Integer.valueOf(data.FormatID));
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
     public void delete(List<Integer> id){
         try {
             FormatModel formatModel = FormatModel.getInstance();
@@ -160,6 +175,7 @@ public class FormatModelTest {
     public void insertUpdateDelete() {
         try {
             List<Integer> newId = this.insert();
+            this.testFilteredData(newId);
             this.update(newId);
             this.delete(newId);
         } catch (Exception e) {
@@ -171,5 +187,28 @@ public class FormatModelTest {
     public void getInstance() {
         FormatModel formatModel = FormatModel.getInstance();
         assertNotNull(formatModel);
+    }
+
+    @Test
+    public void getAttributes(){
+        try {
+            List<String> attributes = MainService.getAttributes(FormatModel.class);
+            assertNotNull(attributes);
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void truncate(){
+        try{
+            FormatModel classModel = FormatModel.getInstance();
+            MainService.setDatabaseType(classModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.truncate(classModel);
+            ModelList<FormatModel.InnerFormatModel> modelList = MainService.getModelList(classModel);
+            assertEquals(0, modelList.getList().size());
+        } catch (Exception e){
+            fail(e.getMessage());
+        }
     }
 }

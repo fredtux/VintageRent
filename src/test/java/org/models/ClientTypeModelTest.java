@@ -137,6 +137,21 @@ public class ClientTypeModelTest {
         return null;
     }
 
+    public void testFilteredData(List<Integer> id){
+        try {
+            ClientTypeModel clientTypeModel = ClientTypeModel.getInstance();
+            MainService.setDatabaseType(clientTypeModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.getFilteredData(clientTypeModel, "==", id.get(0).toString(), "TypeID");
+
+            ModelList<ClientTypeModel.InnerClientTypeModel> modelList = clientTypeModel.getModelList();
+            ClientTypeModel.InnerClientTypeModel data = modelList.getList().get(0);
+
+            assertEquals(id.get(0), Integer.valueOf(data.TypeID));
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
     public void delete(List<Integer> id){
         try {
             ClientTypeModel clientTypeModel = ClientTypeModel.getInstance();
@@ -160,6 +175,7 @@ public class ClientTypeModelTest {
     public void insertUpdateDelete() {
         try {
             List<Integer> newId = this.insert();
+            this.testFilteredData(newId);
             this.update(newId);
             this.delete(newId);
         } catch (Exception e) {
@@ -171,5 +187,28 @@ public class ClientTypeModelTest {
     public void getInstance() {
         ClientTypeModel clientTypeModel = ClientTypeModel.getInstance();
         assertNotNull(clientTypeModel);
+    }
+
+    @Test
+    public void getAttributes(){
+        try {
+            List<String> attributes = MainService.getAttributes(ClientTypeModel.class);
+            assertNotNull(attributes);
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void truncate(){
+        try{
+            ClientTypeModel classModel = ClientTypeModel.getInstance();
+            MainService.setDatabaseType(classModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.truncate(classModel);
+            ModelList<ClientTypeModel.InnerClientTypeModel> modelList = MainService.getModelList(classModel);
+            assertEquals(0, modelList.getList().size());
+        } catch (Exception e){
+            fail(e.getMessage());
+        }
     }
 }

@@ -1,5 +1,6 @@
 package org.gui.tables;
 
+import org.actions.MainService;
 import org.gui.custom.ComboItem;
 import org.gui.main.MainGUI;
 import org.jdatepicker.impl.JDatePanelImpl;
@@ -83,10 +84,14 @@ public class CameraAdd {
         c3.gridx = 2;
         JComboBox cmbFormat = new JComboBox();
         FormatModel formatModel = FormatModel.getInstance();
-        formatModel.setDatabaseType(caller.getDatabaseType());
+        try {
+            MainService.setDatabaseType(formatModel, caller.getDatabaseType());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         ModelList<FormatModel.InnerFormatModel> listFormats = null;
         try {
-            listFormats = formatModel.getData();
+            listFormats = MainService.getData(formatModel);
         } catch (Exception e) {
             listFormats = new ModelList<>();
         }
@@ -104,10 +109,14 @@ public class CameraAdd {
         c3.gridx = 2;
         JComboBox cmbCameraType = new JComboBox();
         CameraTypeModel cameraTypeModel = CameraTypeModel.getInstance();
-        cameraTypeModel.setDatabaseType(caller.getDatabaseType());
+        try {
+            MainService.setDatabaseType(cameraTypeModel, caller.getDatabaseType());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         ModelList<CameraTypeModel.InnerCameraTypeModel> listCameraTypes = null;
         try {
-            listCameraTypes = cameraTypeModel.getData();
+            listCameraTypes = MainService.getData(cameraTypeModel);
         } catch (Exception e) {
             listCameraTypes = new ModelList<>();
         }
@@ -125,10 +134,14 @@ public class CameraAdd {
         c3.gridx = 2;
         JComboBox cmbMount = new JComboBox();
         MountModel monturaModel = MountModel.getInstance();
-        monturaModel.setDatabaseType(caller.getDatabaseType());
+        try {
+            MainService.setDatabaseType(monturaModel, caller.getDatabaseType());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         ModelList<MountModel.InnerMountModel> listMounts = null;
         try {
-            listMounts = monturaModel.getData();
+            listMounts = MainService.getData(monturaModel);
         } catch (Exception e) {
             listMounts = new ModelList<>();
         }
@@ -186,7 +199,7 @@ public class CameraAdd {
             camera.Price = Integer.parseInt(txtPrice.getText());
             camera.RentalPrice = Integer.parseInt(txtRentalPrice.getText());
             try {
-                cameraModel.insertRow(camera);
+                MainService.insert(cameraModel, camera);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
@@ -231,7 +244,7 @@ public class CameraAdd {
     public void closeFrame(JFrame frame, boolean initParent) {
         frame.dispose();
         if(initParent)
-            this.caller.initCameraTable();
+            this.caller.initCameraTable(null ,null, null);
         this.parentFrame.setEnabled(true);
         this.parentFrame.setFocusable(true);
         this.parentFrame.setVisible(true);
