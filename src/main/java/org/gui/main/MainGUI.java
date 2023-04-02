@@ -1179,6 +1179,7 @@ public class MainGUI { // Singleton
             class TableModelEvents implements TableModelListener {
 
                public void setValueAt(String value, int row, int column) throws Exception {
+                    row = tblMain.convertRowIndexToModel(row);
                     RentModel rm = RentModel.getInstance();
                     ModelList<RentModel.InnerRentModel> modelList = new ModelList<>();
                     RentModel.InnerRentModel irm = new RentModel.InnerRentModel();
