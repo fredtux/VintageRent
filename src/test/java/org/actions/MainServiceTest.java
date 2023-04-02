@@ -80,6 +80,7 @@ public class MainServiceTest {
             // Add new Mount
             MountModel mountModel = MountModel.getInstance();
             MainService.setDatabaseType(mountModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.truncate(mountModel);
             MainService.getData(mountModel);
 
             MountModel.InnerMountModel dataMount = new MountModel.InnerMountModel();
@@ -91,6 +92,7 @@ public class MainServiceTest {
             // Add 8 new cameras
             CameraModel cameraModel = CameraModel.getInstance();
             MainService.setDatabaseType(cameraModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.truncate(cameraModel);
             MainService.getData(cameraModel);
 
             CameraModel.InnerCameraModel dataCamera = new CameraModel.InnerCameraModel();
@@ -112,6 +114,7 @@ public class MainServiceTest {
             // Add 8 new objectives
             ObjectiveModel objectiveModel = ObjectiveModel.getInstance();
             MainService.setDatabaseType(objectiveModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.truncate(objectiveModel);
             MainService.getData(objectiveModel);
 
             ObjectiveModel.InnerObjectiveModel objectiveData = new ObjectiveModel.InnerObjectiveModel();
@@ -135,9 +138,7 @@ public class MainServiceTest {
 
             // Check results
             assertNotNull(result);
-            if(result.size() < 8){
-                fail("Not enough data");
-            }
+             assertEquals(16, result.size());
             int objectives = 0, cameras = 0;
             for(Model.AbstractInnerModel model : result){
                 if(model instanceof ObjectiveModel.InnerObjectiveModel){
@@ -147,12 +148,8 @@ public class MainServiceTest {
                 }
             }
 
-            if(objectives < 8){
-                fail("Not enough objectives");
-            }
-            if(cameras < 8){
-                fail("Not enough cameras");
-            }
+            assertEquals(8, objectives);
+            assertEquals(8, cameras);
 
         } catch (Exception e) {
             fail(e.getMessage());

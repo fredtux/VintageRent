@@ -204,4 +204,17 @@ public class ObjectiveModelTest {
             fail(e.getMessage());
         }
     }
+
+    @Test
+    public void truncate(){
+        try{
+            ObjectiveModel classModel = ObjectiveModel.getInstance();
+            MainService.setDatabaseType(classModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.truncate(classModel);
+            ModelList<ObjectiveModel.InnerObjectiveModel> modelList = MainService.getModelList(classModel);
+            assertEquals(0, modelList.getList().size());
+        } catch (Exception e){
+            fail(e.getMessage());
+        }
+    }
 }

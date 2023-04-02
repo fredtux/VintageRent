@@ -197,4 +197,17 @@ public class AddressModelTest {
             fail(e.getMessage());
         }
     }
+
+    @Test
+    public void truncate(){
+        try{
+            AddressModel addressModel = AddressModel.getInstance();
+            MainService.setDatabaseType(addressModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.truncate(addressModel);
+            ModelList<AddressModel.InnerAddressModel> modelList = MainService.getModelList(addressModel);
+            assertEquals(0, modelList.getList().size());
+        } catch (Exception e){
+            fail(e.getMessage());
+        }
+    }
 }

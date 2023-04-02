@@ -206,4 +206,17 @@ public class RentModelTest {
             fail(e.getMessage());
         }
     }
+
+    @Test
+    public void truncate(){
+        try{
+            RentModel classModel = RentModel.getInstance();
+            MainService.setDatabaseType(classModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.truncate(classModel);
+            ModelList<RentModel.InnerRentModel> modelList = MainService.getModelList(classModel);
+            assertEquals(0, modelList.getList().size());
+        } catch (Exception e){
+            fail(e.getMessage());
+        }
+    }
 }

@@ -198,4 +198,17 @@ public class SalaryModelTest {
             fail(e.getMessage());
         }
     }
+
+    @Test
+    public void truncate(){
+        try{
+            SalaryModel classModel = SalaryModel.getInstance();
+            MainService.setDatabaseType(classModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.truncate(classModel);
+            ModelList<SalaryModel.InnerSalaryModel> modelList = MainService.getModelList(classModel);
+            assertEquals(0, modelList.getList().size());
+        } catch (Exception e){
+            fail(e.getMessage());
+        }
+    }
 }

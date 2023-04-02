@@ -197,4 +197,17 @@ public class MountModelTest {
             fail(e.getMessage());
         }
     }
+
+    @Test
+    public void truncate(){
+        try{
+            MountModel classModel = MountModel.getInstance();
+            MainService.setDatabaseType(classModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.truncate(classModel);
+            ModelList<MountModel.InnerMountModel> modelList = MainService.getModelList(classModel);
+            assertEquals(0, modelList.getList().size());
+        } catch (Exception e){
+            fail(e.getMessage());
+        }
+    }
 }

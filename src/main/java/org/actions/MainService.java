@@ -216,6 +216,10 @@ public class MainService {
         model.updateData(innerModelList);
     }
 
+    public static void truncate(LinkModelToDatabase model) throws Exception {
+        model.truncate();
+    }
+
     public static List<String> getAttributes(Class model) throws Exception {
         List<String> attributes = new ArrayList<>();
         for (Field field : model.getDeclaredFields()) {
@@ -227,6 +231,7 @@ public class MainService {
     public static void getFilteredData(LinkModelToDatabase model, String comparator, String value, String column) throws Exception {
         model.getFilteredData(comparator, value, column);
     }
+
 
     public static boolean sendEmail(String to, int id, String report, DatabaseConnection.DatabaseType dbType) throws Exception {
         Map<String, String> result = null;

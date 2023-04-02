@@ -204,4 +204,16 @@ public class CameraModelTest {
             fail(e.getMessage());
         }
     }
+    @Test
+    public void truncate(){
+        try{
+            CameraModel classModel = CameraModel.getInstance();
+            MainService.setDatabaseType(classModel, DatabaseConnection.DatabaseType.INMEMORY);
+            MainService.truncate(classModel);
+            ModelList<CameraModel.InnerCameraModel> modelList = MainService.getModelList(classModel);
+            assertEquals(0, modelList.getList().size());
+        } catch (Exception e){
+            fail(e.getMessage());
+        }
+    }
 }

@@ -263,7 +263,22 @@ public class OracleConnection extends DatabaseConnection {
 
     @Override
     public void truncate(String tableName) throws Exception {
+        Statement stmt = null;
+        try{
+            String query = "TRUNCATE TABLE " + tableName ;
 
+            stmt = this.conn.createStatement();
+            stmt.executeUpdate(query);
+        } catch (SQLException ex) {
+            System.out.println("Error executing query: " + ex.getMessage());
+            throw new SQLException("Error executing query: " + ex.getMessage());
+        }
+
+        try{
+            logger.log("OracleConnection executed truncate");
+        } catch (Exception ex) {
+            System.out.println("Error logging to CSV: " + ex.getMessage());
+        }
     }
 
     @Override

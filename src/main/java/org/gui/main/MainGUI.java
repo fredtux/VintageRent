@@ -1548,6 +1548,58 @@ public class MainGUI { // Singleton
         dtm.removeRow(row);
     }
 
+    private void truncateTable() throws Exception{
+        if (this.currentTableType == TableType.ADDRESS) {
+            AddressModel model = AddressModel.getInstance();
+            MainService.truncate(model);
+        } else if(this.currentTableType == TableType.ADMINISTRATOR){
+            AdministratorModel model = AdministratorModel.getInstance();
+            MainService.truncate(model);
+        } else if(this.currentTableType == TableType.ADMINISTRATORSUBDOMAIN){
+            AdministratorSubdomainModel model = AdministratorSubdomainModel.getInstance();
+            MainService.truncate(model);
+        } else if(this.currentTableType == TableType.CAMERA){
+            CameraModel model = CameraModel.getInstance();
+            MainService.truncate(model);
+        } else if(this.currentTableType == TableType.CAMERATYPE){
+            CameraTypeModel model = CameraTypeModel.getInstance();
+            MainService.truncate(model);
+        } else if(this.currentTableType == TableType.CLIENT){
+            ClientModel model = ClientModel.getInstance();
+            MainService.truncate(model);
+        } else if(this.currentTableType == TableType.CLIENTTYPE){
+            ClientTypeModel model = ClientTypeModel.getInstance();
+            MainService.truncate(model);
+        } else if(this.currentTableType == TableType.EMPLOYEE){
+            EmployeeModel model = EmployeeModel.getInstance();
+            MainService.truncate(model);
+        } else if(this.currentTableType == TableType.FORMAT){
+            FormatModel model = FormatModel.getInstance();
+            MainService.truncate(model);
+        } else if(this.currentTableType == TableType.MOUNT){
+            MountModel model = MountModel.getInstance();
+            MainService.truncate(model);
+        } else if(this.currentTableType == TableType.OBJECTIVE){
+            ObjectiveModel model = ObjectiveModel.getInstance();
+            MainService.truncate(model);
+        } else if(this.currentTableType == TableType.RENT){
+            RentModel model = RentModel.getInstance();
+            MainService.truncate(model);
+        } else if(this.currentTableType == TableType.SALARY){
+            SalaryModel model = SalaryModel.getInstance();
+            MainService.truncate(model);
+        } else if(this.currentTableType == TableType.SUBDOMAIN){
+            SubdomainModel model = SubdomainModel.getInstance();
+            MainService.truncate(model);
+        } else if(this.currentTableType == TableType.USER){
+            UserModel model = UserModel.getInstance();
+            MainService.truncate(model);
+        }
+
+        DefaultTableModel dtm = ((DefaultTableModel) tblMain.getModel());
+        dtm.setRowCount(0);
+    }
+
     public void main(String[] args) {
         JFrame frame = new JFrame("Vintage Rent");
         Dimension minSize = new Dimension();
@@ -1872,6 +1924,24 @@ public class MainGUI { // Singleton
             }
         });
         menuLog.add(menuItemLog);
+
+        JMenu menuDanger = new JMenu("Danger Zone");
+        JMenuItem menuTruncate = new JMenuItem("Truncate current table");
+        menuTruncate.addActionListener(e -> {
+            int confirmed = JOptionPane.showConfirmDialog(null,
+                    "Are you sure you want to truncate the current table?", "Truncate table",
+                    JOptionPane.YES_NO_OPTION);
+
+            if (confirmed == JOptionPane.YES_OPTION) {
+                try {
+                    this.truncateTable();
+                } catch (Exception e2) {
+                    e2.printStackTrace();
+                }
+            }
+        });
+        menuDanger.add(menuTruncate);
+        menuBar.add(menuDanger);
 
         JMenu menu2 = new JMenu("About");
         class AboutMenuListener implements MenuListener {

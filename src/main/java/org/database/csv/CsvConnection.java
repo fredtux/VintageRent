@@ -161,7 +161,12 @@ public class CsvConnection extends DatabaseConnection {
             sdata = lresult.subList(1, lresult.size());
         }
 
+        if(sdata == null){
+            return 1;
+        }
+
         int max = 0;
+
         for (String[] strings : sdata) {
             if(Integer.parseInt(strings[0]) > max)
                 max = Integer.parseInt(strings[0]);
@@ -291,13 +296,13 @@ public class CsvConnection extends DatabaseConnection {
     public ResultSet getResultSet(List<String> headers, List<List<Object>> data) throws Exception {
 
         // validation
-        if (headers == null || data == null) {
+        if (headers == null) {
             throw new Exception("null parameters");
         }
 
-        if (headers.size() != data.get(0).size()) {
-            throw new Exception("parameters size are not equals");
-        }
+//        if (headers.size() != data.get(0).size()) {
+//            throw new Exception("parameters size are not equals");
+//        }
 
 
         // create a mock result set
@@ -309,8 +314,10 @@ public class CsvConnection extends DatabaseConnection {
         }
 
         // add data
-        for (List<Object> list : data) {
-            mockResultSet.addRow(list);
+        if(data != null) {
+            for (List<Object> list : data) {
+                mockResultSet.addRow(list);
+            }
         }
 
         return mockResultSet;
@@ -507,9 +514,22 @@ public class CsvConnection extends DatabaseConnection {
 
 //        ClassLoader classLoader = getClass().getClassLoader();
         File f = new File(filePath);
-        this.writer = new CSVWriter(new FileWriter(f));
-        this.writer.writeNext(null); // write nothing
+
+        // Keep first line, delete the rest
+        Reader r = new BufferedReader(new FileReader(filePath));
+        this.reader = new CSVReader(r);
+        List<String[]> lresult = this.reader.readAll();
+        this.reader.close();
+        List<String> headers = null;
+        if(lresult.size() > 0){
+            headers = Arrays.asList(lresult.get(0));
+        }
+        this.writer = new CSVWriter(new FileWriter(filePath));
+        this.writer.writeNext(headers.toArray(new String[headers.size()]));
         this.writer.close();
+//        this.writer = new CSVWriter(new FileWriter(f));
+//        this.writer.writeNext(null); // write nothing
+//        this.writer.close();
 
         try{
             logger.log("CsvConnection file truncated");

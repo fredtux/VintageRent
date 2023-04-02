@@ -9,6 +9,7 @@ De asemenea, poate fi folosita si interfata grafica de unde se va alege Datasour
 1. Actiuni 
    - CRUD pe fiecare tabela (Address, Administrator, AdministratorSubdomain, Camera, CameraType, Client, Employee, Format, Mount, Objective, Rent, Salary, User)
    - Filtrare (==, <, >, >=, <= si !=) pe fiecare tabela mentionata anterior
+   - Trunchiere pe fiecare tabela mentionata anterior
    - Raport clienti
    - Raport formate
    - Raport monturi
@@ -176,95 +177,111 @@ ___
 - Stergere inchiriere
 - Creare inchiriere
 - Filtrare inchiriere
+- Trunchiere inchiriere
 ___
 - Vizualizare camere
 - Modificare camera
 - Stergere camera
 - Creare camera
 - Filtrare camera
+- Trunchiere camera
 ___
 - Vizualizare tipuri camere
 - Modificare tip camera
 - Stergere tip camera
 - Creare tip camera
 - Filtrare tip camera
+- Trunchiere tip camera
 ___
 - Vizualizare formaturi camere
 - Modificare format camera
 - Stergere format camera
 - Creare format camera
 - Filtrare format camera
+- Trunchiere format camera
 ___
 - Vizualizare angajati
 - Modificare angajat
 - Stergere angajat
 - Creare angajat
 - Filtrare angajat
+- Trunchiere angajat
 ___
 - Vizualizare salarii
 - Modificare salariu
 - Stergere salariu
 - Creare salariu
 - Filtrare salariu
+- Trunchiere salariu
 ___
 - Vizualizare utilizatori
 - Modificare utilizator
 - Stergere utilizator
 - Creare utilizator
 - Filtrare utilizator
+- Trunchiere utilizator
 ___
 - Vizualizare adrese
 - Modificare adresa
 - Stergere adresa
 - Creare adresa
 - Filtrare adresa
+- Trunchiere adresa
 ___
 - Vizualizare administratori
 - Modificare administrator
 - Stergere administrator
 - Creare administrator
 - Filtrare administrator
+- Trunchiere administrator
 ___
 - Vizualizare administratori subdomenii
 - Stergere administrator subdomeniu
 - Creare administrator subdomeniu
 - Filtrare administrator subdomeniu
+- Trunchiere administrator subdomeniu
 ___
 - Vizualizare clienti
 - Modificare client
 - Stergere client
 - Creare client
 - Filtrare client
+- Trunchiere client
 ___
 - Vizualizare tipuri client
 - Modificare tip client
 - Stergere tip client
 - Creare tip client
 - Filtrare tip client
+- Trunchiere tip client
 ___
 - Vizualizare monturi
 - Modificare montura
 - Stergere montura
 - Creare montura
 - Filtrare montura
+- Trunchiere montura
 ___
 - Vizualizare obiective
 - Modificare obiectiv
 - Stergere obiectiv
 - Creare obiectiv
 - Filtrare obiectiv
+- Trunchiere obiectiv
 ___
 - Vizualizare salarii
 - Modificare salariu
 - Stergere salariu
 - Creare salariu
 - Filtrare salariu
+- Trunchiere salariu
 ___
 - Vizualizare subdomenii
 - Modificare subdomeniu
 - Stergere subdomeniu
 - Creare subdomeniu
 - Filtrare subdomeniu
+- Trunchiere subdomeniu
 ___
 - Raport clienti
 - Raport vanzari per format

@@ -348,4 +348,12 @@ public class AddressModel extends Model implements LinkModelToDatabase<ModelList
             System.out.println("Error logging to CSV: " + ex.getMessage());
         }
     }
+
+    @Override
+    public void truncate() throws Exception {
+        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
+        this.setDatabaseType(databaseType);
+        db.truncate(this.tableName);
+        this.getData();
+    }
 }

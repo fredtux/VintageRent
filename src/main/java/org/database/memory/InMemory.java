@@ -1024,20 +1024,8 @@ public class InMemory extends DatabaseConnection {
                 for (Field f : model.getClass().getDeclaredFields()) {
                     if (f.getName().toLowerCase().equals(p.first.toLowerCase())) {
                         f.setAccessible(true);
-                        // Cast p.second to f.getType()
-                        if (f.getType() == String.class) {
-                            f.set(model, p.second);
+                        if(this.processField(f, model, p))
                             break;
-                        } else if (f.getType() == int.class) {
-                            f.set(model, Integer.parseInt(p.second));
-                            break;
-                        } else if (f.getType() == double.class) {
-                            f.set(model, Double.parseDouble(p.second));
-                            break;
-                        } else if (f.getType() == boolean.class) {
-                            f.set(model, Boolean.parseBoolean(p.second));
-                            break;
-                        }
                     }
                 }
             }
@@ -1063,20 +1051,8 @@ public class InMemory extends DatabaseConnection {
                 for (Field f : model.getClass().getDeclaredFields()) {
                     if (f.getName().toLowerCase().equals(p.first.toLowerCase())) {
                         f.setAccessible(true);
-                        // Cast p.second to f.getType()
-                        if (f.getType() == String.class) {
-                            f.set(model, p.second);
+                        if(this.processField(f, model, p))
                             break;
-                        } else if (f.getType() == int.class) {
-                            f.set(model, Integer.parseInt(p.second));
-                            break;
-                        } else if (f.getType() == double.class) {
-                            f.set(model, Double.parseDouble(p.second));
-                            break;
-                        } else if (f.getType() == boolean.class) {
-                            f.set(model, Boolean.parseBoolean(p.second));
-                            break;
-                        }
                     }
                 }
             }
@@ -1102,20 +1078,8 @@ public class InMemory extends DatabaseConnection {
                 for (Field f : model.getClass().getDeclaredFields()) {
                     if (f.getName().toLowerCase().equals(p.first.toLowerCase())) {
                         f.setAccessible(true);
-                        // Cast p.second to f.getType()
-                        if (f.getType() == String.class) {
-                            f.set(model, p.second);
+                        if(this.processField(f, model, p))
                             break;
-                        } else if (f.getType() == int.class) {
-                            f.set(model, Integer.parseInt(p.second));
-                            break;
-                        } else if (f.getType() == double.class) {
-                            f.set(model, Double.parseDouble(p.second));
-                            break;
-                        } else if (f.getType() == boolean.class) {
-                            f.set(model, Boolean.parseBoolean(p.second));
-                            break;
-                        }
                     }
                 }
             }
@@ -1141,32 +1105,8 @@ public class InMemory extends DatabaseConnection {
                 for (Field f : model.getClass().getDeclaredFields()) {
                     if (f.getName().toLowerCase().equals(p.first.toLowerCase())) {
                         f.setAccessible(true);
-                        // Cast p.second to f.getType()
-                        if (f.getType() == String.class) {
-                            f.set(model, p.second);
+                        if(this.processField(f, model, p))
                             break;
-                        } else if (f.getType() == int.class) {
-                            f.set(model, Integer.parseInt(p.second));
-                            break;
-                        } else if (f.getType() == double.class) {
-                            f.set(model, Double.parseDouble(p.second));
-                            break;
-                        } else if (f.getType() == boolean.class) {
-                            f.set(model, Boolean.parseBoolean(p.second));
-                            break;
-                        } else if (f.getType() == Date.class) {
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                            try {
-                                f.set(model, sdf.parse(p.second));
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            break;
-                        } else if (f.getType() == LocalDateTime.class) {
-                            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                            f.set(model, LocalDateTime.parse(p.second, dtf));
-                            break;
-                        }
                     }
                 }
             }
@@ -1193,20 +1133,8 @@ public class InMemory extends DatabaseConnection {
                 for (Field f : model.getClass().getDeclaredFields()) {
                     if (f.getName().toLowerCase().equals(p.first.toLowerCase())) {
                         f.setAccessible(true);
-                        // Cast p.second to f.getType()
-                        if (f.getType() == String.class) {
-                            f.set(model, p.second);
+                        if(this.processField(f, model, p))
                             break;
-                        } else if (f.getType() == int.class) {
-                            f.set(model, Integer.parseInt(p.second));
-                            break;
-                        } else if (f.getType() == double.class) {
-                            f.set(model, Double.parseDouble(p.second));
-                            break;
-                        } else if (f.getType() == boolean.class) {
-                            f.set(model, Boolean.parseBoolean(p.second));
-                            break;
-                        }
                     }
                 }
             }
@@ -1231,21 +1159,8 @@ public class InMemory extends DatabaseConnection {
             for (Pair<String, String> p : values) {
                 for (Field f : model.getClass().getDeclaredFields()) {
                     if (f.getName().toLowerCase().equals(p.first.toLowerCase())) {
-                        f.setAccessible(true);
-                        // Cast p.second to f.getType()
-                        if (f.getType() == String.class) {
-                            f.set(model, p.second);
+                        if(this.processField(f, model, p))
                             break;
-                        } else if (f.getType() == int.class) {
-                            f.set(model, Integer.parseInt(p.second));
-                            break;
-                        } else if (f.getType() == double.class) {
-                            f.set(model, Double.parseDouble(p.second));
-                            break;
-                        } else if (f.getType() == boolean.class) {
-                            f.set(model, Boolean.parseBoolean(p.second));
-                            break;
-                        }
                     }
                 }
             }
@@ -1271,32 +1186,8 @@ public class InMemory extends DatabaseConnection {
                 for (Field f : model.getClass().getDeclaredFields()) {
                     if (f.getName().toLowerCase().equals(p.first.toLowerCase())) {
                         f.setAccessible(true);
-                        // Cast p.second to f.getType()
-                        if (f.getType() == String.class) {
-                            f.set(model, p.second);
+                        if(this.processField(f, model, p))
                             break;
-                        } else if (f.getType() == int.class) {
-                            f.set(model, Integer.parseInt(p.second));
-                            break;
-                        } else if (f.getType() == double.class) {
-                            f.set(model, Double.parseDouble(p.second));
-                            break;
-                        } else if (f.getType() == boolean.class) {
-                            f.set(model, Boolean.parseBoolean(p.second));
-                            break;
-                        } else if (f.getType() == Date.class) {
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                            try {
-                                f.set(model, sdf.parse(p.second));
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            break;
-                        } else if (f.getType() == LocalDateTime.class) {
-                            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                            f.set(model, LocalDateTime.parse(p.second, dtf));
-                            break;
-                        }
                     }
                 }
             }
@@ -1323,32 +1214,8 @@ public class InMemory extends DatabaseConnection {
                 for (Field f : model.getClass().getDeclaredFields()) {
                     if (f.getName().toLowerCase().equals(p.first.toLowerCase())) {
                         f.setAccessible(true);
-                        // Cast p.second to f.getType()
-                        if (f.getType() == String.class) {
-                            f.set(model, p.second);
+                        if(this.processField(f, model, p))
                             break;
-                        } else if (f.getType() == int.class) {
-                            f.set(model, Integer.parseInt(p.second));
-                            break;
-                        } else if (f.getType() == double.class) {
-                            f.set(model, Double.parseDouble(p.second));
-                            break;
-                        } else if (f.getType() == boolean.class) {
-                            f.set(model, Boolean.parseBoolean(p.second));
-                            break;
-                        } else if (f.getType() == Date.class) {
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                            try {
-                                f.set(model, sdf.parse(p.second));
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            break;
-                        } else if (f.getType() == LocalDateTime.class) {
-                            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                            f.set(model, LocalDateTime.parse(p.second, dtf));
-                            break;
-                        }
                     }
                 }
             }
@@ -1375,32 +1242,8 @@ public class InMemory extends DatabaseConnection {
                 for (Field f : model.getClass().getDeclaredFields()) {
                     if (f.getName().toLowerCase().equals(p.first.toLowerCase())) {
                         f.setAccessible(true);
-                        // Cast p.second to f.getType()
-                        if (f.getType() == String.class) {
-                            f.set(model, p.second);
+                        if(this.processField(f, model, p))
                             break;
-                        } else if (f.getType() == int.class) {
-                            f.set(model, Integer.parseInt(p.second));
-                            break;
-                        } else if (f.getType() == double.class) {
-                            f.set(model, Double.parseDouble(p.second));
-                            break;
-                        } else if (f.getType() == boolean.class) {
-                            f.set(model, Boolean.parseBoolean(p.second));
-                            break;
-                        } else if (f.getType() == Date.class) {
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                            try {
-                                f.set(model, sdf.parse(p.second));
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            break;
-                        } else if (f.getType() == LocalDateTime.class) {
-                            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                            f.set(model, LocalDateTime.parse(p.second, dtf));
-                            break;
-                        }
                     }
                 }
             }
@@ -1427,31 +1270,8 @@ public class InMemory extends DatabaseConnection {
                 for (Field f : model.getClass().getDeclaredFields()) {
                     if (f.getName().toLowerCase().equals(p.first.toLowerCase())) {
                         f.setAccessible(true);
-                        // Cast p.second to f.getType()
-                        if (f.getType() == String.class) {
-                            f.set(model, p.second);
+                        if(this.processField(f, model, p))
                             break;
-                        } else if (f.getType() == int.class) {
-                            f.set(model, Integer.parseInt(p.second));
-                            break;
-                        } else if (f.getType() == double.class) {
-                            f.set(model, Double.parseDouble(p.second));
-                            break;
-                        } else if (f.getType() == boolean.class) {
-                            f.set(model, Boolean.parseBoolean(p.second));
-                            break;
-                        } else if (f.getType() == Date.class) {
-                            try {
-                                f.set(model, Date.valueOf(p.second));
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            break;
-                        } else if (f.getType() == LocalDateTime.class) {
-                            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                            f.set(model, LocalDateTime.parse(p.second, dtf));
-                            break;
-                        }
                     }
                 }
             }
@@ -1472,31 +1292,8 @@ public class InMemory extends DatabaseConnection {
                 for (Field f : model.getClass().getDeclaredFields()) {
                     if (f.getName().toLowerCase().replace("_", "").equals(p.first.toLowerCase())) {
                         f.setAccessible(true);
-                        // Cast p.second to f.getType()
-                        if (f.getType() == String.class) {
-                            f.set(model, p.second);
+                        if(this.processField(f, model, p))
                             break;
-                        } else if (f.getType() == int.class) {
-                            f.set(model, Integer.parseInt(p.second));
-                            break;
-                        } else if (f.getType() == double.class) {
-                            f.set(model, Double.parseDouble(p.second));
-                            break;
-                        } else if (f.getType() == boolean.class) {
-                            f.set(model, Boolean.parseBoolean(p.second));
-                            break;
-                        } else if (f.getType() == Date.class) {
-                            try {
-                                f.set(model, Date.valueOf(p.second));
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            break;
-                        } else if (f.getType() == LocalDateTime.class) {
-                            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                            f.set(model, LocalDateTime.parse(p.second, dtf));
-                            break;
-                        }
                     }
                 }
             }
@@ -1523,32 +1320,8 @@ public class InMemory extends DatabaseConnection {
                 for (Field f : model.getClass().getDeclaredFields()) {
                     if (f.getName().toLowerCase().equals(p.first.toLowerCase())) {
                         f.setAccessible(true);
-                        // Cast p.second to f.getType()
-                        if (f.getType() == String.class) {
-                            f.set(model, p.second);
+                        if(this.processField(f, model, p))
                             break;
-                        } else if (f.getType() == int.class) {
-                            f.set(model, Integer.parseInt(p.second));
-                            break;
-                        } else if (f.getType() == double.class) {
-                            f.set(model, Double.parseDouble(p.second));
-                            break;
-                        } else if (f.getType() == boolean.class) {
-                            f.set(model, Boolean.parseBoolean(p.second));
-                            break;
-                        } else if (f.getType() == Date.class) {
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                            try {
-                                f.set(model, sdf.parse(p.second));
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            break;
-                        } else if (f.getType() == LocalDateTime.class) {
-                            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                            f.set(model, LocalDateTime.parse(p.second, dtf));
-                            break;
-                        }
                     }
                 }
             }
@@ -1575,32 +1348,8 @@ public class InMemory extends DatabaseConnection {
                 for (Field f : model.getClass().getDeclaredFields()) {
                     if (f.getName().toLowerCase().equals(p.first.toLowerCase())) {
                         f.setAccessible(true);
-                        // Cast p.second to f.getType()
-                        if (f.getType() == String.class) {
-                            f.set(model, p.second);
+                        if(this.processField(f, model, p))
                             break;
-                        } else if (f.getType() == int.class) {
-                            f.set(model, Integer.parseInt(p.second));
-                            break;
-                        } else if (f.getType() == double.class) {
-                            f.set(model, Double.parseDouble(p.second));
-                            break;
-                        } else if (f.getType() == boolean.class) {
-                            f.set(model, Boolean.parseBoolean(p.second));
-                            break;
-                        } else if (f.getType() == Date.class) {
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                            try {
-                                f.set(model, sdf.parse(p.second));
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            break;
-                        } else if (f.getType() == LocalDateTime.class) {
-                            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                            f.set(model, LocalDateTime.parse(p.second, dtf));
-                            break;
-                        }
                     }
                 }
             }
@@ -1626,33 +1375,8 @@ public class InMemory extends DatabaseConnection {
             for (Pair<String, String> p : values) {
                 for (Field f : model.getClass().getDeclaredFields()) {
                     if (f.getName().toLowerCase().equals(p.first.toLowerCase())) {
-                        f.setAccessible(true);
-                        // Cast p.second to f.getType()
-                        if (f.getType() == String.class) {
-                            f.set(model, p.second);
+                        if(this.processField(f, model, p))
                             break;
-                        } else if (f.getType() == int.class) {
-                            f.set(model, Integer.parseInt(p.second));
-                            break;
-                        } else if (f.getType() == double.class) {
-                            f.set(model, Double.parseDouble(p.second));
-                            break;
-                        } else if (f.getType() == boolean.class) {
-                            f.set(model, Boolean.parseBoolean(p.second));
-                            break;
-                        } else if (f.getType() == Date.class) {
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                            try {
-                                f.set(model, sdf.parse(p.second));
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            break;
-                        } else if (f.getType() == LocalDateTime.class) {
-                            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                            f.set(model, LocalDateTime.parse(p.second, dtf));
-                            break;
-                        }
                     }
                 }
             }
@@ -1678,33 +1402,8 @@ public class InMemory extends DatabaseConnection {
             for (Pair<String, String> p : values) {
                 for (Field f : model.getClass().getDeclaredFields()) {
                     if (f.getName().toLowerCase().equals(p.first.toLowerCase())) {
-                        f.setAccessible(true);
-                        // Cast p.second to f.getType()
-                        if (f.getType() == String.class) {
-                            f.set(model, p.second);
+                        if(this.processField(f, model, p))
                             break;
-                        } else if (f.getType() == int.class) {
-                            f.set(model, Integer.parseInt(p.second));
-                            break;
-                        } else if (f.getType() == double.class) {
-                            f.set(model, Double.parseDouble(p.second));
-                            break;
-                        } else if (f.getType() == boolean.class) {
-                            f.set(model, Boolean.parseBoolean(p.second));
-                            break;
-                        } else if (f.getType() == Date.class) {
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                            try {
-                                f.set(model, sdf.parse(p.second));
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            break;
-                        } else if (f.getType() == LocalDateTime.class) {
-                            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                            f.set(model, LocalDateTime.parse(p.second, dtf));
-                            break;
-                        }
                     }
                 }
             }
@@ -1714,6 +1413,42 @@ public class InMemory extends DatabaseConnection {
         }
 
 
+    }
+
+    private boolean processField(Field f, Model.AbstractInnerModel model, Pair<String, String> p) throws Exception {
+        f.setAccessible(true);
+        // Cast p.second to f.getType()
+        if (f.getType() == String.class) {
+            f.set(model, p.second);
+            return true;
+        } else if (f.getType() == int.class) {
+            f.set(model, Integer.parseInt(p.second));
+            return true;
+        } else if (f.getType() == double.class) {
+            f.set(model, Double.parseDouble(p.second));
+            return true;
+        } else if (f.getType() == boolean.class) {
+            f.set(model, Boolean.parseBoolean(p.second));
+            return true;
+        } else if (f.getType() == Date.class) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                f.set(model, sdf.parse(p.second));
+            } catch (Exception e) {
+                try{
+                    f.set(model, Date.valueOf(p.second));
+                } catch (Exception e2) {
+                    e2.printStackTrace();
+                }
+            }
+            return true;
+        } else if (f.getType() == LocalDateTime.class) {
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            f.set(model, LocalDateTime.parse(p.second, dtf));
+            return true;
+        }
+
+        return false;
     }
 
     private void deleteFromModelList(ModelList<?> list, Map<String, String> where) throws Exception {
@@ -1779,6 +1514,37 @@ public class InMemory extends DatabaseConnection {
 
     @Override
     public void truncate(String tableName) throws Exception {
+        if (tableName == "camera_type") {
+            this.cameraTypes.getList().clear();
+        } else if (tableName == "camera") {
+            this.cameras.getList().clear();
+        } else if (tableName == "format") {
+            this.formats.getList().clear();
+        } else if (tableName == "mount") {
+            this.mounts.getList().clear();
+        } else if (tableName == "client") {
+            this.clients.getList().clear();
+        } else if (tableName == "client_type") {
+            this.clientTypes.getList().clear();
+        } else if (tableName == "user") {
+            this.users.getList().clear();
+        } else if (tableName == "employee") {
+            this.employees.getList().clear();
+        } else if (tableName == "salary") {
+            this.salaries.getList().clear();
+        } else if (tableName == "objective") {
+            this.objectives.getList().clear();
+        } else if (tableName == "rent") {
+            this.rents.getList().clear();
+        } else if (tableName == "administrator") {
+            this.administrators.getList().clear();
+        } else if (tableName == "subdomain") {
+            this.subdomains.getList().clear();
+        } else if (tableName == "administrator_subdomain") {
+            this.administrator_subdomains.getList().clear();
+        } else if (tableName == "address") {
+            this.addresses.getList().clear();
+        }
 
     }
 

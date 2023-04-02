@@ -348,4 +348,11 @@ public class UserModel extends Model implements LinkModelToDatabase<ModelList<Us
         }
         return null;
     }
+    @Override
+    public void truncate() throws Exception {
+        DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
+        this.setDatabaseType(databaseType);
+        db.truncate(this.tableName);
+        this.getData();
+    }
 }
