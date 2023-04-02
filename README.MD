@@ -16,9 +16,9 @@ De asemenea, poate fi folosita si interfata grafica de unde se va alege Datasour
    - Email pentru rapoarte
    - Schimbare datasource
 2. Lista
-   - org.database.memory.InMemory contine List\<ModelList> modelLists. Fiecare ModelList contine un template separat
-   - org.database.DatabaseConnection contine ArrayList\<DatabaseConnection> instances, fiecare obiect mostenind DatabaseConnection
+   - org.database.memory.InMemory contine Map\<String, ModelList\<?>> modelLists. Fiecare ModelList contine un template separat
    - org.actions.MainService contine o metoda denumita getForMount care contine o lista cu 2 tipuri de obiecte (CameraModel.InnerCameraType si ObjectiveModel.InnerObjectiveType, ambele mostenesc Model.AbstractInnerModel) si minim 8 elemente pentru MountID = 1. Acest lucru este testat in MainServiceTest.getForMountTest()
+   - org.database.DatabaseConnection contine ArrayList\<DatabaseConnection> instances, fiecare obiect mostenind DatabaseConnection (fiind toate singleton, numarul de obiecte memorate este 3)
 
 ### Implementare
 #### clase simple cu atribute private / protected și metode de acces

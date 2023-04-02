@@ -8,32 +8,19 @@ import org.models.*;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.sql.*;
+import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class InMemory extends DatabaseConnection {
     private static InMemory instance = null;
-    private ModelList<CameraTypeModel.InnerCameraTypeModel> cameraTypes = null;
-    private ModelList<CameraModel.InnerCameraModel> cameras = null;
-    private ModelList<FormatModel.InnerFormatModel> formats = null;
-    private ModelList<MountModel.InnerMountModel> mounts = null;
-    private ModelList<ClientModel.InnerClientModel> clients = null;
-    private ModelList<ClientTypeModel.InnerClientTypeModel> clientTypes = null;
-    private ModelList<UserModel.InnerUserModel> users = null;
-    private ModelList<EmployeeModel.InnerEmployeeModel> employees = null;
-    private ModelList<SalaryModel.InnerSalaryModel> salaries = null;
-    private ModelList<ObjectiveModel.InnerObjectiveModel> objectives = null;
-    private ModelList<RentModel.InnerRentModel> rents = null;
-    private ModelList<AdministratorModel.InnerAdministratorModel> administrators = null;
-    private ModelList<SubdomainModel.InnerSubdomainModel> subdomains = null;
-    private ModelList<AdministratorSubdomainModel.InnerAdministratorSubdomainModel> administrator_subdomains = null;
-    private ModelList<AddressModel.InnerAddressModel> addresses = null;
-    private List<ModelList> modelLists = new ArrayList<>();
+    private Map<String, ModelList<?>> modelLists = new HashMap<>();
 
     public InMemory() {
         if (instance != null)
@@ -43,38 +30,42 @@ public class InMemory extends DatabaseConnection {
             instances.add(this);
         }
 
-        cameraTypes = new ModelList<>();
-        cameras = new ModelList<>();
-        formats = new ModelList<>();
-        mounts = new ModelList<>();
-        clients = new ModelList<>();
-        clientTypes = new ModelList<>();
-        users = new ModelList<>();
-        employees = new ModelList<>();
-        salaries = new ModelList<>();
-        objectives = new ModelList<>();
-        rents = new ModelList<>();
-        administrators = new ModelList<>();
-        subdomains = new ModelList<>();
-        administrator_subdomains = new ModelList<>();
-        addresses = new ModelList<>();
+        ModelList<CameraTypeModel.InnerCameraTypeModel> cameraTypes = new ModelList<>();
+        ModelList<CameraModel.InnerCameraModel> cameras = new ModelList<>();
+        ModelList<FormatModel.InnerFormatModel> formats = new ModelList<>();
+        ModelList<MountModel.InnerMountModel> mounts = new ModelList<>();
+        ModelList<ClientModel.InnerClientModel> clients = new ModelList<>();
+        ModelList<ClientTypeModel.InnerClientTypeModel> clientTypes = new ModelList<>();
+        ModelList<UserModel.InnerUserModel> users = new ModelList<>();
+        ModelList<EmployeeModel.InnerEmployeeModel> employees = new ModelList<>();
+        ModelList<SalaryModel.InnerSalaryModel> salaries = new ModelList<>();
+        ModelList<ObjectiveModel.InnerObjectiveModel> objectives = new ModelList<>();
+        ModelList<RentModel.InnerRentModel> rents = new ModelList<>();
+        ModelList<AdministratorModel.InnerAdministratorModel> administrators = new ModelList<>();
+        ModelList<SubdomainModel.InnerSubdomainModel> subdomains = new ModelList<>();
+        ModelList<AdministratorSubdomainModel.InnerAdministratorSubdomainModel> administrator_subdomains = new ModelList<>();
+        ModelList<AddressModel.InnerAddressModel> addresses = new ModelList<>();
 
-        modelLists.add(cameraTypes);
-        modelLists.add(cameras);
-        modelLists.add(formats);
-        modelLists.add(mounts);
-        modelLists.add(clients);
-        modelLists.add(clientTypes);
-        modelLists.add(users);
-        modelLists.add(employees);
-        modelLists.add(salaries);
-        modelLists.add(objectives);
-        modelLists.add(rents);
-        modelLists.add(administrators);
-        modelLists.add(subdomains);
-        modelLists.add(administrator_subdomains);
-        modelLists.add(addresses);
+        modelLists.put("camera_type", cameraTypes);
+        modelLists.put("camera", cameras);
+        modelLists.put("format", formats);
+        modelLists.put("mount", mounts);
+        modelLists.put("client", clients);
+        modelLists.put("client_type", clientTypes);
+        modelLists.put("user", users);
+        modelLists.put("employee", employees);
+        modelLists.put("salary", salaries);
+        modelLists.put("objective", objectives);
+        modelLists.put("rent", rents);
+        modelLists.put("administrator", administrators);
+        modelLists.put("subdomain", subdomains);
+        modelLists.put("administrator_subdomain", administrator_subdomains);
+        modelLists.put("address", addresses);
+        
     }
+
+
+
 
     public static DatabaseConnection getInstance(DatabaseType t) throws RuntimeException {
         if (instance == null || t != DatabaseType.INMEMORY)
@@ -127,7 +118,8 @@ public class InMemory extends DatabaseConnection {
         }
 
         if(tableName.equals("camera")) {
-            for(CameraModel.InnerCameraModel data : cameras.getList()) {
+            ModelList<CameraModel.InnerCameraModel> modelList = ((ModelList<CameraModel.InnerCameraModel>)this.modelLists.get("camera"));
+            for(CameraModel.InnerCameraModel data : modelList.getList()) {
                 int counter = 0;
                 for(String key : where.keySet()) {
                     for(Field f : data.getClass().getDeclaredFields()) {
@@ -171,12 +163,15 @@ public class InMemory extends DatabaseConnection {
                             }
                         }
                     }
+
+                    modelLists.replace("camera", modelList);
 
                     break;
                 }
             }
         } else if(tableName.equals("camera_type")) {
-            for(CameraTypeModel.InnerCameraTypeModel data : cameraTypes.getList()) {
+            ModelList<CameraTypeModel.InnerCameraTypeModel> modelList = ((ModelList<CameraTypeModel.InnerCameraTypeModel>)this.modelLists.get("camera_type"));
+            for(CameraTypeModel.InnerCameraTypeModel data : modelList.getList()) {
                 int counter = 0;
                 for(String key : where.keySet()) {
                     for(Field f : data.getClass().getDeclaredFields()) {
@@ -220,12 +215,15 @@ public class InMemory extends DatabaseConnection {
                             }
                         }
                     }
+
+                    modelLists.replace("camera_type", modelList);
 
                     break;
                 }
             }
         } else if(tableName.equals("client")) {
-            for(ClientModel.InnerClientModel data : clients.getList()) {
+            ModelList<ClientModel.InnerClientModel> modelList = ((ModelList<ClientModel.InnerClientModel>)this.modelLists.get("client"));
+            for(ClientModel.InnerClientModel data : modelList.getList()) {
                 int counter = 0;
                 for(String key : where.keySet()) {
                     for(Field f : data.getClass().getDeclaredFields()) {
@@ -269,12 +267,14 @@ public class InMemory extends DatabaseConnection {
                             }
                         }
                     }
+                    modelLists.replace("client", modelList);
 
                     break;
                 }
             }
         } else if(tableName.equals("client_type")) {
-            for(ClientTypeModel.InnerClientTypeModel data : clientTypes.getList()) {
+            ModelList<ClientTypeModel.InnerClientTypeModel> modelList = ((ModelList<ClientTypeModel.InnerClientTypeModel>)this.modelLists.get("client_type"));
+            for(ClientTypeModel.InnerClientTypeModel data : modelList.getList()) {
                 int counter = 0;
                 for(String key : where.keySet()) {
                     for(Field f : data.getClass().getDeclaredFields()) {
@@ -318,12 +318,14 @@ public class InMemory extends DatabaseConnection {
                             }
                         }
                     }
+                    modelLists.replace("client_type", modelList);
 
                     break;
                 }
             }
         } else if(tableName.equals("employee")) {
-            for(EmployeeModel.InnerEmployeeModel data : employees.getList()) {
+            ModelList<EmployeeModel.InnerEmployeeModel> modelList = ((ModelList<EmployeeModel.InnerEmployeeModel>)this.modelLists.get("employee"));
+            for(EmployeeModel.InnerEmployeeModel data : modelList.getList()) {
                 int counter = 0;
                 for(String key : where.keySet()) {
                     for(Field f : data.getClass().getDeclaredFields()) {
@@ -367,12 +369,14 @@ public class InMemory extends DatabaseConnection {
                             }
                         }
                     }
+                    modelLists.replace("employee", modelList);
 
                     break;
                 }
             }
         } else if(tableName.equals("format")) {
-            for(FormatModel.InnerFormatModel data : formats.getList()) {
+            ModelList<FormatModel.InnerFormatModel> modelList = ((ModelList<FormatModel.InnerFormatModel>)this.modelLists.get("format"));
+            for(FormatModel.InnerFormatModel data : modelList.getList()) {
                 int counter = 0;
                 for(String key : where.keySet()) {
                     for(Field f : data.getClass().getDeclaredFields()) {
@@ -416,12 +420,14 @@ public class InMemory extends DatabaseConnection {
                             }
                         }
                     }
+                    modelLists.replace("format", modelList);
 
                     break;
                 }
             }
         } else if(tableName.equals("mount")) {
-            for(MountModel.InnerMountModel data : mounts.getList()) {
+            ModelList<MountModel.InnerMountModel> modelList = ((ModelList<MountModel.InnerMountModel>)this.modelLists.get("mount"));
+            for(MountModel.InnerMountModel data : modelList.getList()) {
                 int counter = 0;
                 for(String key : where.keySet()) {
                     for(Field f : data.getClass().getDeclaredFields()) {
@@ -465,12 +471,14 @@ public class InMemory extends DatabaseConnection {
                             }
                         }
                     }
+                    modelLists.replace("mount", modelList);
 
                     break;
                 }
             }
         } else if(tableName.equals("objective")) {
-            for(ObjectiveModel.InnerObjectiveModel data : objectives.getList()) {
+            ModelList<ObjectiveModel.InnerObjectiveModel> modelList = ((ModelList<ObjectiveModel.InnerObjectiveModel>)this.modelLists.get("objective"));
+            for(ObjectiveModel.InnerObjectiveModel data : modelList.getList()) {
                 int counter = 0;
                 for(String key : where.keySet()) {
                     for(Field f : data.getClass().getDeclaredFields()) {
@@ -514,12 +522,14 @@ public class InMemory extends DatabaseConnection {
                             }
                         }
                     }
+                    modelLists.replace("objective", modelList);
 
                     break;
                 }
             }
         } else if(tableName.equals("rent")) {
-            for(RentModel.InnerRentModel data : rents.getList()) {
+            ModelList<RentModel.InnerRentModel> modelList = ((ModelList<RentModel.InnerRentModel>)this.modelLists.get("rent"));
+            for(RentModel.InnerRentModel data : modelList.getList()) {
                 int counter = 0;
                 for(String key : where.keySet()) {
                     for(Field f : data.getClass().getDeclaredFields()) {
@@ -563,12 +573,14 @@ public class InMemory extends DatabaseConnection {
                             }
                         }
                     }
+                    modelLists.replace("rent", modelList);
 
                     break;
                 }
             }
         } else if(tableName.equals("salary")) {
-            for(SalaryModel.InnerSalaryModel data : salaries.getList()) {
+            ModelList<SalaryModel.InnerSalaryModel> modelList = ((ModelList<SalaryModel.InnerSalaryModel>)this.modelLists.get("salary"));
+            for(SalaryModel.InnerSalaryModel data : modelList.getList()) {
                 int counter = 0;
                 for(String key : where.keySet()) {
                     for(Field f : data.getClass().getDeclaredFields()) {
@@ -612,12 +624,14 @@ public class InMemory extends DatabaseConnection {
                             }
                         }
                     }
+                    modelLists.replace("salary", modelList);
 
                     break;
                 }
             }
         } else if(tableName.equals("user")) {
-            for(UserModel.InnerUserModel data : users.getList()) {
+            ModelList<UserModel.InnerUserModel> modelList = ((ModelList<UserModel.InnerUserModel>)this.modelLists.get("user"));
+            for(UserModel.InnerUserModel data : modelList.getList()) {
                 int counter = 0;
                 for(String key : where.keySet()) {
                     for(Field f : data.getClass().getDeclaredFields()) {
@@ -661,12 +675,14 @@ public class InMemory extends DatabaseConnection {
                             }
                         }
                     }
+                    modelLists.replace("user", modelList);
 
                     break;
                 }
             }
         } else if(tableName.equals("administrator")) {
-            for(AdministratorModel.InnerAdministratorModel data : administrators.getList()) {
+            ModelList<AdministratorModel.InnerAdministratorModel> modelList = ((ModelList<AdministratorModel.InnerAdministratorModel>)this.modelLists.get("administrator"));
+            for(AdministratorModel.InnerAdministratorModel data : modelList.getList()) {
                 int counter = 0;
                 for(String key : where.keySet()) {
                     for(Field f : data.getClass().getDeclaredFields()) {
@@ -710,12 +726,14 @@ public class InMemory extends DatabaseConnection {
                             }
                         }
                     }
+                    modelLists.replace("administrator", modelList);
 
                     break;
                 }
             }
         } else if(tableName.equals("subdomain")) {
-            for(SubdomainModel.InnerSubdomainModel data : subdomains.getList()) {
+            ModelList<SubdomainModel.InnerSubdomainModel> modelList = ((ModelList<SubdomainModel.InnerSubdomainModel>)this.modelLists.get("subdomain"));
+            for(SubdomainModel.InnerSubdomainModel data : modelList.getList()) {
                 int counter = 0;
                 for(String key : where.keySet()) {
                     for(Field f : data.getClass().getDeclaredFields()) {
@@ -759,12 +777,14 @@ public class InMemory extends DatabaseConnection {
                             }
                         }
                     }
+                    modelLists.replace("subdomain", modelList);
 
                     break;
                 }
             }
         } else if(tableName.equals("administrator_subdomain")) {
-            for(AdministratorSubdomainModel.InnerAdministratorSubdomainModel data : administrator_subdomains.getList()) {
+            ModelList<AdministratorSubdomainModel.InnerAdministratorSubdomainModel> modelList = ((ModelList<AdministratorSubdomainModel.InnerAdministratorSubdomainModel>)this.modelLists.get("administrator_subdomain"));
+            for(AdministratorSubdomainModel.InnerAdministratorSubdomainModel data : modelList.getList()) {
                 int counter = 0;
                 for(String key : where.keySet()) {
                     for(Field f : data.getClass().getDeclaredFields()) {
@@ -808,12 +828,14 @@ public class InMemory extends DatabaseConnection {
                             }
                         }
                     }
+                    modelLists.replace("administrator_subdomain", modelList);
 
                     break;
                 }
             }
         } else if(tableName.equals("address")) {
-            for(AddressModel.InnerAddressModel data : addresses.getList()) {
+            ModelList<AddressModel.InnerAddressModel> modelList = ((ModelList<AddressModel.InnerAddressModel>)this.modelLists.get("address"));
+            for(AddressModel.InnerAddressModel data : modelList.getList()) {
                 int counter = 0;
                 for(String key : where.keySet()) {
                     for(Field f : data.getClass().getDeclaredFields()) {
@@ -857,6 +879,7 @@ public class InMemory extends DatabaseConnection {
                             }
                         }
                     }
+                    modelLists.replace("address", modelList);
 
                     break;
                 }
@@ -919,49 +942,49 @@ public class InMemory extends DatabaseConnection {
         List<List<Object>> data = null;
         if (tableName == "camera_type") {
             headers = this.getAttributes(CameraTypeModel.InnerCameraTypeModel.class);
-            data = this.getObjectsFromModelList(this.cameraTypes);
+            data = this.getObjectsFromModelList((ModelList<CameraTypeModel.InnerCameraTypeModel>)this.modelLists.get("camera_type"));
         } else if (tableName == "camera") {
             headers = this.getAttributes(CameraModel.InnerCameraModel.class);
-            data = this.getObjectsFromModelList(this.cameras);
+            data = this.getObjectsFromModelList((ModelList<CameraModel.InnerCameraModel>)this.modelLists.get("camera"));
         } else if (tableName == "format") {
             headers = this.getAttributes(FormatModel.InnerFormatModel.class);
-            data = this.getObjectsFromModelList(this.formats);
+            data = this.getObjectsFromModelList((ModelList<FormatModel.InnerFormatModel>)this.modelLists.get("format"));
         } else if (tableName == "mount") {
             headers = this.getAttributes(MountModel.InnerMountModel.class);
-            data = this.getObjectsFromModelList(this.mounts);
+            data = this.getObjectsFromModelList((ModelList<MountModel.InnerMountModel>)this.modelLists.get("mount"));
         } else if (tableName == "client") {
             headers = this.getAttributes(ClientModel.InnerClientModel.class);
-            data = this.getObjectsFromModelList(this.clients);
+            data = this.getObjectsFromModelList((ModelList<ClientModel.InnerClientModel>)this.modelLists.get("client"));
         } else if (tableName == "client_type") {
             headers = this.getAttributes(ClientTypeModel.InnerClientTypeModel.class);
-            data = this.getObjectsFromModelList(this.clientTypes);
+            data = this.getObjectsFromModelList((ModelList<ClientTypeModel.InnerClientTypeModel>)this.modelLists.get("client_type"));
         } else if (tableName == "user") {
             headers = this.getAttributes(UserModel.InnerUserModel.class);
-            data = this.getObjectsFromModelList(this.users);
+            data = this.getObjectsFromModelList((ModelList<UserModel.InnerUserModel>)this.modelLists.get("user"));
         } else if (tableName == "employee") {
             headers = this.getAttributes(EmployeeModel.InnerEmployeeModel.class);
-            data = this.getObjectsFromModelList(this.employees);
+            data = this.getObjectsFromModelList((ModelList<EmployeeModel.InnerEmployeeModel>)this.modelLists.get("employee"));
         } else if (tableName == "salary") {
             headers = this.getAttributes(SalaryModel.InnerSalaryModel.class);
-            data = this.getObjectsFromModelList(this.salaries);
+            data = this.getObjectsFromModelList((ModelList<SalaryModel.InnerSalaryModel>)this.modelLists.get("salary"));
         } else if (tableName == "objective") {
             headers = this.getAttributes(ObjectiveModel.InnerObjectiveModel.class);
-            data = this.getObjectsFromModelList(this.objectives);
+            data = this.getObjectsFromModelList((ModelList<ObjectiveModel.InnerObjectiveModel>)this.modelLists.get("objective"));
         } else if (tableName == "rent") {
             headers = this.getAttributes(RentModel.InnerRentModel.class);
-            data = this.getObjectsFromModelList(this.rents);
+            data = this.getObjectsFromModelList((ModelList<RentModel.InnerRentModel>)this.modelLists.get("rent"));
         } else if (tableName == "administrator") {
             headers = this.getAttributes(AdministratorModel.InnerAdministratorModel.class);
-            data = this.getObjectsFromModelList(this.administrators);
+            data = this.getObjectsFromModelList((ModelList<AdministratorModel.InnerAdministratorModel>)this.modelLists.get("administrator"));
         } else if (tableName == "subdomain") {
             headers = this.getAttributes(SubdomainModel.InnerSubdomainModel.class);
-            data = this.getObjectsFromModelList(this.subdomains);
+            data = this.getObjectsFromModelList((ModelList<SubdomainModel.InnerSubdomainModel>)this.modelLists.get("subdomain"));
         } else if (tableName == "administrator_subdomain") {
             headers = this.getAttributes(AdministratorSubdomainModel.InnerAdministratorSubdomainModel.class);
-            data = this.getObjectsFromModelList(this.administrator_subdomains);
+            data = this.getObjectsFromModelList((ModelList<AdministratorSubdomainModel.InnerAdministratorSubdomainModel>)this.modelLists.get("administrator_subdomain"));
         } else if (tableName == "address") {
             headers = this.getAttributes(AddressModel.InnerAddressModel.class);
-            data = this.getObjectsFromModelList(this.addresses);
+            data = this.getObjectsFromModelList((ModelList<AddressModel.InnerAddressModel>)this.modelLists.get("address"));
         }
 
         return this.getResultSet(headers, data);
@@ -1005,7 +1028,7 @@ public class InMemory extends DatabaseConnection {
         if (tableName.equals("camera_type")) {
             // Get largest TypeID from cameraTypes
             int idTip = 0;
-            for (CameraTypeModel.InnerCameraTypeModel c : this.cameraTypes.getList()) {
+            for (CameraTypeModel.InnerCameraTypeModel c : ((ModelList<CameraTypeModel.InnerCameraTypeModel>) this.modelLists.get("camera_type")).getList()) {
                 if (c.TypeID > idTip)
                     idTip = c.TypeID;
             }
@@ -1030,10 +1053,12 @@ public class InMemory extends DatabaseConnection {
                 }
             }
 
-            this.cameraTypes.getList().add(model);
+            ModelList<CameraTypeModel.InnerCameraTypeModel> list = (ModelList<CameraTypeModel.InnerCameraTypeModel>)this.modelLists.get("camera_type");
+            list.getList().add(model);
+            modelLists.put("camera_type", list);
         } else if (tableName.equals("camera")) {
             int id = 0;
-            for (CameraModel.InnerCameraModel c : this.cameras.getList()) {
+            for (CameraModel.InnerCameraModel c : ((ModelList<CameraModel.InnerCameraModel>) this.modelLists.get("camera")).getList()) {
                 if (c.IDCamera > id)
                     id = c.IDCamera;
             }
@@ -1057,10 +1082,12 @@ public class InMemory extends DatabaseConnection {
                 }
             }
 
-            this.cameras.getList().add(model);
+            ModelList<CameraModel.InnerCameraModel> list = (ModelList<CameraModel.InnerCameraModel>)this.modelLists.get("camera");
+            list.getList().add(model);
+            modelLists.put("camera", list);
         } else if (tableName.equals("format")) {
             int id = 0;
-            for (FormatModel.InnerFormatModel c : this.formats.getList()) {
+            for (FormatModel.InnerFormatModel c : ((ModelList<FormatModel.InnerFormatModel>) this.modelLists.get("format")).getList()) {
                 if (c.FormatID > id)
                     id = c.FormatID;
             }
@@ -1084,10 +1111,12 @@ public class InMemory extends DatabaseConnection {
                 }
             }
 
-            this.formats.getList().add(model);
+            ModelList<FormatModel.InnerFormatModel> list = (ModelList<FormatModel.InnerFormatModel>)this.modelLists.get("format");
+            list.getList().add(model);
+            modelLists.put("format", list);
         } else if (tableName.equals("client")) {
             int id = 0;
-            for (ClientModel.InnerClientModel c : this.clients.getList()) {
+            for (ClientModel.InnerClientModel c : ((ModelList<ClientModel.InnerClientModel>) this.modelLists.get("client")).getList()) {
                 if (c.UserID > id)
                     id = c.UserID;
             }
@@ -1111,11 +1140,13 @@ public class InMemory extends DatabaseConnection {
                 }
             }
 
-            this.clients.getList().add(model);
+            ModelList<ClientModel.InnerClientModel> list = (ModelList<ClientModel.InnerClientModel>)this.modelLists.get("client");
+            list.getList().add(model);
+            modelLists.put("client", list);
 
         } else if (tableName.equals("mount")) {
             int id = 0;
-            for (MountModel.InnerMountModel c : this.mounts.getList()) {
+            for (MountModel.InnerMountModel c : ((ModelList<MountModel.InnerMountModel>) this.modelLists.get("mount")).getList()) {
                 if (c.MountID > id)
                     id = c.MountID;
             }
@@ -1139,10 +1170,12 @@ public class InMemory extends DatabaseConnection {
                 }
             }
 
-            this.mounts.getList().add(model);
+            ModelList<MountModel.InnerMountModel> list = (ModelList<MountModel.InnerMountModel>)this.modelLists.get("mount");
+            list.getList().add(model);
+            modelLists.put("mount", list);
         } else if (tableName.equals("client_type")) {
             int id = 0;
-            for (ClientTypeModel.InnerClientTypeModel c : this.clientTypes.getList()) {
+            for (ClientTypeModel.InnerClientTypeModel c : ((ModelList<ClientTypeModel.InnerClientTypeModel>) this.modelLists.get("client_type")).getList()) {
                 if (c.TypeID > id)
                     id = c.TypeID;
             }
@@ -1165,10 +1198,12 @@ public class InMemory extends DatabaseConnection {
                 }
             }
 
-            this.clientTypes.getList().add(model);
+            ModelList<ClientTypeModel.InnerClientTypeModel> list = (ModelList<ClientTypeModel.InnerClientTypeModel>)this.modelLists.get("client_type");
+            list.getList().add(model);
+            modelLists.put("client_type", list);
         } else if (tableName.equals("user")) {
             int id = 0;
-            for (UserModel.InnerUserModel c : this.users.getList()) {
+            for (UserModel.InnerUserModel c : ((ModelList<UserModel.InnerUserModel>) this.modelLists.get("user")).getList()) {
                 if (c.UserID > id)
                     id = c.UserID;
             }
@@ -1192,11 +1227,13 @@ public class InMemory extends DatabaseConnection {
                 }
             }
 
-            this.users.getList().add(model);
+            ModelList<UserModel.InnerUserModel> list = (ModelList<UserModel.InnerUserModel>)this.modelLists.get("user");
+            list.getList().add(model);
+            modelLists.put("user", list);
 
         } else if (tableName.equals("employee")) {
             int id = 0;
-            for (EmployeeModel.InnerEmployeeModel c : this.employees.getList()) {
+            for (EmployeeModel.InnerEmployeeModel c : ((ModelList<EmployeeModel.InnerEmployeeModel>) this.modelLists.get("employee")).getList()) {
                 if (c.UserID > id)
                     id = c.UserID;
             }
@@ -1220,11 +1257,13 @@ public class InMemory extends DatabaseConnection {
                 }
             }
 
-            this.employees.getList().add(model);
+            ModelList<EmployeeModel.InnerEmployeeModel> list = (ModelList<EmployeeModel.InnerEmployeeModel>)this.modelLists.get("employee");
+            list.getList().add(model);
+            modelLists.put("employee", list);
 
         } else if (tableName.equals("salary")) {
             int id = 0;
-            for (SalaryModel.InnerSalaryModel c : this.salaries.getList()) {
+            for (SalaryModel.InnerSalaryModel c : ((ModelList<SalaryModel.InnerSalaryModel>) this.modelLists.get("salary")).getList()) {
                 if (c.SalaryID > id)
                     id = c.SalaryID;
             }
@@ -1248,11 +1287,13 @@ public class InMemory extends DatabaseConnection {
                 }
             }
 
-            this.salaries.getList().add(model);
+            ModelList<SalaryModel.InnerSalaryModel> list = (ModelList<SalaryModel.InnerSalaryModel>)this.modelLists.get("salary");
+            list.getList().add(model);
+            modelLists.put("salary", list);
 
         } else if (tableName.equals("objective")) {
             int id = 0;
-            for (ObjectiveModel.InnerObjectiveModel c : this.objectives.getList()) {
+            for (ObjectiveModel.InnerObjectiveModel c : ((ModelList<ObjectiveModel.InnerObjectiveModel>) this.modelLists.get("objective")).getList()) {
                 if (c.ObjectiveID > id)
                     id = c.ObjectiveID;
             }
@@ -1276,7 +1317,9 @@ public class InMemory extends DatabaseConnection {
                 }
             }
 
-            this.objectives.getList().add(model);
+            ModelList<ObjectiveModel.InnerObjectiveModel> list = (ModelList<ObjectiveModel.InnerObjectiveModel>)this.modelLists.get("objective");
+            list.getList().add(model);
+            modelLists.put("objective", list);
 
         } else if (tableName.equals("rent")) {
             for (Pair<String, String> p : values) {
@@ -1298,11 +1341,13 @@ public class InMemory extends DatabaseConnection {
                 }
             }
 
-            this.rents.getList().add(model);
+            ModelList<RentModel.InnerRentModel> list = (ModelList<RentModel.InnerRentModel>)this.modelLists.get("rent");
+            list.getList().add(model);
+            modelLists.put("rent", list);
 
         } else if (tableName.equals("administrator")) {
             int id = 0;
-            for (AdministratorModel.InnerAdministratorModel c : this.administrators.getList()) {
+            for (AdministratorModel.InnerAdministratorModel c : ((ModelList<AdministratorModel.InnerAdministratorModel>) this.modelLists.get("administrator")).getList()) {
                 if (c.UserID > id)
                     id = c.UserID;
             }
@@ -1326,11 +1371,13 @@ public class InMemory extends DatabaseConnection {
                 }
             }
 
-            this.administrators.getList().add(model);
+            ModelList<AdministratorModel.InnerAdministratorModel> list = (ModelList<AdministratorModel.InnerAdministratorModel>)this.modelLists.get("administrator");
+            list.getList().add(model);
+            modelLists.put("administrator", list);
 
         } else if (tableName.equals("subdomain")) {
             int id = 0;
-            for (SubdomainModel.InnerSubdomainModel c : this.subdomains.getList()) {
+            for (SubdomainModel.InnerSubdomainModel c : ((ModelList<SubdomainModel.InnerSubdomainModel>) this.modelLists.get("subdomain")).getList()) {
                 if (c.SubdomainID > id)
                     id = c.SubdomainID;
             }
@@ -1354,11 +1401,13 @@ public class InMemory extends DatabaseConnection {
                 }
             }
 
-            this.subdomains.getList().add(model);
+            ModelList<SubdomainModel.InnerSubdomainModel> list = (ModelList<SubdomainModel.InnerSubdomainModel>)this.modelLists.get("subdomain");
+            list.getList().add(model);
+            modelLists.put("subdomain", list);
 
         } else if (tableName.equals("administrator_subdomain")) {
             int id = 0;
-            for (AdministratorSubdomainModel.InnerAdministratorSubdomainModel c : this.administrator_subdomains.getList()) {
+            for (AdministratorSubdomainModel.InnerAdministratorSubdomainModel c : ((ModelList<AdministratorSubdomainModel.InnerAdministratorSubdomainModel>) this.modelLists.get("administrator_subdomain")).getList()) {
                 if (c.IDAdministrator > id)
                     id = c.IDAdministrator;
             }
@@ -1381,11 +1430,13 @@ public class InMemory extends DatabaseConnection {
                 }
             }
 
-            this.administrator_subdomains.getList().add(model);
+            ModelList<AdministratorSubdomainModel.InnerAdministratorSubdomainModel> list = (ModelList<AdministratorSubdomainModel.InnerAdministratorSubdomainModel>)this.modelLists.get("administrator_subdomain");
+            list.getList().add(model);
+            modelLists.put("administrator_subdomain", list);
 
         } else if (tableName.equals("address")) {
             int id = 0;
-            for (AddressModel.InnerAddressModel c : this.addresses.getList()) {
+            for (AddressModel.InnerAddressModel c : ((ModelList<AddressModel.InnerAddressModel>) this.modelLists.get("address")).getList()) {
                 if (c.AddressID > id)
                     id = c.AddressID;
             }
@@ -1408,7 +1459,9 @@ public class InMemory extends DatabaseConnection {
                 }
             }
 
-            this.addresses.getList().add(model);
+            ModelList<AddressModel.InnerAddressModel> list = (ModelList<AddressModel.InnerAddressModel>)this.modelLists.get("address");
+            list.getList().add(model);
+            modelLists.put("address", list);
 
         }
 
@@ -1451,7 +1504,7 @@ public class InMemory extends DatabaseConnection {
         return false;
     }
 
-    private void deleteFromModelList(ModelList<?> list, Map<String, String> where) throws Exception {
+    private void deleteFromModelList(ModelList<?> list, Map<String, String> where, String table_name) throws Exception {
         for (Object o : list.getList()) {
             boolean delete = true;
             for (Map.Entry<String, String> entry : where.entrySet()) {
@@ -1466,6 +1519,7 @@ public class InMemory extends DatabaseConnection {
             }
             if (delete) {
                 list.getList().remove(o);
+                modelLists.replace(table_name, list);
                 break;
             }
         }
@@ -1475,35 +1529,35 @@ public class InMemory extends DatabaseConnection {
     public void delete(String tableName, Map<String, String> where) throws Exception {
         List<String> headers = null;
         if (tableName == "camera_type") {
-            this.deleteFromModelList(this.cameraTypes, where);
+            this.deleteFromModelList((ModelList<CameraTypeModel.InnerCameraTypeModel>)this.modelLists.get("camera_type"), where, "camera_type");
         } else if (tableName == "camera") {
-            this.deleteFromModelList(this.cameras, where);
+            this.deleteFromModelList((ModelList<CameraModel.InnerCameraModel>)this.modelLists.get("camera"), where, "camera");
         } else if (tableName == "format") {
-            this.deleteFromModelList(this.cameras, where);
+            this.deleteFromModelList((ModelList<FormatModel.InnerFormatModel>)this.modelLists.get("format"), where, "format");
         } else if (tableName == "mount") {
-            this.deleteFromModelList(this.cameras, where);
+            this.deleteFromModelList((ModelList<MountModel.InnerMountModel>)this.modelLists.get("mount"), where, "mount");
         } else if (tableName == "client") {
-            this.deleteFromModelList(this.clients, where);
+            this.deleteFromModelList((ModelList<ClientModel.InnerClientModel>)this.modelLists.get("client"), where, "client");
         } else if (tableName == "client_type") {
-            this.deleteFromModelList(this.clientTypes, where);
+            this.deleteFromModelList((ModelList<ClientTypeModel.InnerClientTypeModel>)this.modelLists.get("client_type"), where, "client_type");
         } else if (tableName == "user") {
-            this.deleteFromModelList(this.users, where);
+            this.deleteFromModelList((ModelList<UserModel.InnerUserModel>)this.modelLists.get("user"), where, "user");
         } else if (tableName == "employee") {
-            this.deleteFromModelList(this.employees, where);
+            this.deleteFromModelList((ModelList<EmployeeModel.InnerEmployeeModel>)this.modelLists.get("employee"), where, "employee");
         } else if (tableName == "salary") {
-            this.deleteFromModelList(this.salaries, where);
+            this.deleteFromModelList((ModelList<SalaryModel.InnerSalaryModel>)this.modelLists.get("salary"), where, "salary");
         } else if (tableName == "objective") {
-            this.deleteFromModelList(this.objectives, where);
+            this.deleteFromModelList((ModelList<ObjectiveModel.InnerObjectiveModel>)this.modelLists.get("objective"), where, "objective");
         } else if (tableName == "rent") {
-            this.deleteFromModelList(this.rents, where);
+            this.deleteFromModelList((ModelList<RentModel.InnerRentModel>)this.modelLists.get("rent"), where, "rent");
         } else if (tableName == "administrator") {
-            this.deleteFromModelList(this.administrators, where);
+            this.deleteFromModelList((ModelList<AdministratorModel.InnerAdministratorModel>)this.modelLists.get("administrator"), where, "administrator");
         } else if (tableName == "subdomain") {
-            this.deleteFromModelList(this.subdomains, where);
+            this.deleteFromModelList((ModelList<SubdomainModel.InnerSubdomainModel>)this.modelLists.get("subdomain"), where, "subdomain");
         } else if (tableName == "administrator_subdomain") {
-            this.deleteFromModelList(this.administrator_subdomains, where);
+            this.deleteFromModelList((ModelList<AdministratorSubdomainModel.InnerAdministratorSubdomainModel>)this.modelLists.get("administrator_subdomain"), where, "administrator_subdomain");
         } else if (tableName == "address") {
-            this.deleteFromModelList(this.addresses, where);
+            this.deleteFromModelList((ModelList<AddressModel.InnerAddressModel>)this.modelLists.get("address"), where, "address");
         }
     }
 
@@ -1515,35 +1569,65 @@ public class InMemory extends DatabaseConnection {
     @Override
     public void truncate(String tableName) throws Exception {
         if (tableName == "camera_type") {
-            this.cameraTypes.getList().clear();
+            ModelList<CameraTypeModel.InnerCameraTypeModel> model = (ModelList<CameraTypeModel.InnerCameraTypeModel>) this.modelLists.get("camera_type");
+            model.getList().clear();
+            this.modelLists.put("camera_type", model);
         } else if (tableName == "camera") {
-            this.cameras.getList().clear();
+            ModelList<CameraModel.InnerCameraModel> model = (ModelList<CameraModel.InnerCameraModel>) this.modelLists.get("camera");
+            model.getList().clear();
+            this.modelLists.put("camera", model);
         } else if (tableName == "format") {
-            this.formats.getList().clear();
+            ModelList<FormatModel.InnerFormatModel> model = (ModelList<FormatModel.InnerFormatModel>) this.modelLists.get("format");
+            model.getList().clear();
+            this.modelLists.put("format", model);
         } else if (tableName == "mount") {
-            this.mounts.getList().clear();
+            ModelList<MountModel.InnerMountModel> model = (ModelList<MountModel.InnerMountModel>) this.modelLists.get("mount");
+            model.getList().clear();
+            this.modelLists.put("mount", model);
         } else if (tableName == "client") {
-            this.clients.getList().clear();
+            ModelList<ClientModel.InnerClientModel> model = (ModelList<ClientModel.InnerClientModel>) this.modelLists.get("client");
+            model.getList().clear();
+            this.modelLists.put("client", model);
         } else if (tableName == "client_type") {
-            this.clientTypes.getList().clear();
+            ModelList<ClientTypeModel.InnerClientTypeModel> model = (ModelList<ClientTypeModel.InnerClientTypeModel>) this.modelLists.get("client_type");
+            model.getList().clear();
+            this.modelLists.put("client_type", model);
         } else if (tableName == "user") {
-            this.users.getList().clear();
+            ModelList<UserModel.InnerUserModel> model = (ModelList<UserModel.InnerUserModel>) this.modelLists.get("user");
+            model.getList().clear();
+            this.modelLists.put("user", model);
         } else if (tableName == "employee") {
-            this.employees.getList().clear();
+            ModelList<EmployeeModel.InnerEmployeeModel> model = (ModelList<EmployeeModel.InnerEmployeeModel>) this.modelLists.get("employee");
+            model.getList().clear();
+            this.modelLists.put("employee", model);
         } else if (tableName == "salary") {
-            this.salaries.getList().clear();
+            ModelList<SalaryModel.InnerSalaryModel> model = (ModelList<SalaryModel.InnerSalaryModel>) this.modelLists.get("salary");
+            model.getList().clear();
+            this.modelLists.put("salary", model);
         } else if (tableName == "objective") {
-            this.objectives.getList().clear();
+            ModelList<ObjectiveModel.InnerObjectiveModel> model = (ModelList<ObjectiveModel.InnerObjectiveModel>) this.modelLists.get("objective");
+            model.getList().clear();
+            this.modelLists.put("objective", model);
         } else if (tableName == "rent") {
-            this.rents.getList().clear();
+            ModelList<RentModel.InnerRentModel> model = (ModelList<RentModel.InnerRentModel>) this.modelLists.get("rent");
+            model.getList().clear();
+            this.modelLists.put("rent", model);
         } else if (tableName == "administrator") {
-            this.administrators.getList().clear();
+            ModelList<AdministratorModel.InnerAdministratorModel> model = (ModelList<AdministratorModel.InnerAdministratorModel>) this.modelLists.get("administrator");
+            model.getList().clear();
+            this.modelLists.put("administrator", model);
         } else if (tableName == "subdomain") {
-            this.subdomains.getList().clear();
+            ModelList<SubdomainModel.InnerSubdomainModel> model = (ModelList<SubdomainModel.InnerSubdomainModel>) this.modelLists.get("subdomain");
+            model.getList().clear();
+            this.modelLists.put("subdomain", model);
         } else if (tableName == "administrator_subdomain") {
-            this.administrator_subdomains.getList().clear();
+            ModelList<AdministratorSubdomainModel.InnerAdministratorSubdomainModel> model = (ModelList<AdministratorSubdomainModel.InnerAdministratorSubdomainModel>) this.modelLists.get("administrator_subdomain");
+            model.getList().clear();
+            this.modelLists.put("administrator_subdomain", model);
         } else if (tableName == "address") {
-            this.addresses.getList().clear();
+            ModelList<AddressModel.InnerAddressModel> model = (ModelList<AddressModel.InnerAddressModel>) this.modelLists.get("address");
+            model.getList().clear();
+            this.modelLists.put("address", model);
         }
 
     }
