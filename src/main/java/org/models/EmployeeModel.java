@@ -242,7 +242,7 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
 
         Map<Integer, Integer> salaryMap = new HashMap<>();
         while(salarii.next()){
-            salaryMap.put(salarii.getInt("SALARYID"), salarii.getInt("SALARYID"));
+            salaryMap.put(salarii.getInt("SALARYID"), salarii.getInt("SALARY"));
         }
 
         Map<Integer, String> userMap = new HashMap<>();
