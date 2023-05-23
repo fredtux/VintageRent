@@ -43,10 +43,7 @@ jobs:
           release_name: This is version ${{ env.project_version }} of the project.
           body: This is version ${{ env.project_version }} of the project.
           draft: false
-          prerelease: true
-#           files: |
-#             target/VintageRent-${{ steps.get-version.outputs.version }}.jar
-#           opts.auth: ${{ secrets.GITHUB_TOKEN }}
+          prerelease: false
           artifacts: "target/VintageRent-${{ env.project_version }}.jar"
             
       - name: Step 7 - Attach release asset
