@@ -2076,7 +2076,6 @@ public class MainGUI { // Singleton
             }
         });
 
-//        this.jscrPane.setViewportView(this.tblMain);
 
         this.jscrPane = new JScrollPane();
 

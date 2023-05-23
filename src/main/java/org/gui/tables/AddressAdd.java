@@ -154,10 +154,6 @@ public class AddressAdd {
             }
 
             closeFrame(frame, true);
-//            this.parentFrame.setVisible(true);
-//            Dimension size = new Dimension();
-//            size.setSize(800, 600);
-//            this.parentFrame.setSize(size);;
         });
         c3.gridy = 5;
         c3.gridx = 0;
@@ -169,10 +165,6 @@ public class AddressAdd {
         this.btnExit.setText("Cancel");
         this.btnExit.addActionListener(e -> {
             closeFrame(frame, false);
-//            this.parentFrame.setVisible(true);
-//            Dimension size = new Dimension();
-//            size.setSize(800, 600);
-//            this.parentFrame.setSize(size);
         });
         this.pnlMain.add(this.btnExit, c3);
 
@@ -181,7 +173,6 @@ public class AddressAdd {
         frame.pack();
         frame.setVisible(true);
 
-//        frame.setSize(600, 600);
         // Set relative to main window
         frame.setLocationRelativeTo(this.parentFrame);
     }

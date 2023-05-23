@@ -68,7 +68,6 @@ public class ClientAdd {
         c3.gridx = 1;
         pnlMain.add(JDatePickerImpl1, c3);
 
-//        pnlDate.add(JDatePickerImpl1);
         JDatePickerImpl1.setBounds(220,350,120,30);
 
 

@@ -314,9 +314,7 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
         Map<String, String> set = new HashMap<>();
         set.put("BRAND", "'" + oneRow.get(0).Brand + "'");
         set.put("MODELCAMERA", "'" + oneRow.get(0).ModelCamera + "'");
-//        set.put("FORMATID", String.valueOf(oneRow.get(0).FormatID));
-//        set.put("TYPEID", String.valueOf(oneRow.get(0).TypeID));
-//        set.put("MOUNTID", String.valueOf(oneRow.get(0).MountID));
+
         set.put("MANUFACTURINGYEAR", String.valueOf(oneRow.get(0).ManufacturingYear));
         set.put("PRICE", String.valueOf(oneRow.get(0).Price));
         set.put("RENTALPRICE", String.valueOf(oneRow.get(0).RentalPrice));
@@ -329,7 +327,6 @@ public class CameraModel extends Model implements LinkModelToDatabase<ModelList<
         } catch (Exception ex) {
             System.out.println("Error logging to CSV: " + ex.getMessage());
         }
-//        db.update("UPDATE " + this.tableName + " SET BRAND = '" + oneRow.get(0).Brand + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRICE = " + oneRow.get(0).Price + ", RENTALPRICE = " + oneRow.get(0).RentalPrice + ", MANUFACTURINGYEAR = " + oneRow.get(0).ManufacturingYear + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
     }
 
     @Override
