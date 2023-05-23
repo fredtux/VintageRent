@@ -136,161 +136,40 @@ Pentru conexiunea cu baza de date, va trebui sa intrati in folderul **docker_ora
 docker-compose up
 ```
 
-## Documentatie
-Documentatia se gaseste in format PDF in fisierul [Documentatie.pdf](https://github.com/fredtux/VintageRent/blob/main/Documentatie.pdf)
+#### Extindeti proiectul din prima etpa prin realizarea persistentei utilizand o baza de date relationala si JDBC
+Am folosit solutia de SGBD Oracle DB implementata folosind un container de docker personalizat si urcat pe docker hub.
 
+Conexiunea la baza de date se face in **org.database.oracle.OracleConnection** . Este o clasa de tip singleton ce mosteneste **org.database.DatabaseConnection** . In DatabaseConnection se tine un ArrayList cu toate conexiunile la "bazele de date", adica Oracle, CSV si InMemory deoarece toate acestea au metode similare de manipulare a datelor.
 
-## Cerinte
-### Etapa I
-1. Definirea sistemului
-- [x] Să se creeze o lista pe baza temei alese cu cel puțin 10 acțiuni/interogări care se pot face în cadrul sistemului și o lista cu cel puțin 8 tipuri de obiecte.
-2. Implementare
-- [x] Sa se implementeze în limbajul Java o aplicație pe baza celor definite la primul punct.
-- Aplicatia va contine:
-  - [x] clase simple cu atribute private / protected și metode de acces
-  - [x] cel puțin 2 colecții diferite capabile să gestioneze obiectele definite anterior (eg: List, Set, Map, etc.) dintre care cel puțin una sa fie sortata –se vor folosi array-uri uni-/bidimensionale în cazul în care nu se parcurg colectiile pana la data checkpoint-ului.
-  - [x] utilizare moștenire pentru crearea de clase adiționale și utilizarea lor încadrul colecțiilor;
-  - [x] cel puțin o clasă serviciu care sa expună operațiile sistemului
-  - [x] o clasa Main din care sunt făcute apeluri către servicii
-    - Implementare proprie: O clasa Main care incarca resursele si lanseaza GUI-ul. O clasa MainForm care contine ecranul principal + clase pentru ecranele de adaugare
+Am implementat CRUD pentru urmatoarele tabele:
+- Address
+- Administrator
+- AdministratorSubdomain
+- Camera
+- CameraType
+- Client
+- ClientType
+- Employee
+- Format
+- Mount
+- Objective
+- Rent
+- Salary
+- Subdomain
+- User
 
-### Etapa II
-1. Extindeți proiectul din prima etapa prin realizarea persistentei utilizând o baza de date relationala si JDBC.
-- [x] Să se realizeze servicii care sa expună operații de tip create, read, update si delete pentru cel puțin 4 dintre clasele definite.
-- [x] Se vor realiza servicii singleton generice pentru scrierea și citirea din baza de date.
-2. Realizarea unui serviciu de audit
-- [x] Se va realiza un serviciu care sa scrie într-un fișier de tip CSV de fiecare data când este executată una dintre acțiunile descrise în prima etapa.
-- [x] Structura fișierului: nume_actiune, timestamp.
+Toate metodele de CRUD pot fi accesate din interfata grafica.
 
-### Observatii
-- [x] Toata lumea trebuie sa foloseasca Git & Maven. Proiectele nu se trimit ca arhiva.
-- [x] Proiectul trebuie sa aiba documentatie. Fiecare scrie documentatia cum vrea, in doc/pdf sau in cod. Trebuie sa stii sa explici ce ai facut in cod, nu e de ajuns doar sa-l scrii.
-- [x] Versiunea Java o sa fie MINIM 17.
-- [x] O sa folosim Docker & Docker-Compose pentru baza de date.
-- [x] O sa folosim Github Workflows pentru pipelines. Se pot accepta alternative pentru cei care vor sa foloseasca altceva.
-- [ ] Cei mai activi o sa aiba o surpriza la final de semestru.
+#### Realizarea unui serviciu de audit
+Am realizat un serviciu de audit in **org.logger.CsvLogger** . Acesta este un singleton care are o metoda **log(String message)** care scrie in fisierul **Log.csv** mesajul primit ca parametru si data la care a fost scris.
 
-## Actiuni / Interogari:
-___
-- Vizualizare inchirieri
-- Modificare inchiriere
-- Stergere inchiriere
-- Creare inchiriere
-- Filtrare inchiriere
-- Trunchiere inchiriere
-___
-- Vizualizare camere
-- Modificare camera
-- Stergere camera
-- Creare camera
-- Filtrare camera
-- Trunchiere camera
-___
-- Vizualizare tipuri camere
-- Modificare tip camera
-- Stergere tip camera
-- Creare tip camera
-- Filtrare tip camera
-- Trunchiere tip camera
-___
-- Vizualizare formaturi camere
-- Modificare format camera
-- Stergere format camera
-- Creare format camera
-- Filtrare format camera
-- Trunchiere format camera
-___
-- Vizualizare angajati
-- Modificare angajat
-- Stergere angajat
-- Creare angajat
-- Filtrare angajat
-- Trunchiere angajat
-___
-- Vizualizare salarii
-- Modificare salariu
-- Stergere salariu
-- Creare salariu
-- Filtrare salariu
-- Trunchiere salariu
-___
-- Vizualizare utilizatori
-- Modificare utilizator
-- Stergere utilizator
-- Creare utilizator
-- Filtrare utilizator
-- Trunchiere utilizator
-___
-- Vizualizare adrese
-- Modificare adresa
-- Stergere adresa
-- Creare adresa
-- Filtrare adresa
-- Trunchiere adresa
-___
-- Vizualizare administratori
-- Modificare administrator
-- Stergere administrator
-- Creare administrator
-- Filtrare administrator
-- Trunchiere administrator
-___
-- Vizualizare administratori subdomenii
-- Stergere administrator subdomeniu
-- Creare administrator subdomeniu
-- Filtrare administrator subdomeniu
-- Trunchiere administrator subdomeniu
-___
-- Vizualizare clienti
-- Modificare client
-- Stergere client
-- Creare client
-- Filtrare client
-- Trunchiere client
-___
-- Vizualizare tipuri client
-- Modificare tip client
-- Stergere tip client
-- Creare tip client
-- Filtrare tip client
-- Trunchiere tip client
-___
-- Vizualizare monturi
-- Modificare montura
-- Stergere montura
-- Creare montura
-- Filtrare montura
-- Trunchiere montura
-___
-- Vizualizare obiective
-- Modificare obiectiv
-- Stergere obiectiv
-- Creare obiectiv
-- Filtrare obiectiv
-- Trunchiere obiectiv
-___
-- Vizualizare salarii
-- Modificare salariu
-- Stergere salariu
-- Creare salariu
-- Filtrare salariu
-- Trunchiere salariu
-___
-- Vizualizare subdomenii
-- Modificare subdomeniu
-- Stergere subdomeniu
-- Creare subdomeniu
-- Filtrare subdomeniu
-- Trunchiere subdomeniu
-___
-- Raport clienti
-- Raport vanzari per format
-- Raport monturi
-___
-- Email pentru rapoarte
-___
-- Schimbare datasource: Oracle/CSV
-___
-- Logging
-- Afisare loguri
-___
+Logurile pot fi citite cu ajutorul metodei **readLogToday()** pentru logul curent sau **readLog()** pentru intreg logul.
+
+Loggerul foloseste o conexiune de tip **org.database.csv.CsvConnection** pentru a scrie in fisierul CSV.
+
+Logul poate fi citit in interfata grafica.
+
+#### Implementarea code reviewului
+- Am tradus tot in engleza, inclusiv denumirile campurilor si ale tabelelor din baza de date
+- Am sters codul comentat
+- Am rezolvat exception handling (nu garantez ca peste tot, deoarece e mai greu de cautat in cod)
