@@ -115,10 +115,6 @@ public class AdministratorSubdomainAdd {
             }
 
             closeFrame(frame, true);
-//            this.parentFrame.setVisible(true);
-//            Dimension size = new Dimension();
-//            size.setSize(800, 600);
-//            this.parentFrame.setSize(size);;
         });
         c3.gridy = 2;
         c3.gridx = 1;
@@ -130,10 +126,6 @@ public class AdministratorSubdomainAdd {
         this.btnExit.setText("Cancel");
         this.btnExit.addActionListener(e -> {
             closeFrame(frame, false);
-//            this.parentFrame.setVisible(true);
-//            Dimension size = new Dimension();
-//            size.setSize(800, 600);
-//            this.parentFrame.setSize(size);
         });
         this.pnlMain.add(this.btnExit, c3);
 
@@ -142,7 +134,6 @@ public class AdministratorSubdomainAdd {
         frame.pack();
         frame.setVisible(true);
 
-//        frame.setSize(600, 600);
         // Set relative to main window
         frame.setLocationRelativeTo(this.parentFrame);
     }

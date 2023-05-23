@@ -205,10 +205,6 @@ public class CameraAdd {
             }
 
             closeFrame(frame, true);
-//            this.parentFrame.setVisible(true);
-//            Dimension size = new Dimension();
-//            size.setSize(800, 600);
-//            this.parentFrame.setSize(size);;
         });
         c3.gridy = 10;
         c3.gridx = 1;
@@ -220,10 +216,6 @@ public class CameraAdd {
         this.btnExit.setText("Cancel");
         this.btnExit.addActionListener(e -> {
             closeFrame(frame, false);
-//            this.parentFrame.setVisible(true);
-//            Dimension size = new Dimension();
-//            size.setSize(800, 600);
-//            this.parentFrame.setSize(size);
         });
         this.pnlMain.add(this.btnExit, c3);
 
@@ -232,7 +224,6 @@ public class CameraAdd {
         frame.pack();
         frame.setVisible(true);
 
-//        frame.setSize(600, 600);
         // Set relative to main window
         frame.setLocationRelativeTo(this.parentFrame);
     }

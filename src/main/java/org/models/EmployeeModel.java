@@ -5,7 +5,6 @@ import org.database.csv.CsvConnection;
 
 import javax.swing.table.DefaultTableModel;
 import java.lang.reflect.Field;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.text.SimpleDateFormat;
@@ -242,7 +241,7 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
 
         Map<Integer, Integer> salaryMap = new HashMap<>();
         while(salarii.next()){
-            salaryMap.put(salarii.getInt("SALARYID"), salarii.getInt("SALARYID"));
+            salaryMap.put(salarii.getInt("SALARYID"), salarii.getInt("SALARY"));
         }
 
         Map<Integer, String> userMap = new HashMap<>();
@@ -343,7 +342,7 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
         } catch (Exception ex) {
             System.out.println("Error logging to CSV: " + ex.getMessage());
         }
-//        db.update("UPDATE " + this.tableName + " SET BRAND = '" + oneRow.get(0).Brand + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRICE = " + oneRow.get(0).Price + ", RENTALPRICE = " + oneRow.get(0).RentalPrice + ", MANUFACTURINGYEAR = " + oneRow.get(0).ManufacturingYear + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
+
     }
 
     @Override
@@ -405,7 +404,6 @@ public class EmployeeModel extends Model implements LinkModelToDatabase<ModelLis
     @Override
     public void insertRow(InnerEmployeeModel row) throws Exception {
         DatabaseConnection db = DatabaseConnection.getInstance(databaseType);
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         List<Pair<String, String>> values = new ArrayList<>();

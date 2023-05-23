@@ -74,7 +74,6 @@ public class EmployeeAdd {
         c3.gridx = 1;
         c3.anchor = GridBagConstraints.WEST;
 
-//        pnlDate.add(JDatePickerImpl1);
         JDatePickerImpl1.setBounds(220,350,120,30);
 
         this.lblRentDate = new JLabel("Birth date");
@@ -84,7 +83,6 @@ public class EmployeeAdd {
         pnlMain.add(JDatePickerImpl1, c3);
 
         c2.gridy = 2;
-//        GridBagConstraints c3 = new GridBagConstraints();
         c3.gridy = 2;
         c3.gridx = 1;
         c3.anchor = GridBagConstraints.WEST;

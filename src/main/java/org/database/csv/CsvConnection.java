@@ -73,13 +73,10 @@ public class CsvConnection extends DatabaseConnection {
 
     @Override
     public void connect() throws Exception {
-//        ClassLoader classLoader = getClass().getClassLoader();
-//        this.reader = new CSVReader(new FileReader(classLoader.getResource(this.path).getFile()));
     }
 
     @Override
     public void disconnect() throws Exception {
-//        this.reader.close();
     }
 
     @Override
@@ -128,7 +125,6 @@ public class CsvConnection extends DatabaseConnection {
     public void init(String[] columns) throws Exception {
         String filePath = Paths.get(System.getProperty("user.dir") + "/CSV/" + path).toString();
 
-//        ClassLoader classLoader = getClass().getClassLoader();
         // Create file at this.path
         File f = new File(filePath);
         f.createNewFile();
@@ -253,7 +249,7 @@ public class CsvConnection extends DatabaseConnection {
     public ResultSet getAllTableData(String tableName) throws Exception {
         this.setPath(tableName);
         String filePath = Paths.get(System.getProperty("user.dir") + "/CSV/" + tableName).toString();
-//        ClassLoader classLoader = getClass().getClassLoader();
+
         Reader r = new BufferedReader(new FileReader(filePath));
         this.reader = new CSVReader(r);
 
@@ -300,11 +296,6 @@ public class CsvConnection extends DatabaseConnection {
             throw new Exception("null parameters");
         }
 
-//        if (headers.size() != data.get(0).size()) {
-//            throw new Exception("parameters size are not equals");
-//        }
-
-
         // create a mock result set
         MockResultSet mockResultSet = new MockResultSet("myResultSet");
 
@@ -329,7 +320,6 @@ public class CsvConnection extends DatabaseConnection {
             this.setPath(tableName);
             String filePath = Paths.get(System.getProperty("user.dir") + "/CSV/" + tableName).toString();
 
-//            ClassLoader classLoader = getClass().getClassLoader();
             File f = new File(filePath);
             this.writer = new CSVWriter(new FileWriter(f));
             if(columns != null)
@@ -357,11 +347,9 @@ public class CsvConnection extends DatabaseConnection {
     public void createAndInsertDynamically(String tableName, String[] columns, List<String[]> values) throws Exception {
         String filePath = Paths.get(System.getProperty("user.dir") + "/CSV/" + "mock.csv").toString();
 
-//        ClassLoader classLoader = getClass().getClassLoader();
         File mock = new File(filePath);
         File parent = mock.getParentFile();
 
-//        System.out.println(parent.getPath());
         File f = new File(parent, tableName);
         f.createNewFile();
         this.writer = new CSVWriter(new FileWriter(f));
@@ -380,11 +368,9 @@ public class CsvConnection extends DatabaseConnection {
     public void createTable(String tableName, String[] columns, String[] types) throws Exception {
         String filePath = Paths.get(System.getProperty("user.dir") + "/CSV/" + "mock.csv").toString();
 
-//        ClassLoader classLoader = getClass().getClassLoader();
         File mock = new File(filePath);
         File parent = mock.getParentFile();
 
-//        System.out.println(parent.getPath());
         File f = new File(parent, tableName);
         f.createNewFile();
 
@@ -402,7 +388,6 @@ public class CsvConnection extends DatabaseConnection {
         this.setPath(tableName);
         String filePath = Paths.get(System.getProperty("user.dir") + "/CSV/" + tableName).toString();
 
-//        ClassLoader classLoader = getClass().getClassLoader();
         File f = new File(filePath);
         this.writer = new CSVWriter(new FileWriter(f, true));
         String[] row = new String[values.size()];
@@ -435,8 +420,6 @@ public class CsvConnection extends DatabaseConnection {
         this.setPath(tableName);
         String filePath = Paths.get(System.getProperty("user.dir") + "/Log/Log.csv" ).toString();
 
-//        ClassLoader classLoader = getClass().getClassLoader();
-//        String filePath =  Paths.get(System.getProperty("user.dir") + "/Log/Log.csv").toString();
         File f = new File(filePath);
         this.writer = new CSVWriter(new FileWriter(f, true));
         this.writer.writeNext(columns);
@@ -449,7 +432,6 @@ public class CsvConnection extends DatabaseConnection {
         this.setPath(tableName);
         String filePath = Paths.get(System.getProperty("user.dir") + "/CSV/" + tableName).toString();
 
-//        ClassLoader classLoader = getClass().getClassLoader();
         Reader r = new BufferedReader(new FileReader(filePath));
         this.reader = new CSVReader(r);
 
@@ -512,7 +494,6 @@ public class CsvConnection extends DatabaseConnection {
         this.setPath(tableName);
         String filePath = Paths.get(System.getProperty("user.dir") + "/CSV/" + tableName).toString();
 
-//        ClassLoader classLoader = getClass().getClassLoader();
         File f = new File(filePath);
 
         // Keep first line, delete the rest
@@ -527,9 +508,6 @@ public class CsvConnection extends DatabaseConnection {
         this.writer = new CSVWriter(new FileWriter(filePath));
         this.writer.writeNext(headers.toArray(new String[headers.size()]));
         this.writer.close();
-//        this.writer = new CSVWriter(new FileWriter(f));
-//        this.writer.writeNext(null); // write nothing
-//        this.writer.close();
 
         try{
             logger.log("CsvConnection file truncated");
@@ -547,7 +525,6 @@ public class CsvConnection extends DatabaseConnection {
         this.setPath(tableName);
         String filePath = Paths.get(System.getProperty("user.dir") + "/Log/Log.csv").toString();
 
-//        String filePath = Paths.get(System.getProperty("user.dir") + "/CSV/" + tableName).toString();
         Reader reader = new BufferedReader(new FileReader(filePath));
         this.reader = new CSVReader(reader);
 

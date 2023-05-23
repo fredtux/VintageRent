@@ -138,7 +138,6 @@ public class ClientReport {
         frame.pack();
         frame.setVisible(true);
 
-//        frame.setSize(600, 600);
         // Set relative to main window
         frame.setLocationRelativeTo(this.parentFrame);
     }

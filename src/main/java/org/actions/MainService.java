@@ -19,19 +19,15 @@ public class MainService {
     public static Map<String, String> formatSales(int formatID, DatabaseConnection.DatabaseType databaseType) throws Exception {
         Map<String, String> result = new HashMap<>();
 
-//        FormatModel format = FormatModel.getInstance();
         CameraModel camera = CameraModel.getInstance();
         RentModel rent = RentModel.getInstance();
 
-//        format.setDatabaseType(databaseType);
         camera.setDatabaseType(databaseType);
         rent.setDatabaseType(databaseType);
 
-//        format.getData();
         camera.getData();
         rent.getData();
 
-//        ModelList<FormatModel.InnerFormatModel> lformat = format.getModelList();
         ModelList<CameraModel.InnerCameraModel> lcamera = camera.getModelList();
         ModelList<RentModel.InnerRentModel> lrent = rent.getModelList();
 
@@ -43,7 +39,6 @@ public class MainService {
 
         Set<Integer> clientset = new HashSet<>();
         // Max heap
-//        PriorityQueue<Double> rentPriceQueue = new PriorityQueue<>(Collections.reverseOrder());
         TreeMap<Double, Double> rentPriceMap = new TreeMap<>();
 
         List<Integer> cameraIDs = new ArrayList<>();
@@ -57,15 +52,12 @@ public class MainService {
                 ++totalRents;
                 clientset.add(rentModel.IDCLIENT);
                 double rentPrice = rentModel.DURATION_IN_DAYS * getCameraRentPrice(rentModel.IDCAMERA, lcamera);
-//                rentPriceQueue.add(rentPrice);
                 rentPriceMap.put(rentPrice, rentPrice);
             }
         }
 
         numDistinctClients = clientset.size();
-//        maxRentPrice = rentPriceQueue.peek() == null ? 0 : rentPriceQueue.poll();
-//        secondMaxRentPrice = rentPriceQueue.peek() == null ? 0 : rentPriceQueue.poll();
-//        thirdMaxRentPrice = rentPriceQueue.peek() == null ? 0 : rentPriceQueue.poll();
+
         maxRentPrice = rentPriceMap.lastEntry() == null ? 0 : rentPriceMap.lastEntry().getValue();
         secondMaxRentPrice = rentPriceMap.lowerEntry(maxRentPrice) == null ? 0 : rentPriceMap.lowerEntry(maxRentPrice).getValue();
         thirdMaxRentPrice = rentPriceMap.lowerEntry(secondMaxRentPrice) == null ? 0 : rentPriceMap.lowerEntry(secondMaxRentPrice).getValue();
@@ -88,19 +80,15 @@ public class MainService {
     public static Map<String, String> ClientRents(int clientID, DatabaseConnection.DatabaseType databaseType) throws Exception {
         Map<String, String> result = new HashMap<>();
 
-//        ClientModel client = ClientModel.getInstance();
         RentModel rent = RentModel.getInstance();
         CameraModel camera = CameraModel.getInstance();
 
-//        client.setDatabaseType(databaseType);
         rent.setDatabaseType(databaseType);
         camera.setDatabaseType(databaseType);
 
-//        client.getData();
         rent.getData();
         camera.getData();
 
-//        ModelList<ClientModel.InnerClientModel> lclient = client.getModelList();
         ModelList<RentModel.InnerRentModel> lrent = rent.getModelList();
         ModelList<CameraModel.InnerCameraModel> lcamera = camera.getModelList();
 

@@ -72,7 +72,6 @@ public class RentAdd {
         c3.gridx = 1;
         c3.anchor = GridBagConstraints.WEST;
 
-//        pnlDate.add(JDatePickerImpl1);
         JDatePickerImpl1.setBounds(220,350,120,30);
 
         this.lblRentDate = new JLabel("Rent date");
@@ -82,7 +81,6 @@ public class RentAdd {
         pnlMain.add(JDatePickerImpl1, c3);
 
         c2.gridy = 2;
-//        GridBagConstraints c3 = new GridBagConstraints();
         c3.gridy = 2;
         c3.gridx = 1;
         c3.anchor = GridBagConstraints.WEST;
@@ -94,7 +92,6 @@ public class RentAdd {
         c3.gridy = 2;
         c3.gridx = 2;
         c3.anchor = GridBagConstraints.WEST;
-//        c3.fill = GridBagConstraints.BOTH;
         JTextField txtDurata = new JTextField();
         txtDurata.setText("1");
         pnlMain.add(txtDurata, c3);
@@ -264,7 +261,6 @@ public class RentAdd {
         frame.pack();
         frame.setVisible(true);
 
-//        frame.setSize(600, 600);
         // Set relative to main window
         frame.setLocationRelativeTo(this.parentFrame);
     }

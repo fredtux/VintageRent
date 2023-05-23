@@ -24,8 +24,6 @@ public class ModelInit {
     private static String[] modelNames = {"Employee", "Rental", "Administrator_Subdomains", "Administrators", "Address", "Camera","Clients", "Format", "Mount", "Objective", "Salary", "CameraType", "ClientType", "Users", "Subdomains"};
 
     public static void copyResourceDirectory(Path source, Path destination) throws IOException  {
-//        Path source = Paths.get("CSV");
-//        Path destination = Paths.get("C:/myproject/resources/CSV"); // specify your desired destination path here
 
         try {
             Files.walk(source)
@@ -41,29 +39,6 @@ public class ModelInit {
             e.printStackTrace();
         }
     }
-
-//    public static void copyFromJar(URI uri, final Path target) throws IOException {
-//        Path myPath = null;
-//
-//        try {
-//            myPath = Paths.get(uri);
-//        } catch (FileSystemNotFoundException e) {
-//            System.out.println("File system not found: " + e.getMessage() + ":" + uri.toString());
-//            throw e;
-//        }
-//
-//        Files.walkFileTree(myPath, new SimpleFileVisitor<Path>() {
-//            @Override
-//            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-//                try {
-//                    Files.copy(file, target.resolve(file.getFileName()));
-//                } catch (Exception e){
-//                    System.out.println("Error copying file: " + e.getMessage());
-//                }
-//                return FileVisitResult.CONTINUE;
-//            }
-//        });
-//    }
 
     public static void logInit() throws Exception{
         String logPath = Paths.get(System.getProperty("user.dir") + "/Log").toString();

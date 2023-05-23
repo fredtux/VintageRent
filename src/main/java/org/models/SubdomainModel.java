@@ -2,7 +2,6 @@ package org.models;
 
 import org.database.DatabaseConnection;
 import org.database.csv.CsvConnection;
-import org.gui.tables.CameraTypeAdd;
 
 import javax.swing.table.DefaultTableModel;
 import java.lang.reflect.Field;
@@ -221,7 +220,7 @@ public class SubdomainModel extends Model implements LinkModelToDatabase<ModelLi
         } catch (Exception ex) {
             System.out.println("Error logging to CSV: " + ex.getMessage());
         }
-//        db.update("UPDATE " + this.tableName + " SET BRAND = '" + oneRow.get(0).Brand + "', MODELCAMERA = '" + oneRow.get(0).ModelCamera + "', PRICE = " + oneRow.get(0).Price + ", RENTALPRICE = " + oneRow.get(0).RentalPrice + ", MANUFACTURINGYEAR = " + oneRow.get(0).ManufacturingYear + " WHERE IDCAMERA = " + oneRow.get(0).IDCamera);
+
     }
 
     @Override

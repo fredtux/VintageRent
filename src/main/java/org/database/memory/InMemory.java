@@ -894,10 +894,6 @@ public class InMemory extends DatabaseConnection {
             throw new Exception("null parameters");
         }
 
-//        if (headers.size() != data.get(0).size()) {
-//            throw new Exception("parameters size are not equals");
-//        }
-
 
         // create a mock result set
         MockResultSet mockResultSet = new MockResultSet("myResultSet");
@@ -1000,20 +996,6 @@ public class InMemory extends DatabaseConnection {
     public void createTable(String tableName, String[] columns, String[] types) throws Exception {
 
     }
-
-//    private List<Pair<String, String>> makeInsert(List<String> headers, List<Pair<String, String>> values) throws Exception {
-//        List<Pair<String, String>> result = new ArrayList<>();
-//
-//        for(int i = 0; i < headers.size(); i++){
-//            for(int j = 0; j < values.size(); j++){
-//                if(headers.get(i).toLowerCase() == values.get(j).first.toLowerCase()){
-//                    result.add(new Pair<>(headers.get(i), values.get(j).second));
-//                }
-//            }
-//        }
-//
-//        return result;
-//    }
 
 
     @Override
@@ -1352,13 +1334,6 @@ public class InMemory extends DatabaseConnection {
                     id = c.UserID;
             }
 
-//            for (Pair<String, String> p : values) {
-//                if (p.first.toLowerCase().equals("userid")) {
-//                    p.second = String.valueOf(id + 1);
-//                    break;
-//                }
-//            }
-
 
             AdministratorModel.InnerAdministratorModel model = new AdministratorModel.InnerAdministratorModel();
             for (Pair<String, String> p : values) {
@@ -1411,13 +1386,6 @@ public class InMemory extends DatabaseConnection {
                 if (c.IDAdministrator > id)
                     id = c.IDAdministrator;
             }
-
-//            for (Pair<String, String> p : values) {
-//                if (p.first.toLowerCase().equals("subdomainid")) {
-//                    p.second = String.valueOf(id + 1);
-//                    break;
-//                }
-//            }
 
 
             AdministratorSubdomainModel.InnerAdministratorSubdomainModel model = new AdministratorSubdomainModel.InnerAdministratorSubdomainModel();

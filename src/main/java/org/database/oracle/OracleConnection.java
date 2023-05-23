@@ -2,7 +2,6 @@ package org.database.oracle;
 
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.database.DatabaseConnection;
-import org.models.ModelInit;
 import org.models.Pair;
 
 import java.io.*;
@@ -103,6 +102,7 @@ public class OracleConnection extends DatabaseConnection {
             } catch (Exception ex) {
                 System.out.println("Error logging to CSV: " + ex.getMessage());
             }
+
             return res;
         } catch (SQLException ex) {
             System.out.println("Error executing query: " + ex.getMessage() + ":" + ex.getErrorCode());
@@ -134,8 +134,6 @@ public class OracleConnection extends DatabaseConnection {
     @Override
     public void init() throws Exception {
         try {
-//            ModelInit.oracleInit();
-
             Reader initScript = readFile(DB_INIT_FILE);
             ScriptRunner sr = new ScriptRunner(this.conn);
             sr.setLogWriter(null);
@@ -170,6 +168,8 @@ public class OracleConnection extends DatabaseConnection {
 
             stmt = this.conn.createStatement();
             stmt.executeUpdate(query);
+
+            stmt.close();
         } catch (SQLException ex) {
             System.out.println("Error executing query: " + ex.getMessage());
             throw new SQLException("Error executing query: " + ex.getMessage());
@@ -220,6 +220,7 @@ public class OracleConnection extends DatabaseConnection {
 
             stmt = this.conn.createStatement();
             stmt.executeUpdate(query);
+            stmt.close();
         } catch (SQLException ex) {
             System.out.println("Error executing query: " + ex.getMessage());
             throw new SQLException("Error executing query: " + ex.getMessage());
@@ -244,6 +245,7 @@ public class OracleConnection extends DatabaseConnection {
 
             stmt = this.conn.createStatement();
             stmt.executeUpdate(query);
+            stmt.close();
         } catch (SQLException ex) {
             System.out.println("Error executing query: " + ex.getMessage());
             throw new SQLException("Error executing query: " + ex.getMessage());
@@ -269,6 +271,7 @@ public class OracleConnection extends DatabaseConnection {
 
             stmt = this.conn.createStatement();
             stmt.executeUpdate(query);
+            stmt.close();
         } catch (SQLException ex) {
             System.out.println("Error executing query: " + ex.getMessage());
             throw new SQLException("Error executing query: " + ex.getMessage());
@@ -299,6 +302,7 @@ public class OracleConnection extends DatabaseConnection {
                 maxId = rs.getInt("MAX_ID");
             }
 
+            stmt.close();
             return maxId + 1;
         } catch (SQLException ex) {
             System.out.println("Error executing query: " + ex.getMessage());
@@ -310,7 +314,6 @@ public class OracleConnection extends DatabaseConnection {
         InputStream in = getClass().getResourceAsStream(resourcePath);
         InputStreamReader isr = new InputStreamReader(in);
         return new BufferedReader(isr);
-//        return new BufferedReader(new FileReader(classLoader.getResource(resourcePath).getFile()));
     }
 
 
