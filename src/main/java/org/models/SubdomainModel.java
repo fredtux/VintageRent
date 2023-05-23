@@ -2,7 +2,6 @@ package org.models;
 
 import org.database.DatabaseConnection;
 import org.database.csv.CsvConnection;
-import org.gui.tables.CameraTypeAdd;
 
 import javax.swing.table.DefaultTableModel;
 import java.lang.reflect.Field;

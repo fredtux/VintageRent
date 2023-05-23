@@ -2,15 +2,10 @@ package org.models;
 
 import org.actions.MainService;
 import org.database.DatabaseConnection;
-import org.database.csv.CsvConnection;
 import org.database.memory.InMemory;
-import org.database.oracle.OracleConnection;
 import org.junit.Test;
-import org.vintage.Main;
 
 import javax.swing.table.TableModel;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
