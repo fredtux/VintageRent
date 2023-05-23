@@ -40,7 +40,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v${{ env.project_version }}
-          release_name: This is version ${{ env.project_version }} of the project.
+          release_name: Vintage Rent ${{ env.project_version }}
           body: This is version ${{ env.project_version }} of the project.
           draft: false
           prerelease: false
