@@ -137,7 +137,7 @@ docker-compose up
 ```
 
 #### Extindeti proiectul din prima etpa prin realizarea persistentei utilizand o baza de date relationala si JDBC
-Am folosit solutia de SGBD Oracle DB implementata folosind un container de docker personalizat si urcat pe docker hub.
+Am folosit solutia de SGBD Oracle DB implementata folosind un container de docker personalizat si urcat pe docker hub la adresa: [https://hub.docker.com/r/fredtux/dockerpao](https://hub.docker.com/r/fredtux/dockerpao)
 
 Conexiunea la baza de date se face in **org.database.oracle.OracleConnection** . Este o clasa de tip singleton ce mosteneste **org.database.DatabaseConnection** . In DatabaseConnection se tine un ArrayList cu toate conexiunile la "bazele de date", adica Oracle, CSV si InMemory deoarece toate acestea au metode similare de manipulare a datelor.
 
