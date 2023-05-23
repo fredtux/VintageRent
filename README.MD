@@ -160,6 +160,8 @@ Am implementat CRUD pentru urmatoarele tabele:
 
 Toate metodele de CRUD pot fi accesate din interfata grafica.
 
+Daca se strica integritatea referentiala, nu se vor putea face UPDATE, DELETE sau TRUNCATE.
+
 #### Realizarea unui serviciu de audit
 Am realizat un serviciu de audit in **org.logger.CsvLogger** . Acesta este un singleton care are o metoda **log(String message)** care scrie in fisierul **Log.csv** mesajul primit ca parametru si data la care a fost scris.
 
